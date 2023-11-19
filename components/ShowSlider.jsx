@@ -92,7 +92,7 @@ export default function ShowSlider({ data, title }) {
   return (
     <div className="mx-auto w-full  border-t-1  dark:border-customGray">
       <div className="mt-5   flex items-center justify-between">
-        <span className="text-xl  font-bold ">{title}</span>
+        <span className="text-xl  font-bold line-clamp-1">{title}</span>
         <Button
           variant={currentTheme === "light" ? "light" : "ghost"}
           radius="full"

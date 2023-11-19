@@ -38,7 +38,7 @@ export default function Header({ toggleSidebar }) {
       </Button>
 
       <NavbarBrand>
-        <p className="font-bold text-2xl">NEXTANI</p>
+        <p className="font-bold text-2xl hidden sm:block">NEXTANI</p>
       </NavbarBrand>
       <NavbarContent className="max-w-[650px] w-full" justify="center">
         <Input
