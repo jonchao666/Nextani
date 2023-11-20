@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import ShowSlider from "@/components/ShowSlider";
+import HomepageInfiniteScroll from "@/components/HomepageInfiniteScroll";
 import Category from "@/components/Category";
 import ReleaseCalendar from "@/components/Calendar";
 import Sidebar from "@/components/Sidebar";
@@ -9,90 +10,12 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleSidebar } from "@/reducers/sidebarSlice";
 import axios from "axios";
-
-const categoryTitles = {
-  thisSeasonPopular: "Popular this season",
-  nextSeason: "Upcoming next season",
-  movie: "Movie",
-  allTimePopular: "All Time Popular",
-  topAnime: "Top Anime",
-  music: "Music",
-
-  "Miyazaki, Hayao": "Hayao Miyazaki",
-  "Kon, Satoshi": "Satoshi Kon",
-  "Kawaguchi, Yuichiro": "Yuichiro Kawaguchi",
-  "Kawaguchi, Yuichiro": "Yuichiro Kawaguchi",
-  "Oshii, Mamoru": "Mamoru Oshii",
-  "Otomo, Katsuhiro": "Katsuhiro Otomo",
-  "Hosoda, Mamoru": "Mamoru Hosoda",
-  "Oshii, Mamoru": "Mamoru Oshii",
-  "Otomo, Katsuhiro": "Katsuhiro Otomo",
-  "Anno, Hideaki": "Hideaki Anno",
-  "Shinkai, Makoto": "Makoto Shinkai",
-};
-const categories = [
-  "thisSeasonPopular",
-  "nextSeason",
-  "Award Winning",
-  "Adventure",
-  "Miyazaki, Hayao",
-  "Fantasy",
-  "Drama",
-  "Hosoda, Mamoru",
-  "Shinkai, Makoto",
-
-  "Avant Garde",
-  "Action",
-  "Oshii, Mamoru",
-  "Anno, Hideaki",
-  "Kon, Satoshi",
-  "Sci-Fi",
-  "Otomo, Katsuhiro",
-
-  "allTimePopular",
-  "topAnime",
-  "movie",
-  "music",
-  "Comedy",
-  "Romance",
-  "Slice of Life",
-  "Supernatural",
-  "Mystery",
-  "Sports",
-  "Horror",
-  "Suspense",
-  "Gourmet",
-];
-
-const genres = [
-  "Fantasy",
-  "Sci-Fi",
-  "Drama",
-  "Comedy",
-  "Action",
-  "Adventure",
-  "Romance",
-  "Slice of Life",
-  "Supernatural",
-  "Mystery",
-  "Avant Garde",
-  "Sports",
-  "Horror",
-  "Suspense",
-  "Gourmet",
-
-  "Award Winning",
-];
-
-const directors = [
-  "Miyazaki, Hayao",
-  "Kon, Satoshi",
-  "Hosoda, Mamoru",
-  "Oshii, Mamoru",
-  "Otomo, Katsuhiro",
-  "Anno, Hideaki",
-  "Shinkai, Makoto",
-];
+import {
+  categoryTitles,
+  categories,
+  genres,
+  directors,
+} from "@/constans/categoryData";
 
 export default function HomePage({ slidersData, calendarData }) {
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
@@ -147,7 +70,7 @@ export default function HomePage({ slidersData, calendarData }) {
           showSidebars ? (showSidebar ? "ml-60" : "ml-[72px]") : "ml-0"
         }`}
       >
-        <div className="mx-auto " style={{ maxWidth: mainWidth }}>
+        <div className="mx-auto" style={{ maxWidth: mainWidth }}>
           {showSidebars ? (
             <ReleaseCalendar calendarData={calendarData} />
           ) : null}
@@ -159,6 +82,7 @@ export default function HomePage({ slidersData, calendarData }) {
               data={data}
             />
           ))}
+          <HomepageInfiniteScroll />
         </div>
       </main>
     </div>
@@ -168,7 +92,7 @@ export default function HomePage({ slidersData, calendarData }) {
 export async function getStaticProps() {
   const slidersData = await Promise.all(
     //get sliders data
-    categories.map(async (category) => {
+    categories.slice(0, 5).map(async (category) => {
       let url;
       if (genres.includes(category)) {
         // 如果是流派类别，则构建流派 URL
@@ -233,6 +157,6 @@ export async function getStaticProps() {
       slidersData,
       calendarData,
     },
-    revalidate: 3600, // 重新验证间隔（秒）
+    revalidate: 86400, // 重新验证间隔（秒）
   };
 }

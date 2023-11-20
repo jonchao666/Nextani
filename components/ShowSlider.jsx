@@ -6,10 +6,9 @@ import "slick-carousel/slick/slick-theme.css";
 import ImageCard from "./ImageCard";
 import { useResponsive } from "../hooks/useResponsive";
 import { useTheme } from "next-themes";
+import { memo } from "react";
 
-const API_KEY = process.env.API_KEY;
-
-export default function ShowSlider({ data, title }) {
+function ShowSlider({ data, title }) {
   const { theme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("light"); // 设置默认主题
 
@@ -109,3 +108,4 @@ export default function ShowSlider({ data, title }) {
     </div>
   );
 }
+export default memo(ShowSlider);
