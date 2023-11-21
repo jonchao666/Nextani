@@ -9,11 +9,18 @@ import {
   NavbarContent,
   NavbarItem,
   NavbarBrand,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
 } from "@nextui-org/react";
+import DropDownMenu from "./DropDownMenu";
 
 export default function Header({ toggleSidebar }) {
   const { theme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("light"); // 设置默认主题
+  const [dropDownMenu, setdropDownMenu] = useState("default");
 
   useEffect(() => {
     setCurrentTheme(theme);
@@ -38,7 +45,7 @@ export default function Header({ toggleSidebar }) {
       </Button>
 
       <NavbarBrand>
-        <p className="font-bold text-2xl hidden sm:block">NEXTANI</p>
+        <p className="font-bold text-2xl hidden md:block">NEXTANI</p>
       </NavbarBrand>
       <NavbarContent className="max-w-[650px] w-full" justify="center">
         <Input
@@ -59,6 +66,27 @@ export default function Header({ toggleSidebar }) {
         />
       </NavbarContent>
       <NavbarContent justify="end">
+        <Dropdown>
+          <DropdownTrigger>
+            <Button
+              disableAnimation
+              variant="ghost"
+              className="border-none -mr-2"
+              radius="full"
+              isIconOnly
+            >
+              <span
+                className={`material-symbols-outlined`}
+                style={{
+                  fontVariationSettings: `"FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24`,
+                }}
+              >
+                more_vert
+              </span>
+            </Button>
+          </DropdownTrigger>
+          <DropDownMenu />
+        </Dropdown>
         <NavbarItem>
           <Button
             startContent={<SignInIcon size={24} />}
@@ -72,8 +100,6 @@ export default function Header({ toggleSidebar }) {
             <span className="-ml-1">Sign in</span>
           </Button>
         </NavbarItem>
-
-        <ThemeSwitcher />
       </NavbarContent>
     </Navbar>
   );

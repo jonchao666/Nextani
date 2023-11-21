@@ -20,13 +20,20 @@ export default function CalendarTabContent({ data }) {
         isIconOnly
         style={{
           display:
-            currentSlide === slideCount - slidesToShow ? "none" : "block",
+            currentSlide === slideCount - slidesToShow ? "none" : "inline-flex",
         }}
         className="z-30 bg-background dark:bg-default-100 hover:bg-default dark:hover:bg-default-300 absolute top-[145px] -right-4  
-          text-xl   rounded-full w-10 h-10 p-0   shadow-sliderArrow
+           rounded-full   shadow-sliderArrow
          "
       >
-        &gt;
+        <span
+          className="material-symbols-outlined "
+          style={{
+            fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
+          }}
+        >
+          navigate_next
+        </span>
       </Button>
     );
   }
@@ -38,12 +45,19 @@ export default function CalendarTabContent({ data }) {
         onClick={onClick}
         variant="solid"
         isIconOnly
-        style={{ display: currentSlide === 0 ? "none" : "block" }}
+        style={{ display: currentSlide === 0 ? "none" : "inline-flex" }}
         className="z-30 bg-background dark:bg-default-100 hover:bg-default dark:hover:bg-default-300 absolute top-[145px] -left-5  
-          text-xl  rounded-full w-10 h-10 p-0 shadow-sliderArrow
+           rounded-full shadow-sliderArrow
           "
       >
-        &lt;
+        <span
+          className="material-symbols-outlined "
+          style={{
+            fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
+          }}
+        >
+          navigate_before
+        </span>
       </Button>
     );
   }

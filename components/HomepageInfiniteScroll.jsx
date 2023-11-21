@@ -2,7 +2,6 @@ import { useState } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import ShowSlider from "@/components/ShowSlider";
 import { CircularProgress } from "@nextui-org/react";
-
 import {
   categoryTitles,
   categories,
@@ -18,7 +17,6 @@ export default function HomepageInfiniteScroll() {
   const [hasMoreData, setHasMoreData] = useState(true);
 
   const fetchMoreData = async () => {
-    console.log(dataToFetch);
     if (loading || !hasMoreData) return;
     setLoading(true);
     for (

@@ -74,7 +74,7 @@ export default function HomePage({ slidersData, calendarData }) {
           {showSidebars ? (
             <ReleaseCalendar calendarData={calendarData} />
           ) : null}
-          {showSidebars ? <Category /> : null}
+
           {slidersData.map(({ title, data }) => (
             <ShowSlider
               key={title}
