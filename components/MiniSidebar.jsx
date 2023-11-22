@@ -37,7 +37,7 @@ export default function MiniSidebar() {
   );
 
   return (
-    <div className="fixed w-[72px] px-1 ">
+    <div className="fixed w-[72px] px-1 top-16">
       <div className="flex flex-col mt-1 ">
         {renderButton("home", "Home", "home")}
         {renderButton("subscriptions", "Watchlist", "watchlist")}

@@ -23,22 +23,7 @@ export default function Sidebar() {
   const handleButtonClick = (buttonName) => {
     dispatch(setSelectedButton(buttonName));
   };
-  const buttonsToShowMore = [
-    "sci-fi",
-    "drama",
-    "romance",
-    "slice of life",
-    "supernatural",
-    "mystery",
-    "avant garde",
-    "sports",
-    "horror",
-    "suspense",
-    "gourmet",
-
-    "adventure",
-    "show less",
-  ];
+  const buttonsToShowMore = ["show less"];
   const renderButton = (iconName, label, name) => {
     if (!showMore && buttonsToShowMore.includes(name)) {
       return null;
@@ -108,9 +93,9 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="fixed top-0 left-0 overflow-y-hidden hover:overflow-y-scroll h-[100vh] w-60">
-      <div className="mt-16 flex flex-col w-full">
-        <div className="border-b-1 flex flex-col p-3">
+    <div className="fixed top-0 left-0  h-[100vh] w-60">
+      <div className="mt-16 flex flex-col w-full h-full overscroll-none  hover:overflow-auto  ">
+        <div className="border-b-1 flex flex-col p-3 ">
           {renderButton("home", "Home", "home")}
           {renderButton("subscriptions", "Watchlist", "watchlist")}
           {renderButton("favorite", "Likes", "likes")}
@@ -138,30 +123,13 @@ export default function Sidebar() {
           <span className="px-3 pt-1.5 pb-1 font-medium">Explore</span>
           <div className="flex flex-col">
             {renderButton("trending_up", "Popular", "popular")}
-            {renderButton("schedule", "Upcoming", "upcoming")}
             {renderButton("leaderboard", "Top", "top")}
             {renderButton("emoji_events", "Award Winning", "award winning")}
             {renderButton("movie", "Movie", "movie")}
             {renderButton("library_music", "Music", "music")}
-            {renderButton("sentiment_very_satisfied", "Comedy", "comedy")}
-            {renderButton("auto_awesome", "Fantasy", "fantasy")}
 
-            {renderButton("bolt", "Action", "action")}
-            {renderButton("explore", "Adventure", "adventure")}
-            {renderButton("expand_more", "Show more", "show more")}
-            {renderButton("science", "Sci-Fi", "sci-fi")}
-            {renderButton("theater_comedy", "Drama", "drama")}
-            {renderButton("local_florist", "Romance", "romance")}
-            {renderButton("emoji_people", "Slice of Life", "slice of life")}
-            {renderButton("auto_fix_high", "Supernatural", "supernatural")}
-            {renderButton("psychology", "Mystery", "mystery")}
-            {renderButton("style", "Avant Garde", "avant garde")}
-            {renderButton("sports_soccer", "Sports", "sports")}
-            {renderButton("mood_bad", "Horror", "horror")}
-            {renderButton("hourglass_empty", "Suspense", "suspense")}
-            {renderButton("restaurant", "Gourmet", "gourmet")}
-
-            {renderButton("expand_less", "Show less", "show less")}
+            {/* {renderButton("expand_more", "Show more", "show more")}
+            {renderButton("expand_less", "Show less", "show less")} */}
           </div>
         </div>
 

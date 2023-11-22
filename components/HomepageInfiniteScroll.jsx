@@ -76,7 +76,7 @@ export default function HomepageInfiniteScroll() {
           aria-label="Loading..."
         />
       )}
-      <div ref={lastElementRef} />
+      <div ref={lastElementRef} className="h-1" />
     </div>
   );
 }

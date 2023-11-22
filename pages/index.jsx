@@ -53,7 +53,7 @@ export default function HomePage({ slidersData, calendarData }) {
       const width = window.innerWidth;
       if (width < 1315 && showSidebar) {
         dispatch(toggleSidebar());
-      }
+      } 
     };
 
     window.addEventListener("resize", handleResize);
@@ -64,13 +64,14 @@ export default function HomePage({ slidersData, calendarData }) {
       <Header toggleSidebar={() => dispatch(toggleSidebar())} />
 
       {showSidebars && (showSidebar ? <Sidebar /> : <MiniSidebar />)}
+
       <main
-        style={{ height: "calc(100vh - 64px)" }}
-        className={`bg-background overflow-y-scroll mt-16 ${
+        style={{ height: "calc(100vh-64px)" }}
+        className={`bg-background mt-16 ${
           showSidebars ? (showSidebar ? "ml-60" : "ml-[72px]") : "ml-0"
         }`}
       >
-        <div className="mx-auto" style={{ maxWidth: mainWidth }}>
+        <div className="mx-auto pt-6 h-full" style={{ maxWidth: mainWidth }}>
           {showSidebars ? (
             <ReleaseCalendar calendarData={calendarData} />
           ) : null}

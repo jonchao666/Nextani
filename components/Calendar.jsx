@@ -67,7 +67,7 @@ export default function ReleaseCalendar({ calendarData }) {
   ));
 
   return (
-    <div className="flex w-full flex-col my-6">
+    <div className="flex w-full flex-col mb-6">
       <Tabs
         aria-label="Options"
         selectedKey={selected}

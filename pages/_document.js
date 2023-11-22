@@ -21,7 +21,7 @@ export default function Document() {
         />
       </Head>
 
-      <body className="overflow-y-hidden">
+      <body>
         <Main />
         <NextScript />
       </body>
