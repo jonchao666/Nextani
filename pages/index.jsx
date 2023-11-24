@@ -9,6 +9,7 @@ import { useResponsive } from "@/hooks/useResponsive";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleSidebar } from "@/reducers/sidebarSlice";
+import { setShowSidebars } from "@/reducers/sidebarVisibilitySlice";
 import axios from "axios";
 import {
   categoryTitles,
@@ -20,9 +21,12 @@ import {
 export default function HomePage({ slidersData, calendarData }) {
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [mainWidth, setMainWidth] = useState();
-  const dispatch = useDispatch();
+
   const showSidebar = useSelector((state) => state.sidebar.showSidebar);
-  const [showSidebars, setShowSidebars] = useState(true);
+  const showSidebars = useSelector(
+    (state) => state.sidebarVisibility.showSidebars
+  );
+  const dispatch = useDispatch();
   useEffect(() => {
     const width = isXl
       ? "1284px"
@@ -40,20 +44,20 @@ export default function HomePage({ slidersData, calendarData }) {
 
   useEffect(() => {
     function handleResize() {
-      setShowSidebars(window.innerWidth >= 790);
+      dispatch(setShowSidebars(window.innerWidth >= 790));
     }
 
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       if (width < 1315 && showSidebar) {
         dispatch(toggleSidebar());
-      } 
+      }
     };
 
     window.addEventListener("resize", handleResize);
@@ -61,9 +65,25 @@ export default function HomePage({ slidersData, calendarData }) {
   }, [showSidebar, dispatch]);
   return (
     <div>
+      {!showSidebars && showSidebar && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40" />
+      )}
       <Header toggleSidebar={() => dispatch(toggleSidebar())} />
 
-      {showSidebars && (showSidebar ? <Sidebar /> : <MiniSidebar />)}
+      {showSidebars ? (
+        showSidebar ? (
+          <Sidebar />
+        ) : (
+          <MiniSidebar />
+        )
+      ) : (
+        showSidebar && (
+          <Sidebar
+            absolute={true}
+            toggleSidebar={() => dispatch(toggleSidebar())}
+          />
+        )
+      )}
 
       <main
         style={{ height: "calc(100vh-64px)" }}
@@ -72,9 +92,7 @@ export default function HomePage({ slidersData, calendarData }) {
         }`}
       >
         <div className="mx-auto pt-6 h-full" style={{ maxWidth: mainWidth }}>
-          {showSidebars ? (
-            <ReleaseCalendar calendarData={calendarData} />
-          ) : null}
+          {showSidebars && <ReleaseCalendar calendarData={calendarData} />}
 
           {slidersData.map(({ title, data }) => (
             <ShowSlider

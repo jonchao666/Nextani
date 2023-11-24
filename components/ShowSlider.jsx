@@ -116,7 +116,7 @@ function ShowSlider({ data, title }) {
         </Button>
       </div>
 
-      <Slider {...settings} className="mt-5 mb-6">
+      <Slider {...settings} className="mt-5 mb-6 bg-background">
         {data && data.map((item) => <ImageCard key={item._id} data={item} />)}
       </Slider>
     </div>

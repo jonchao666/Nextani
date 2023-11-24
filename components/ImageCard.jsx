@@ -5,9 +5,9 @@ export default function ImageCard({ data, ep }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div className="bg-background w-[210px]">
+    <div className=" w-[210px]">
       <Card
-        className={`isPressable rounded-lg ${
+        className={`isPressable  rounded-lg shadow-none ${
           isLoaded ? "visible" : "invisible"
         }`}
       >

@@ -33,7 +33,7 @@ module.exports = {
     nextui({
       themes: {
         light: {
-          colors: { background: "#fafafa", backgroundlight: "#ffffff" },
+          colors: { background: "#fafafa" },
           layout: {},
         },
         dark: {

@@ -15,19 +15,40 @@ import {
   DropdownSection,
   DropdownItem,
 } from "@nextui-org/react";
-import DropDownMenu from "./DropDownMenu";
+import { Menu, MenuItem } from "@mui/material";
+import {
+  DefaultDropdownMenu,
+  LanguageDropdownMenu,
+  DeviceThemeDropdownMenu,
+} from "./DropDownMenu";
 
 export default function Header({ toggleSidebar }) {
   const { theme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("light"); // 设置默认主题
-  const [dropDownMenu, setdropDownMenu] = useState("default");
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeMenu, setActiveMenu] = useState("default");
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuChange = (menu) => {
+    setActiveMenu(menu);
+    handleMenuClose();
+  };
 
   useEffect(() => {
     setCurrentTheme(theme);
   }, [theme]);
   return (
     <Navbar
-      className="fixed"
+      isBlurred="false"
+      className="fixed z-30"
       maxWidth="full"
       classNames={{
         wrapper: "px-4",
@@ -45,7 +66,7 @@ export default function Header({ toggleSidebar }) {
       </Button>
 
       <NavbarBrand>
-        <p className="font-bold text-2xl hidden md:block">NEXTANI</p>
+        <p className="font-bold text-2xl hidden sm:block">NEXTANI</p>
       </NavbarBrand>
       <NavbarContent className="max-w-[650px] w-full" justify="center">
         <Input
@@ -66,27 +87,40 @@ export default function Header({ toggleSidebar }) {
         />
       </NavbarContent>
       <NavbarContent justify="end">
-        <Dropdown>
-          <DropdownTrigger>
-            <Button
-              disableAnimation
-              variant="ghost"
-              className="border-none -mr-2"
-              radius="full"
-              isIconOnly
+        <div>
+          <Button
+            onClick={handleMenuOpen}
+            disableAnimation
+            variant="ghost"
+            className="border-none -mr-2"
+            radius="full"
+            isIconOnly
+          >
+            <span
+              className={`material-symbols-outlined`}
+              style={{
+                fontVariationSettings: `"FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24`,
+              }}
             >
-              <span
-                className={`material-symbols-outlined`}
-                style={{
-                  fontVariationSettings: `"FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24`,
-                }}
-              >
-                more_vert
-              </span>
-            </Button>
-          </DropdownTrigger>
-          <DropDownMenu />
-        </Dropdown>
+              more_vert
+            </span>
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            {activeMenu === "default" && (
+              <DefaultDropdownMenu onChangeMenu={handleMenuChange} />
+            )}
+            {activeMenu === "theme" && (
+              <DeviceThemeDropdownMenu onChangeMenu={handleMenuChange} />
+            )}
+            {activeMenu === "language" && (
+              <LanguageDropdownMenu onChangeMenu={handleMenuChange} />
+            )}
+          </Menu>
+        </div>
         <NavbarItem>
           <Button
             startContent={<SignInIcon size={24} />}

@@ -1,11 +1,24 @@
-import { Button, Link } from "@nextui-org/react";
+import { Button, Link, navbar } from "@nextui-org/react";
 import { SignInIcon } from "@/icons";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedButton } from "@/reducers/selectedButtonSlice";
+import { GuideButtonIcon } from "@/icons";
 
-export default function Sidebar() {
+import {
+  Input,
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+  NavbarBrand,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@nextui-org/react";
+export default function Sidebar({ absolute, toggleSidebar }) {
   const { theme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("light"); // 设置默认主题
 
@@ -93,8 +106,31 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="fixed top-0 left-0  h-[100vh] w-60">
-      <div className="mt-16 flex flex-col w-full h-full overscroll-none  hover:overflow-auto  ">
+    <div
+      className={`fixed  top-0 left-0  h-[100vh] w-60 bg-background ${
+        absolute && "z-50"
+      }`}
+    >
+      <div className="h-16 w-full">
+        {absolute && (
+          <Navbar>
+            <Button
+              onClick={toggleSidebar}
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              className="border-none -ml-2"
+            >
+              <GuideButtonIcon />
+            </Button>
+
+            <NavbarBrand>
+              <p className="font-bold text-2xl ">NEXTANI</p>
+            </NavbarBrand>
+          </Navbar>
+        )}
+      </div>
+      <div className=" flex flex-col w-full h-full overscroll-none  hover:overflow-auto  ">
         <div className="border-b-1 flex flex-col p-3 ">
           {renderButton("home", "Home", "home")}
           {renderButton("subscriptions", "Watchlist", "watchlist")}
@@ -124,9 +160,9 @@ export default function Sidebar() {
           <div className="flex flex-col">
             {renderButton("trending_up", "Popular", "popular")}
             {renderButton("leaderboard", "Top", "top")}
-            {renderButton("emoji_events", "Award Winning", "award winning")}
             {renderButton("movie", "Movie", "movie")}
             {renderButton("library_music", "Music", "music")}
+            {renderButton("emoji_events", "Award Winning", "award winning")}
 
             {/* {renderButton("expand_more", "Show more", "show more")}
             {renderButton("expand_less", "Show less", "show less")} */}
