@@ -25,7 +25,7 @@ export default function Category() {
 
       <div className="flex bg-backgroundlight dark:bg-background mt-6">
         <div className="w-[20%] border-r-1   px-6 my-4">
-          <Link className="text-md font-bold  text-foreground  " href="#">
+          <Link className="text-md font-bold  text-foreground  ">
             Sort by &gt;
           </Link>
           <div className="mt-2  -mb-2 flex flex-wrap">
@@ -42,7 +42,7 @@ export default function Category() {
         </div>
 
         <div className="w-[40%] border-r-1   px-6 my-4">
-          <Link className="text-md font-bold  text-foreground " href="#">
+          <Link className="text-md font-bold  text-foreground ">
             Genres &gt;
           </Link>
           <div className="mt-2 -mb-2 flex flex-wrap ">
@@ -60,7 +60,7 @@ export default function Category() {
         </div>
 
         <div className="w-[25%] border-r-1   px-6 my-4">
-          <Link className="text-md font-bold  text-foreground " href="#">
+          <Link className="text-md font-bold  text-foreground ">
             Airing &gt;
           </Link>
           <div className="mt-2 -mb-2 flex flex-wrap text-foreground font-400 text-gray-500">
@@ -77,7 +77,7 @@ export default function Category() {
         </div>
 
         <div className="w-[30%]   px-6 my-4">
-          <Link className="text-md font-bold  text-foreground   " href="#">
+          <Link className="text-md font-bold  text-foreground   ">
             Release Year &gt;
           </Link>
           <div className="mt-2 -mb-2 flex flex-wrap ">

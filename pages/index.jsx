@@ -1,15 +1,10 @@
-import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import ShowSlider from "@/components/ShowSlider";
 import HomepageInfiniteScroll from "@/components/HomepageInfiniteScroll";
-import Category from "@/components/Category";
 import ReleaseCalendar from "@/components/Calendar";
-import Sidebar from "@/components/Sidebar";
-import MiniSidebar from "@/components/MiniSidebar";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { toggleSidebar } from "@/reducers/sidebarSlice";
-import { setShowSidebars } from "@/reducers/sidebarVisibilitySlice";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import {
   categoryTitles,
@@ -21,12 +16,11 @@ import {
 export default function HomePage({ slidersData, calendarData }) {
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [mainWidth, setMainWidth] = useState();
-
   const showSidebar = useSelector((state) => state.sidebar.showSidebar);
   const showSidebars = useSelector(
     (state) => state.sidebarVisibility.showSidebars
   );
-  const dispatch = useDispatch();
+
   useEffect(() => {
     const width = isXl
       ? "1284px"
@@ -42,49 +36,8 @@ export default function HomePage({ slidersData, calendarData }) {
     setMainWidth(width);
   }, [isXl, isLg, isMd, isSm, isXs]);
 
-  useEffect(() => {
-    function handleResize() {
-      dispatch(setShowSidebars(window.innerWidth >= 790));
-    }
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, [dispatch]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 1315 && showSidebar) {
-        dispatch(toggleSidebar());
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [showSidebar, dispatch]);
   return (
-    <div>
-      {!showSidebars && showSidebar && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40" />
-      )}
-      <Header toggleSidebar={() => dispatch(toggleSidebar())} />
-
-      {showSidebars ? (
-        showSidebar ? (
-          <Sidebar />
-        ) : (
-          <MiniSidebar />
-        )
-      ) : (
-        showSidebar && (
-          <Sidebar
-            absolute={true}
-            toggleSidebar={() => dispatch(toggleSidebar())}
-          />
-        )
-      )}
-
+    <Layout>
       <main
         style={{ height: "calc(100vh-64px)" }}
         className={`bg-background mt-16 ${
@@ -104,7 +57,7 @@ export default function HomePage({ slidersData, calendarData }) {
           <HomepageInfiniteScroll />
         </div>
       </main>
-    </div>
+    </Layout>
   );
 }
 

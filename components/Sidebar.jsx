@@ -1,33 +1,27 @@
-import { Button, Link, navbar } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import { SignInIcon } from "@/icons";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedButton } from "@/reducers/selectedButtonSlice";
 import { GuideButtonIcon } from "@/icons";
+import { Navbar, NavbarBrand } from "@nextui-org/react";
 
-import {
-  Input,
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  NavbarBrand,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownSection,
-  DropdownItem,
-} from "@nextui-org/react";
 export default function Sidebar({ absolute, toggleSidebar }) {
   const { theme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState("light"); // 设置默认主题
 
-  useEffect(() => {
-    setCurrentTheme(theme);
-  }, [theme]);
+  const [isMounted, setIsMounted] = useState(false);
   const selectedButton = useSelector((state) => state.selectedButton.value);
   const dispatch = useDispatch();
-  const [showMore, setShowMore] = useState(false); // 新增状态
+  const [showMore, setShowMore] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   const handleShowMoreClick = () => {
     setShowMore(!showMore);
@@ -50,7 +44,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
           disableAnimation
           onClick={handleShowMoreClick}
           as={Link}
-          variant={currentTheme === "light" ? "light" : "ghost"}
+          variant={theme === "light" ? "light" : "ghost"}
           className="justify-start border-none"
         >
           <span
@@ -73,11 +67,12 @@ export default function Sidebar({ absolute, toggleSidebar }) {
 
     return (
       <Button
+        href={name === "home" ? "/" : null}
         disableAnimation
         onClick={() => handleButtonClick(name)}
         as={Link}
         variant={
-          currentTheme === "light"
+          theme === "light"
             ? selectedButton === name
               ? "flat"
               : "light"
@@ -146,10 +141,9 @@ export default function Sidebar({ absolute, toggleSidebar }) {
             startContent={<SignInIcon size={24} />}
             className="text-sm font-medium pl-2 pr-3 border-1 dark:border-customGray mt-3"
             size="sm"
-            variant={currentTheme === "light" ? "light" : "ghost"}
+            variant={theme === "light" ? "light" : "ghost"}
             color="primary"
             radius="full"
-            href="#"
           >
             <span className="-ml-1">Sign in</span>
           </Button>

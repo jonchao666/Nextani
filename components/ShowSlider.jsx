@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -6,15 +6,10 @@ import "slick-carousel/slick/slick-theme.css";
 import ImageCard from "./ImageCard";
 import { useResponsive } from "../hooks/useResponsive";
 import { useTheme } from "next-themes";
-import { memo } from "react";
 
 function ShowSlider({ data, title }) {
   const { theme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState("light"); // 设置默认主题
-
-  useEffect(() => {
-    setCurrentTheme(theme);
-  }, [theme]);
+  const [isMounted, setIsMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [slidesToShow, setSlidesToShow] = useState(1);
@@ -86,6 +81,13 @@ function ShowSlider({ data, title }) {
     setSlidesToShow(newSlidesToShow);
   }, [isXl, isLg, isMd, isSm, isXs]);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
   // Slider settings
   const settings = {
     dots: false,
@@ -107,10 +109,12 @@ function ShowSlider({ data, title }) {
       <div className="mt-5   flex items-center justify-between">
         <span className="text-xl  font-bold line-clamp-1">{title}</span>
         <Button
-          variant={currentTheme === "light" ? "light" : "ghost"}
+          variant={theme === "light" ? "light" : "ghost"}
           radius="full"
           color="primary"
           className="border-none"
+          href="/category"
+          as={Link}
         >
           View All
         </Button>
@@ -122,4 +126,4 @@ function ShowSlider({ data, title }) {
     </div>
   );
 }
-export default memo(ShowSlider);
+export default ShowSlider;
