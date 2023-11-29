@@ -13,7 +13,7 @@ export default function ImageCard({ data, ep }) {
       >
         <CardBody className="p-0 overflow-hidden">
           <Image
-            className="h-[329px] w-[210px] object-cover "
+            className="h-[302px] w-[210px] object-cover "
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
             isZoomed

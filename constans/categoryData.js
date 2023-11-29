@@ -82,3 +82,4 @@ export const directors = [
   "Yamada, Naoko",
   "Oshii, Mamoru",
 ];
+export const types = ["TV", "OVA", "Movie", "Special", "ONA", "Music"];

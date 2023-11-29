@@ -31,6 +31,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
     dispatch(setSelectedButton(buttonName));
   };
   const buttonsToShowMore = ["show less"];
+  const Explore = ["Popular", "Top", "Movie", "Music", "Award Winning"];
   const renderButton = (iconName, label, name) => {
     if (!showMore && buttonsToShowMore.includes(name)) {
       return null;
@@ -67,7 +68,11 @@ export default function Sidebar({ absolute, toggleSidebar }) {
 
     return (
       <Button
-        href={name === "home" ? "/" : null}
+        href={
+          name === "home"
+            ? "/"
+            : Explore.includes(name) && `/category?category=${name}`
+        }
         disableAnimation
         onClick={() => handleButtonClick(name)}
         as={Link}
@@ -152,11 +157,11 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         <div className="flex flex-col border-b-1 p-3">
           <span className="px-3 pt-1.5 pb-1 font-medium">Explore</span>
           <div className="flex flex-col">
-            {renderButton("trending_up", "Popular", "popular")}
-            {renderButton("leaderboard", "Top", "top")}
-            {renderButton("movie", "Movie", "movie")}
-            {renderButton("library_music", "Music", "music")}
-            {renderButton("emoji_events", "Award Winning", "award winning")}
+            {renderButton("trending_up", "Popular", "Popular")}
+            {renderButton("leaderboard", "Top", "Top")}
+            {renderButton("movie", "Movie", "Movie")}
+            {renderButton("library_music", "Music", "Music")}
+            {renderButton("emoji_events", "Award Winning", "Award Winning")}
 
             {/* {renderButton("expand_more", "Show more", "show more")}
             {renderButton("expand_less", "Show less", "show less")} */}

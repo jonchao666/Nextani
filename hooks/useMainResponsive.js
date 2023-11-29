@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSidebar } from "@/reducers/sidebarSlice";
+import { toggleSidebar, setShowSidebar } from "@/reducers/sidebarSlice";
 import { setShowSidebars } from "@/reducers/sidebarVisibilitySlice";
 import { useEffect } from "react";
 
@@ -19,10 +19,8 @@ export default function useMainResponsive() {
 
   useEffect(() => {
     const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 1315 && showSidebar) {
-        dispatch(toggleSidebar());
-      }
+      if (window.innerWidth >= 1315) dispatch(setShowSidebar(showSidebar));
+      else if (showSidebar) dispatch(setShowSidebar(false));
     };
 
     window.addEventListener("resize", handleResize);

@@ -7,7 +7,7 @@ import ImageCard from "./ImageCard";
 import { useResponsive } from "../hooks/useResponsive";
 import { useTheme } from "next-themes";
 
-function ShowSlider({ data, title }) {
+function ShowSlider({ data, title, category }) {
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -108,12 +108,13 @@ function ShowSlider({ data, title }) {
     <div className="mx-auto w-full  border-t-1  dark:border-customGray">
       <div className="mt-5   flex items-center justify-between">
         <span className="text-xl  font-bold line-clamp-1">{title}</span>
+
         <Button
           variant={theme === "light" ? "light" : "ghost"}
           radius="full"
           color="primary"
           className="border-none"
-          href="/category"
+          href={`/category?category=${category}`}
           as={Link}
         >
           View All

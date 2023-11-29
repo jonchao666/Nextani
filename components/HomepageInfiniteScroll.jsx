@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import ShowSlider from "@/components/ShowSlider";
 import { CircularProgress } from "@nextui-org/react";
@@ -25,20 +25,23 @@ export default function HomepageInfiniteScroll() {
       i++
     ) {
       const category = categories[i];
-      let url;
+      let params = {};
+
       if (genres.includes(category)) {
-        // 如果是流派类别，则构建流派 URL
-        url = `${process.env.API_URL}/anime/genres/${category}`;
+        // 如果是流派类别
+        params.genre = category;
+        params.sortBy = "members";
       } else if (directors.includes(category)) {
-        // 如果是流派类别，则构建流派 URL
-        url = `${process.env.API_URL}/anime/directors/${category}`;
-      } else {
-        // 否则，使用原来的 URL
-        url = `${process.env.API_URL}/anime/${category}`;
+        // 如果是导演类别
+        params.director = category;
+        params.sortBy = "members";
       }
+
+      const url = `${process.env.API_URL}/anime`;
 
       try {
         const response = await axios.get(url, {
+          params,
           headers: { "X-API-Key": process.env.API_KEY },
         });
         setItems((prevData) => [
@@ -64,6 +67,7 @@ export default function HomepageInfiniteScroll() {
     <div>
       {items.map(({ title, data }) => (
         <ShowSlider
+          category={title}
           key={title}
           title={categoryTitles[title] || title}
           data={data}
