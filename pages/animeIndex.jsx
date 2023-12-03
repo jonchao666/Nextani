@@ -17,6 +17,8 @@ export default function AnimeIndex() {
   const [selectedButtonYear, setSelectedButtonYear] = useState("All Year");
   const [selectedButtonSeason, setSelectedButtonSeason] =
     useState("All Season");
+  const [selectedButtonRated, setSelectedButtonRated] = useState("All Rated");
+
   const selectedButton = [
     selectedButtonSortby,
     selectedButtonGenres,
@@ -24,8 +26,17 @@ export default function AnimeIndex() {
     selectedButtonStatus,
     selectedButtonYear,
     selectedButtonSeason,
+    selectedButtonRated,
   ];
-  const header = ["Sort by", "Genres", "Types", "Status", "Year", "Season"];
+  const header = [
+    "Sort by",
+    "Genres",
+    "Types",
+    "Status",
+    "Year",
+    "Season",
+    "Rated",
+  ];
   const renderButton = (label, name, group) => (
     <Button
       key={name}
@@ -45,6 +56,8 @@ export default function AnimeIndex() {
           ? () => setSelectedButtonStatus(label)
           : group === "Year"
           ? () => setSelectedButtonYear(label)
+          : group === "Rated"
+          ? () => setSelectedButtonRated(label)
           : group === "Season"
           ? () => setSelectedButtonSeason(label)
           : null
@@ -113,6 +126,24 @@ export default function AnimeIndex() {
           {renderButton("summer", "Summer", "Season")}
           {renderButton("fall", "Fall", "Season")}
         </div>
+        {renderButton("Rated", "Rated", "Rated")}
+        <div>
+          {renderButton("All Rated", "All", "Rated")}
+          {renderButton("G - All Ages", "G - All Ages", "Rated")}
+          {renderButton("PG - Children", "PG - Children", "Rated")}
+          {renderButton(
+            "PG-13 - Teens 13 or older",
+            "PG-13 - Teens 13 or older",
+            "Rated"
+          )}
+          {renderButton(
+            "R - 17+ (violence & profanity)",
+            "R - 17+ (violence & profanity)",
+            "Rated"
+          )}
+          {renderButton("R+ - Mild Nudity", "R+ - Mild Nudity", "Rated")}
+          {renderButton("Rx - Hentai", "Rx - Hentai", "Rated")}
+        </div>
         {renderButton("Sort by", "Sort by", "Sort by")}
         <div>
           {renderButton("Popular", "Popular", "Sort by")}
@@ -126,6 +157,7 @@ export default function AnimeIndex() {
         selectedButtonStatus={selectedButtonStatus}
         selectedButtonYear={selectedButtonYear}
         selectedButtonSeason={selectedButtonSeason}
+        selectedButtonRated={selectedButtonRated}
       />
     </Layout>
   );

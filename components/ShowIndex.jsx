@@ -13,6 +13,7 @@ export default function ShowIndex({
   selectedButtonStatus,
   selectedButtonYear,
   selectedButtonSeason,
+  selectedButtonRated,
 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,6 +46,8 @@ export default function ShowIndex({
       selectedButtonYear !== "All Year" ? parseYears(selectedButtonYear) : null;
     params.season =
       selectedButtonSeason !== "All Season" ? selectedButtonSeason : null;
+    params.rating =
+      selectedButtonRated !== "All Rated" ? selectedButtonRated : null;
 
     const url = `${process.env.API_URL}/anime`;
 
@@ -93,7 +96,9 @@ export default function ShowIndex({
     selectedButtonStatus,
     selectedButtonYear,
     selectedButtonSeason,
+    selectedButtonRated,
   ]);
+  console.log(page);
   useEffect(() => {
     // 根据屏幕尺寸更新 slidesToShow 的值
     const newColToshow = isXl
@@ -109,7 +114,9 @@ export default function ShowIndex({
       : "grid-cols-1";
     setColToShow(newColToshow);
   }, [isXl, isLg, isMd, isSm, isXs]);
+
   const lastElementRef = useInfiniteScroll(indexData);
+
   return (
     <div>
       <div className={`w-full grid ${colToShow} gap-y-6 mt-6 `}>
