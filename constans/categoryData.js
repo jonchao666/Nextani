@@ -83,3 +83,69 @@ export const directors = [
   "Oshii, Mamoru",
 ];
 export const types = ["TV", "OVA", "Movie", "Special", "ONA", "Music"];
+
+export const themes = [
+  "Music",
+  "School",
+  "Historical",
+  "Mecha",
+  "Anthropomorphic",
+  "Parody",
+  "Military",
+  "Super Power",
+  "Mythology",
+  "Space",
+  "Martial Arts",
+  "Harem",
+  "Psychological",
+  "Isekai",
+  "Mahou Shoujo",
+  "Strategy Game",
+  "Team Sports",
+  "Detective",
+  "Idols (Female)",
+  "Educational",
+  "Gore",
+  "Racing",
+  "Gag Humor",
+  "CGDCT",
+  "Samurai",
+  "Workplace",
+  "Iyashikei",
+  "Idols (Male)",
+  "Vampire",
+  "Video Game",
+  "Time Travel",
+  "Reincarnation",
+  "Performing Arts",
+  "Pets",
+  "Survival",
+  "Otaku Culture",
+  "Combat Sports",
+  "Love Polygon",
+  "Visual Arts",
+  "Organized Crime",
+  "Reverse Harem",
+  "Childcare",
+  "Delinquents",
+  "Romantic Subtext",
+  "Crossdressing",
+  "High Stakes Game",
+  "Medical",
+  "Showbiz",
+  "Magical Sex Shift",
+];
+const date = new Date();
+const currentYear = date.getFullYear();
+const years = [
+  "2014-2010",
+  "2009-2005",
+  "2004-2000",
+  "1990s",
+  "1980s",
+  "Earlier",
+];
+for (let i = 2015; i <= currentYear; i++) {
+  years.unshift(i);
+}
+export { years };

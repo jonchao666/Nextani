@@ -46,7 +46,11 @@ export default function Sidebar({ absolute, toggleSidebar }) {
           onClick={handleShowMoreClick}
           as={Link}
           variant={theme === "light" ? "light" : "ghost"}
-          className="justify-start border-none"
+          className={
+            selectedButton === name
+              ? "justify-start border-none font-medium"
+              : "justify-start border-none"
+          }
         >
           <span
             className={`material-symbols-outlined mr-4`}
@@ -71,7 +75,11 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         href={
           name === "home"
             ? "/"
-            : Explore.includes(name) && `/category?category=${name}`
+            : name === "Category"
+            ? "animeIndex"
+            : Explore.includes(name)
+            ? `/category?category=${name}`
+            : undefined
         }
         disableAnimation
         onClick={() => handleButtonClick(name)}
@@ -85,7 +93,11 @@ export default function Sidebar({ absolute, toggleSidebar }) {
             ? "solid"
             : "ghost"
         }
-        className="justify-start border-none"
+        className={
+          selectedButton === name
+            ? "justify-start border-none font-medium"
+            : "justify-start border-none"
+        }
       >
         <span
           className={`material-symbols-outlined mr-4`}
@@ -157,6 +169,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         <div className="flex flex-col border-b-1 p-3">
           <span className="px-3 pt-1.5 pb-1 font-medium">Explore</span>
           <div className="flex flex-col">
+            {renderButton("category", "Category", "Category")}
             {renderButton("trending_up", "Popular", "Popular")}
             {renderButton("leaderboard", "Top", "Top")}
             {renderButton("movie", "Movie", "Movie")}

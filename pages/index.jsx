@@ -16,6 +16,7 @@ import {
 } from "@/constans/categoryData";
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function HomePage({ slidersData, calendarData }) {
   const showSidebars = useSelector(
     (state) => state.sidebarVisibility.showSidebars

@@ -13,6 +13,7 @@ export default function MiniSidebar() {
 
   const renderButton = (iconName, label, name) => (
     <Button
+      href={name === "home" ? "/" : undefined}
       disableAnimation
       as={Link}
       onClick={() => handleButtonClick(name)}

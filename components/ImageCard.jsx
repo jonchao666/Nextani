@@ -3,7 +3,11 @@ import { useState } from "react";
 
 export default function ImageCard({ data, ep }) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false); // 新增状态用于追踪图片加载是否失败
 
+  if (hasError) {
+    return null;
+  }
   return (
     <div className=" w-[210px]">
       <Card
@@ -16,6 +20,7 @@ export default function ImageCard({ data, ep }) {
             className="h-[302px] w-[210px] object-cover "
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
+            onError={() => setHasError(true)}
             isZoomed
             radius="none"
             alt={data.apiData.title}
@@ -54,7 +59,9 @@ export default function ImageCard({ data, ep }) {
                 .map((genre) => genre.name)
                 .join("&")
             : "Anime"}{" "}
-          <span className="text-2xl align-[-4px]"> &middot;</span>{" "}
+          {data.apiData.aired.prop.from.year && (
+            <span className="text-2xl align-[-4px]"> &middot;</span>
+          )}{" "}
           {data.apiData.aired.prop.from.year}
         </span>
       </div>

@@ -1,25 +1,19 @@
-import Layout from "@/components/Layout";
-import ImageCard from "@/components/ImageCard";
-import axios from "axios";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import ImageCard from "./ImageCard";
+import { useState, useEffect } from "react";
 import { useResponsive } from "../hooks/useResponsive";
-import {
-  genres,
-  directors,
-  categoryTitles,
-  types,
-} from "@/constans/categoryData";
-import {
-  getLastSeasonAndYear,
-  getNextSeasonAndYear,
-} from "@/helpers/getSeasonAndYear";
+import axios from "axios";
+import { parseYears } from "@/helpers/parseCategoryYears";
 
-export default function Category() {
-  const router = useRouter();
-  const { category } = router.query;
+export default function ShowIndex({
+  selectedButtonSortby,
+  selectedButtonGenres,
+  selectedButtonTypes,
+  selectedButtonStatus,
+  selectedButtonYear,
+  selectedButtonSeason,
+}) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -27,40 +21,30 @@ export default function Category() {
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [colToShow, setColToShow] = useState(1);
 
-  const slidersData = async () => {
-    if (loading || !hasMoreData || !category) return;
+  const year = {};
+  const indexData = async () => {
+    if (loading || !hasMoreData) return;
     setLoading(true);
 
     let params = {};
 
     params.page = page;
-    if (genres.includes(category)) {
-      // 如果是流派类别
-      params.genre = category;
-      params.sortBy = "members";
-    } else if (directors.includes(category)) {
-      // 如果是导演类别
-      params.director = category;
-      params.sortBy = "members";
-    } else if (types.includes(category)) {
-      params.type = category;
-      params.sortBy = "members";
-    } else if (category === "thisSeasonPopular") {
-      const seasonYear = getLastSeasonAndYear();
-
-      params.year = seasonYear[0].year;
-      params.season = seasonYear[0].season;
-      params.sortBy = "members";
-    } else if (category === "nextSeason") {
-      const seasonYear = getNextSeasonAndYear();
-      params.year = seasonYear[0].year;
-      params.season = seasonYear[0].season;
-      params.sortBy = "members";
-    } else if (category === "Popular") {
-      params.sortBy = "members";
-    } else if (category === "Top") {
-      params.sortBy = "score";
-    }
+    params.sortBy =
+      selectedButtonSortby === "Popular"
+        ? "members"
+        : selectedButtonSortby === "Score"
+        ? "score"
+        : null;
+    params.genre =
+      selectedButtonGenres !== "All Genres" ? selectedButtonGenres : null;
+    params.type =
+      selectedButtonTypes !== "All Types" ? selectedButtonTypes : null;
+    params.status =
+      selectedButtonStatus !== "All Status" ? selectedButtonStatus : null;
+    params.year =
+      selectedButtonYear !== "All Year" ? parseYears(selectedButtonYear) : null;
+    params.season =
+      selectedButtonSeason !== "All Season" ? selectedButtonSeason : null;
 
     const url = `${process.env.API_URL}/anime`;
 
@@ -92,21 +76,24 @@ export default function Category() {
         setPage((prev) => prev + 1);
       }
     } catch (error) {
-      console.error(`Error fetching ${category}`, error);
+      console.error("Error fetching data", error);
     }
 
     setLoading(false);
   };
 
   useEffect(() => {
-    if (category) {
-      setData([]); // 重置数据
-      setPage(1); // 重置页码
-      setHasMoreData(true); // 重置是否有更多数据的标志
-    }
-  }, [category]);
-  const lastElementRef = useInfiniteScroll(slidersData);
-
+    setData([]);
+    setPage(1);
+    setHasMoreData(true);
+  }, [
+    selectedButtonSortby,
+    selectedButtonGenres,
+    selectedButtonTypes,
+    selectedButtonStatus,
+    selectedButtonYear,
+    selectedButtonSeason,
+  ]);
   useEffect(() => {
     // 根据屏幕尺寸更新 slidesToShow 的值
     const newColToshow = isXl
@@ -122,12 +109,9 @@ export default function Category() {
       : "grid-cols-1";
     setColToShow(newColToshow);
   }, [isXl, isLg, isMd, isSm, isXs]);
-
+  const lastElementRef = useInfiniteScroll(indexData);
   return (
-    <Layout>
-      <div className="text-xl  font-bold line-clamp-1">
-        {categoryTitles[category] || category}
-      </div>
+    <div>
       <div className={`w-full grid ${colToShow} gap-y-6 mt-6 `}>
         {data && data.map((item) => <ImageCard key={item._id} data={item} />)}
       </div>
@@ -139,6 +123,6 @@ export default function Category() {
         />
       )}
       <div ref={lastElementRef} className="h-1" />
-    </Layout>
+    </div>
   );
 }
