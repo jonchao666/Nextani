@@ -2,7 +2,8 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import MiniSidebar from "./MiniSidebar";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSidebar } from "@/reducers/sidebarSlice";
+import { toggleSidebar, setShowSidebar } from "@/reducers/sidebarSlice";
+
 import useMainResponsive from "@/hooks/useMainResponsive";
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -16,6 +17,13 @@ const Layout = ({ children, col1Width }) => {
   const dispatch = useDispatch();
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [mainWidth, setMainWidth] = useState();
+
+  useEffect(() => {
+    if (!showSidebars) {
+      dispatch(setShowSidebar(false));
+    }
+  }, [dispatch, showSidebars]);
+
   useEffect(() => {
     const width = isXl
       ? "1284px"

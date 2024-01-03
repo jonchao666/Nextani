@@ -6,7 +6,7 @@ export default function AnimeInformation({ data }) {
   }
 
   return (
-    <div className="sm:w-[154px] mr-4 flex whitespace-nowrap sm:whitespace-normal sm:flex-col shrink-0 overflow-x-scroll mb-6">
+    <div className="sm:w-[154px] mr-4 flex whitespace-nowrap sm:whitespace-normal sm:flex-col shrink-0 overflow-x-scroll sm:overflow-auto mb-6">
       {data.status && (
         <div className="flex flex-col pb-3.5 pr-6">
           <span className="font-medium text-sm pb-1">Status</span>

@@ -15,14 +15,12 @@ export default function DetailsPanelBottomOpened({
       <div className="flex justify-between">
         <div className=" flex flex-col">
           <span className="text-[#ffa058] text-xl font-bold">
-            {data.score.toFixed(2)}
+            {data.score ? data.score.toFixed(2) : "N/A"}
           </span>
 
-          {data.scored_by && (
-            <span className="text-xs text-[#61666d] mt-0.5">
-              {data.scored_by} users
-            </span>
-          )}
+          <span className="text-xs text-[#61666d] mt-0.5">
+            {data.scored_by ? data.scored_by : "- "}users
+          </span>
         </div>
         <Link
           onClick={() => setSynopsisOpened(false)}

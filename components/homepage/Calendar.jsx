@@ -80,8 +80,9 @@ export default function Calendar({ calendarData }) {
             theme === "light"
               ? "group-data-[selected=true]:text-[#4c93ff]"
               : "",
-          panel: "p-0",
-          tabList: "p-0",
+          panel: "p-0 ",
+          tabList:
+            "p-0  w-screen   custom458:w-[376px] ml-custom458 custom458:ml-0 overflow-visible",
         }}
       >
         {tabs}

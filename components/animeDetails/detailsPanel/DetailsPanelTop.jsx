@@ -1,7 +1,7 @@
 import DetailsPanelButton from "./DetailsPanelButton";
 import { Button } from "@nextui-org/react";
 import { HeartIcon } from "@/icons";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function DetailsPanelTop({
   data,
@@ -9,18 +9,21 @@ export default function DetailsPanelTop({
   videos,
   setVideoUrl,
 }) {
-  let PV = [],
-    otherPV = [];
-  if (videos) {
-    for (let v of videos) {
-      if (v.title.indexOf("PV") === 0) {
-        PV.unshift(v);
-      } else {
-        otherPV.push(v);
+  const PV = useMemo(() => {
+    let tempPV = [];
+    if (videos) {
+      for (let v of videos) {
+        tempPV.unshift(v);
       }
     }
-  }
-  const [selectedButtonIndex, setSelectedButtonIndex] = useState(PV.length - 1);
+    return tempPV;
+  }, [videos]);
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState();
+
+  useEffect(() => {
+    setSelectedButtonIndex(PV.length - 1);
+  }, [PV]);
+
   const handleButtonClick = (video, index) => {
     setVideoUrl(video.trailer.embed_url.replace("autoplay=1", "autoplay=0"));
     setSelectedButtonIndex(index);
