@@ -1,12 +1,15 @@
-import ImageCard from "@/components/ImageCard";
-import { useState, useEffect } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useResponsive } from "../hooks/useResponsive";
+import ImageCard from "../ImageCard";
+import { useResponsive } from "../../hooks/useResponsive";
+import { useTheme } from "next-themes";
 
-export default function CalendarTabContent({ data }) {
+function ShowSlider({ data, title, category }) {
+  const { theme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [slidesToShow, setSlidesToShow] = useState(1);
@@ -27,7 +30,7 @@ export default function CalendarTabContent({ data }) {
          "
       >
         <span
-          className="material-symbols-outlined "
+          className={`material-symbols-outlined`}
           style={{
             fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
           }}
@@ -47,7 +50,7 @@ export default function CalendarTabContent({ data }) {
         isIconOnly
         style={{ display: currentSlide === 0 ? "none" : "inline-flex" }}
         className="z-30 bg-background dark:bg-default-100 hover:bg-default dark:hover:bg-default-300 absolute top-[145px] -left-5  
-           rounded-full shadow-sliderArrow
+           rounded-full  shadow-sliderArrow 
           "
       >
         <span
@@ -78,6 +81,13 @@ export default function CalendarTabContent({ data }) {
     setSlidesToShow(newSlidesToShow);
   }, [isXl, isLg, isMd, isSm, isXs]);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
   // Slider settings
   const settings = {
     dots: false,
@@ -89,13 +99,32 @@ export default function CalendarTabContent({ data }) {
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     autoplay: false,
-    autoplaySpeed: 10000,
+
+    draggable: false,
     beforeChange: (next) => setCurrentSlide(next),
   };
 
   return (
-    <Slider {...settings}>
-      {data && data.map((d) => <ImageCard key={d._id} data={d} ep={true} />)}
-    </Slider>
+    <div className="mx-auto w-full  border-t-1  dark:border-customGray">
+      <div className="mt-5   flex items-center justify-between">
+        <span className="text-xl  font-bold line-clamp-1">{title}</span>
+
+        <Button
+          variant={theme === "light" ? "light" : "ghost"}
+          radius="full"
+          color="primary"
+          className="border-none hover:opacity-100"
+          href={`/category?category=${category}`}
+          as={Link}
+        >
+          View All
+        </Button>
+      </div>
+
+      <Slider {...settings} className="mt-5 mb-6 bg-background">
+        {data && data.map((item) => <ImageCard key={item._id} data={item} />)}
+      </Slider>
+    </div>
   );
 }
+export default ShowSlider;

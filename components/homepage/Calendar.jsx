@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Tabs, Tab } from "@nextui-org/react";
 import moment from "moment-timezone";
-import CalendarTabContent from "@/components/CalendarTabContent";
+import CalendarTabContent from "@/components/homepage/CalendarTabContent";
 import { useTheme } from "next-themes";
 
-export default function ReleaseCalendar({ calendarData }) {
+export default function Calendar({ calendarData }) {
   const timezoneOffset = useMemo(() => {
     const localTime = moment();
     const tokyoTime = moment.tz("Asia/Tokyo");
@@ -67,16 +67,15 @@ export default function ReleaseCalendar({ calendarData }) {
   ));
 
   return (
-    <div className="flex w-full flex-col mb-6">
+    <div className="flex  flex-col mb-6 ">
       <Tabs
-        aria-label="Options"
         selectedKey={selected}
         onSelectionChange={setSelected}
         color="primary"
-        className="p-0 mb-4"
+        className="p-0 mb-4  "
         classNames={{
           cursor: theme === "light" ? "bg-[#4C93FF1A] " : "",
-          tab: "  text-xs",
+          tab: "  text-xs ",
           tabContent:
             theme === "light"
               ? "group-data-[selected=true]:text-[#4c93ff]"

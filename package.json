@@ -27,7 +27,8 @@
     "react-responsive": "^9.0.2",
     "react-slick": "^0.29.0",
     "redux": "^4.2.1",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
     "autoprefixer": "^10",

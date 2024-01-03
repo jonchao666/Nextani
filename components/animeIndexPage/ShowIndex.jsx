@@ -1,8 +1,8 @@
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
-import ImageCard from "./ImageCard";
+import ImageCard from "../ImageCard";
 import { useState, useEffect } from "react";
-import { useResponsive } from "../hooks/useResponsive";
+import { useResponsive } from "../../hooks/useResponsive";
 import axios from "axios";
 import { parseYears } from "@/helpers/parseCategoryYears";
 
@@ -98,7 +98,7 @@ export default function ShowIndex({
     selectedButtonSeason,
     selectedButtonRated,
   ]);
-  console.log(page);
+
   useEffect(() => {
     // 根据屏幕尺寸更新 slidesToShow 的值
     const newColToshow = isXl

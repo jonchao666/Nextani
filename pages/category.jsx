@@ -1,4 +1,4 @@
-import Layout from "@/components/Layout";
+import Layout from "@/components/layout/Layout";
 import ImageCard from "@/components/ImageCard";
 import axios from "axios";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";

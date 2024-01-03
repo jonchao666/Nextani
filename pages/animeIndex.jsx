@@ -1,9 +1,9 @@
-import Layout from "@/components/Layout";
+import Layout from "@/components/layout/Layout";
 import { Button } from "@nextui-org/react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { genres, types, years } from "@/constans/categoryData";
-import ShowIndex from "@/components/ShowIndex";
+import ShowIndex from "@/components/animeIndexPage/ShowIndex";
 
 export default function AnimeIndex() {
   const { theme } = useTheme();
@@ -91,7 +91,7 @@ export default function AnimeIndex() {
 
   return (
     <Layout>
-      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 pb-6  w-full h-full border-b-1  dark:border-customGray">
+      <div className="w-screen   custom458:w-full ml-custom458 custom458:ml-0 grid grid-cols-[70px_1fr] gap-x-4 gap-y-2 pb-6   h-full border-b-1  dark:border-customGray ">
         {renderButton("Genres", "Genres", "Genres")}
         <div>
           {renderButton("All Genres", "All", "Genres")}

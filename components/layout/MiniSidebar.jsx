@@ -18,7 +18,7 @@ export default function MiniSidebar() {
       as={Link}
       onClick={() => handleButtonClick(name)}
       variant={theme === "light" ? "light" : "ghost"}
-      className="flex flex-col  pt-4 pb-3.5 px-0 w-full h-[74px] border-none min-w-0 min-h-0"
+      className="flex flex-col hover:opacity-100 pt-4 pb-3.5 px-0 w-full h-[74px] border-none min-w-0 min-h-0"
     >
       <span
         className="material-symbols-outlined -mb-2"
@@ -42,7 +42,7 @@ export default function MiniSidebar() {
       <div className="flex flex-col mt-1 ">
         {renderButton("home", "Home", "home")}
         {renderButton("subscriptions", "Watchlist", "watchlist")}
-        {renderButton("favorite", "Likes", "likes")}
+        {renderButton("favorite", "Favorites", "favorites")}
         {renderButton("history", "History", "history")}
       </div>
     </div>

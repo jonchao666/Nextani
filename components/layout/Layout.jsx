@@ -6,7 +6,7 @@ import { toggleSidebar } from "@/reducers/sidebarSlice";
 import useMainResponsive from "@/hooks/useMainResponsive";
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
-const Layout = ({ children }) => {
+const Layout = ({ children, col1Width }) => {
   useMainResponsive();
 
   const showSidebar = useSelector((state) => state.sidebar.showSidebar);
@@ -27,9 +27,11 @@ const Layout = ({ children }) => {
       ? "642px"
       : isXs
       ? "428px"
-      : "214px";
+      : col1Width
+      ? col1Width
+      : "210px";
     setMainWidth(width);
-  }, [isXl, isLg, isMd, isSm, isXs]);
+  }, [isXl, isLg, isMd, isSm, isXs, col1Width]);
 
   return (
     <div>

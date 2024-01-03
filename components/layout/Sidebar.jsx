@@ -48,8 +48,8 @@ export default function Sidebar({ absolute, toggleSidebar }) {
           variant={theme === "light" ? "light" : "ghost"}
           className={
             selectedButton === name
-              ? "justify-start border-none font-medium"
-              : "justify-start border-none"
+              ? "justify-start border-none font-medium hover:opacity-100"
+              : "justify-start border-none hover:opacity-100"
           }
         >
           <span
@@ -76,7 +76,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
           name === "home"
             ? "/"
             : name === "Category"
-            ? "animeIndex"
+            ? "/animeIndex"
             : Explore.includes(name)
             ? `/category?category=${name}`
             : undefined
@@ -95,8 +95,8 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         }
         className={
           selectedButton === name
-            ? "justify-start border-none font-medium"
-            : "justify-start border-none"
+            ? "justify-start border-none font-medium hover:opacity-100"
+            : "justify-start border-none hover:opacity-100"
         }
       >
         <span
@@ -136,75 +136,82 @@ export default function Sidebar({ absolute, toggleSidebar }) {
               <GuideButtonIcon />
             </Button>
 
-            <NavbarBrand>
+            <NavbarBrand href="/" as={Link}>
               <p className="font-bold text-2xl ">NEXTANI</p>
             </NavbarBrand>
           </Navbar>
         )}
       </div>
-      <div className=" flex flex-col w-full h-full overscroll-none  hover:overflow-auto  ">
-        <div className="border-b-1 flex flex-col p-3 ">
-          {renderButton("home", "Home", "home")}
-          {renderButton("subscriptions", "Watchlist", "watchlist")}
-          {renderButton("favorite", "Likes", "likes")}
-          {renderButton("history", "History", "history")}
-        </div>
+      <div className=" flex flex-col w-full h-full overscroll-none  hover:overflow-auto  justify-between">
+        <div>
+          <div className="border-b-1 flex flex-col p-3 ">
+            {renderButton("home", "Home", "home")}
+            {renderButton("subscriptions", "Watchlist", "watchlist")}
+            {renderButton("favorite", "Favorites", "favorites")}
+            {renderButton("history", "History", "history")}
+          </div>
 
-        <div className="border-b-1 flex flex-col px-8 py-4 justify-start items-start">
-          <span className="text-sm">
-            Sign in to like Animes, comment, and add to watchlist.
-          </span>
-          <Button
-            startContent={<SignInIcon size={24} />}
-            className="text-sm font-medium pl-2 pr-3 border-1 dark:border-customGray mt-3"
-            size="sm"
-            variant={theme === "light" ? "light" : "ghost"}
-            color="primary"
-            radius="full"
-          >
-            <span className="-ml-1">Sign in</span>
-          </Button>
-        </div>
+          <div className="border-b-1 flex flex-col px-8 py-4 justify-start items-start">
+            <span className="text-sm">
+              Sign in to like Animes, comment, and add to watchlist.
+            </span>
+            <Button
+              startContent={<SignInIcon size={24} />}
+              className="text-sm font-medium pl-2 pr-3 border-1 dark:border-customGray mt-3"
+              size="sm"
+              variant={theme === "light" ? "light" : "ghost"}
+              color="primary"
+              radius="full"
+            >
+              <span className="-ml-1">Sign in</span>
+            </Button>
+          </div>
 
-        <div className="flex flex-col border-b-1 p-3">
-          <span className="px-3 pt-1.5 pb-1 font-medium">Explore</span>
-          <div className="flex flex-col">
-            {renderButton("category", "Category", "Category")}
-            {renderButton("trending_up", "Popular", "Popular")}
-            {renderButton("leaderboard", "Top", "Top")}
-            {renderButton("movie", "Movie", "Movie")}
-            {renderButton("library_music", "Music", "Music")}
-            {renderButton("emoji_events", "Award Winning", "Award Winning")}
+          <div className="flex flex-col  p-3">
+            <span className="px-3 pt-1.5 pb-1 font-medium">Explore</span>
+            <div className="flex flex-col">
+              {renderButton("category", "Category", "Category")}
+              {renderButton("trending_up", "Popular", "Popular")}
+              {renderButton("leaderboard", "Top", "Top")}
+              {renderButton("movie", "Movie", "Movie")}
+              {renderButton("library_music", "Music", "Music")}
+              {renderButton("emoji_events", "Award Winning", "Award Winning")}
 
-            {/* {renderButton("expand_more", "Show more", "show more")}
+              {/* {renderButton("expand_more", "Show more", "show more")}
             {renderButton("expand_less", "Show less", "show less")} */}
+            </div>
           </div>
         </div>
-
-        <div className="flex flex-col border-b-1 p-3">
-          {renderButton("settings", "Settings", "settings")}
-          {renderButton("feedback", "Send feedback", "feedback")}
-        </div>
-
-        <footer className="flex flex-col">
+        <footer className="flex flex-col border-t-1">
           <div className="pt-4 px-6 flex flex-wrap">
-            <Link className="text-xs mr-2 font-medium text-gray-600 ">
+            <Link
+              href="/legalPages/About"
+              className="text-xs mr-2 font-medium text-gray-600 "
+            >
               About
             </Link>
-            <Link className="text-xs mr-2 font-medium text-gray-600">
-              Copyright
-            </Link>
-            <Link className="text-xs mr-2 font-medium text-gray-600">
+
+            <Link
+              href="/legalPages/Contact us"
+              className="text-xs mr-2 font-medium text-gray-600"
+            >
               Contact us
             </Link>
-            <Link className="text-xs mr-2 font-medium text-gray-600">
-              Terms
+            <Link
+              href="/legalPages/Terms of Service"
+              className="text-xs mr-2 font-medium text-gray-600"
+            >
+              Terms of Service
             </Link>
-            <Link className="text-xs mr-2 font-medium text-gray-600">
-              Privacy
+            <Link
+              href="/legalPages/Privacy Policy"
+              className="text-xs mr-2 font-medium text-gray-600"
+            >
+              Privacy Policy
             </Link>
           </div>
           <div className="text-xs py-4 px-6 text-[#909090]">© 2023 Nextani</div>
+          <div className="h-16"></div>
         </footer>
       </div>
     </div>

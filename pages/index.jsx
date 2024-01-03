@@ -1,7 +1,7 @@
-import Layout from "@/components/Layout";
-import ShowSlider from "@/components/ShowSlider";
-import HomepageInfiniteScroll from "@/components/HomepageInfiniteScroll";
-import ReleaseCalendar from "@/components/Calendar";
+import Layout from "@/components/layout/Layout";
+import ShowSlider from "@/components/homepage/ShowSlider";
+import HomepageInfiniteScroll from "@/components/homepage/HomepageInfiniteScroll";
+import Calendar from "@/components/homepage/Calendar";
 import { useSelector } from "react-redux";
 import {
   getLastSeasonAndYear,
@@ -39,7 +39,7 @@ export default function HomePage({ slidersData, calendarData }) {
   }, [isXl, isLg, isMd, isSm, isXs]);
   return (
     <Layout>
-      {showSidebars && <ReleaseCalendar calendarData={calendarData} />}
+      <Calendar calendarData={calendarData} />
       {slidersData.map(({ title, data }) => (
         <ShowSlider
           category={title}

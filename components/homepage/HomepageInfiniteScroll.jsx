@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
-import ShowSlider from "@/components/ShowSlider";
+import ShowSlider from "@/components/homepage/ShowSlider";
 import { CircularProgress } from "@nextui-org/react";
 import {
   categoryTitles,
