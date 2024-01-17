@@ -24,34 +24,41 @@ export default function CharacterCard({ character }) {
             <div className="text-left text-[#61666d]">{character.role}</div>
           </div>
           {character.voice_actors.length > 0 && (
-            <Link
-              href={`/voiceActor?mal_id=${character.voice_actors[0].person.mal_id}`}
+            <div
+              href={`/person?mal_id=${character.voice_actors[0].person.mal_id}`}
               className="flex flex-col justify-between p-2.5"
             >
-              <div className=" text-right">
+              <Link
+                href={`/person?mal_id=${character.voice_actors[0].person.mal_id}`}
+                className=" text-right"
+              >
                 {character.voice_actors[0].person.name}{" "}
-              </div>
+              </Link>
               <div className="flex-grow"></div>
               <div className="text-right text-[#61666d]">
                 {character.voice_actors[0].language}
               </div>
-            </Link>
+            </div>
           )}
         </div>
 
         {character.voice_actors.length > 0 && (
-          <Image
-            radius="none"
-            className="w-[60px] h-[81px] object-cover"
-            alt={character.voice_actors[0].person.name}
-            src={
-              character.voice_actors[0].person.images.jpg.image_url.startsWith(
-                "https://cdn.myanimelist.net/images/questionmark_23.gif"
-              )
-                ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
-                : character.voice_actors[0].person.images.jpg.image_url
-            }
-          ></Image>
+          <Link
+            href={`/person?mal_id=${character.voice_actors[0].person.mal_id}`}
+          >
+            <Image
+              radius="none"
+              className="w-[60px] h-[81px] object-cover"
+              alt={character.voice_actors[0].person.name}
+              src={
+                character.voice_actors[0].person.images.jpg.image_url.startsWith(
+                  "https://cdn.myanimelist.net/images/questionmark_23.gif"
+                )
+                  ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
+                  : character.voice_actors[0].person.images.jpg.image_url
+              }
+            ></Image>
+          </Link>
         )}
       </Card>
     </div>

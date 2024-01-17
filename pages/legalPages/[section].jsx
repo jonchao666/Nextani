@@ -14,9 +14,8 @@ const AboutPage = () => (
 
           <p className="md:text-xl lg:text-2xl mt-20 w-2/3 text-center">
             Explore diverse genres, share your favorites, and create
-            personalized playlists. At <strong>NEXTANI</strong>, we unite
-            through stories and adventures in anime. Join our community and
-            discover more!
+            personalized playlists. At NextAni, we unite through stories and
+            adventures in anime. Join our community and discover more!
           </p>
         </div>
       </div>
@@ -40,14 +39,13 @@ const ContactPage = () => (
             Contact me at{" "}
             <a
               className="underline font-bold"
-              href="mailto:contact@nextani.net"
+              href="mailto:nextani.net@gmail.com"
             >
               contact@nextani.net
             </a>
-            . As the sole creator of <strong>NEXTANI</strong>, I&apos;m
-            committed to continuously improving your experience on this
-            platform. Your insights are invaluable, so don&apos;t hesitate to
-            reach out!
+            . As the sole creator of NextAni, I&apos;m committed to continuously
+            improving your experience on this platform. Your insights are
+            invaluable, so don&apos;t hesitate to reach out!
           </p>
         </div>
       </div>
@@ -67,7 +65,7 @@ const TermsOfServicePage = () => (
           </p>
 
           <p className="md:text-xl lg:text-2xl mt-10 w-2/3 ">
-            By using NEXTANI, you agree to our Terms of Use. Our platform is
+            By using NextAni, you agree to our Terms of Use. Our platform is
             dedicated to sharing and enjoying anime content responsibly. Users
             can create and share playlists, and participate in community
             discussions. Please respect copyright laws, and refrain from posting
@@ -93,7 +91,7 @@ const PrivacyPolicyPage = () => (
           </p>
 
           <p className="md:text-xl lg:text-2xl mt-10 w-2/3 ">
-            Your privacy is a top priority at NEXTANI. We collect essential data
+            Your privacy is a top priority at NextAni. We collect essential data
             to enhance your experience, like account details and preferences for
             personalized content. Rest assured, your personal information is
             kept confidential and is never shared with third parties without
@@ -111,14 +109,14 @@ export default function LegalPages() {
   const router = useRouter();
   const { section } = router.query;
 
-  switch (section?.toLowerCase()) {
-    case "about":
+  switch (section) {
+    case "About":
       return <AboutPage />;
-    case "contact us":
+    case "ContactUs":
       return <ContactPage />;
-    case "terms of service":
+    case "TermsOfService":
       return <TermsOfServicePage />;
-    case "privacy policy":
+    case "PrivacyPolicy":
       return <PrivacyPolicyPage />;
   }
 }

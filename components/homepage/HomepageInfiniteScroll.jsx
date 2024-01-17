@@ -2,12 +2,7 @@ import { useEffect, useState } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import ShowSlider from "@/components/homepage/ShowSlider";
 import { CircularProgress } from "@nextui-org/react";
-import {
-  categoryTitles,
-  categories,
-  genres,
-  directors,
-} from "@/constans/categoryData";
+import { categoryTitles, categories, genres } from "@/constans/categoryData";
 import axios from "axios";
 
 export default function HomepageInfiniteScroll() {
@@ -30,10 +25,6 @@ export default function HomepageInfiniteScroll() {
       if (genres.includes(category)) {
         // 如果是流派类别
         params.genre = category;
-        params.sortBy = "members";
-      } else if (directors.includes(category)) {
-        // 如果是导演类别
-        params.director = category;
         params.sortBy = "members";
       }
 
@@ -80,6 +71,7 @@ export default function HomepageInfiniteScroll() {
           aria-label="Loading..."
         />
       )}
+
       <div ref={lastElementRef} className="h-1" />
     </div>
   );

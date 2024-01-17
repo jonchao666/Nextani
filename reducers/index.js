@@ -1,12 +1,14 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import selectedButtonReducer from "./selectedButtonSlice";
+
 import sidebarReducer from "./sidebarSlice";
 import sidebarVisibilityReducer from "./sidebarVisibilitySlice";
+import userReducer from "./userSlice";
 
 const rootReducer = combineReducers({
   sidebar: sidebarReducer,
-  selectedButton: selectedButtonReducer,
+
   sidebarVisibility: sidebarVisibilityReducer,
+  user: userReducer,
 });
 
 export default rootReducer;

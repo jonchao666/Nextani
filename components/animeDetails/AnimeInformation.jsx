@@ -1,3 +1,5 @@
+import { Link } from "@nextui-org/react";
+
 export default function AnimeInformation({ data }) {
   function formatDate(dateString) {
     const options = { year: "numeric", month: "short", day: "numeric" };
@@ -63,14 +65,24 @@ export default function AnimeInformation({ data }) {
       {data.rank && (
         <div className="flex flex-col pb-3.5 pr-6">
           <span className="font-medium text-sm pb-1">Rank</span>
-          <span className="text-xs text-[#61666d]">#{data.rank}</span>
+          <Link
+            href="/animeIndex?category=Top"
+            className="text-xs text-[#61666d]"
+          >
+            #{data.rank}
+          </Link>
         </div>
       )}
 
       {data.popularity && (
         <div className="flex flex-col pb-3.5 pr-6">
           <span className="font-medium text-sm pb-1">Popularity</span>
-          <span className="text-xs text-[#61666d]">#{data.popularity}</span>
+          <Link
+            href="/animeIndex?category=Popular"
+            className="text-xs text-[#61666d]"
+          >
+            #{data.popularity}
+          </Link>
         </div>
       )}
 

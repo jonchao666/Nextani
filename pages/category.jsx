@@ -38,13 +38,15 @@ export default function Category() {
       // 如果是流派类别
       params.genre = category;
       params.sortBy = "members";
-    } else if (directors.includes(category)) {
-      // 如果是导演类别
-      params.director = category;
-      params.sortBy = "members";
-    } else if (types.includes(category)) {
+    }
+    // else if (directors.includes(category)) {
+    //   // 如果是导演类别
+    //   params.director = category;
+    //   params.sortBy = "members";
+    // }
+    else if (types.includes(category)) {
       params.type = category;
-      params.sortBy = "members";
+      params.sortBy = "score";
     } else if (category === "thisSeasonPopular") {
       const seasonYear = getLastSeasonAndYear();
 

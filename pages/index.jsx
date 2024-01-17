@@ -73,6 +73,12 @@ export async function getStaticProps() {
         params.year = seasonYear[0].year;
         params.season = seasonYear[0].season;
         params.sortBy = "members";
+      } else if (category === "thisSeasonTop") {
+        const seasonYear = getLastSeasonAndYear();
+
+        params.year = seasonYear[0].year;
+        params.season = seasonYear[0].season;
+        params.sortBy = "score";
       } else if (category === "nextSeason") {
         const seasonYear = getNextSeasonAndYear();
         params.year = seasonYear[0].year;

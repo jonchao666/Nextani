@@ -1,10 +1,12 @@
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
 import { SearchIcon, SignInIcon, GuideButtonIcon } from "@/icons";
-import { Button, Link, Tooltip } from "@nextui-org/react";
+import { Button, Link, Avatar } from "@nextui-org/react";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import useSearch from "@/hooks/useSearch";
+import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/router";
+import AvatarDropdown from "./AvatarDropdown";
 import {
   Input,
   Navbar,
@@ -22,6 +24,8 @@ export default function Header({ toggleSidebar, noMenu }) {
   const searchRef = useRef(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const blurTimeoutRef = useRef();
+  const isAuthenticated = useAuth();
+
   const handleFocus = () => {
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
@@ -149,16 +153,22 @@ export default function Header({ toggleSidebar, noMenu }) {
 
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button
-            startContent={<SignInIcon size={24} />}
-            className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-customGray "
-            size="sm"
-            variant={theme === "light" ? "light" : "ghost"}
-            radius="full"
-            color="primary"
-          >
-            <span className="-ml-1">Sign in</span>
-          </Button>
+          {isAuthenticated ? (
+            <AvatarDropdown />
+          ) : (
+            <Button
+              as={Link}
+              href="/login"
+              startContent={<SignInIcon size={24} />}
+              className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-customGray "
+              size="sm"
+              variant={theme === "light" ? "light" : "ghost"}
+              radius="full"
+              color="primary"
+            >
+              <span className="-ml-1">Sign in</span>
+            </Button>
+          )}
         </NavbarItem>
         <ThemeSwitcher />
       </NavbarContent>

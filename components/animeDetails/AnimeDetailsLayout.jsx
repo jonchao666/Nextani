@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setShowSidebar, toggleSidebar } from "@/reducers/sidebarSlice";
 import Sidebar from "@/components/layout/Sidebar";
 import { useEffect, useState } from "react";
+import { fetchUserData } from "@/reducers/userSlice";
 
 export default function AnimeDetailsLayout({
   children,
@@ -21,6 +22,14 @@ export default function AnimeDetailsLayout({
   }, [dispatch]);
 
   const mainCharacters = [];
+  const jwt =
+    typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
+
+  useEffect(() => {
+    if (jwt) {
+      dispatch(fetchUserData(jwt));
+    }
+  }, [jwt, dispatch]);
 
   if (characters && characters.data) {
     for (let character of characters.data) {

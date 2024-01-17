@@ -1,14 +1,35 @@
 import { Link, Button } from "@nextui-org/react";
 import { useTheme } from "next-themes";
-import { useSelector, useDispatch } from "react-redux";
-import { setSelectedButton } from "@/reducers/selectedButtonSlice";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 export default function MiniSidebar() {
   const { theme } = useTheme();
-  const selectedButton = useSelector((state) => state.selectedButton.value);
-  const dispatch = useDispatch();
-  const handleButtonClick = (buttonName) => {
-    dispatch(setSelectedButton(buttonName));
+  const [selectedButton, setSelectedButton] = useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // 根据当前路由来设置 selectedButton
+    switch (router.pathname) {
+      case "/":
+        setSelectedButton("home");
+        break;
+      case "/watchlist":
+        setSelectedButton("watchlist");
+        break;
+
+      case "/favorites":
+        setSelectedButton("favorites");
+        break;
+      case "/history":
+        setSelectedButton("history");
+        break;
+    }
+  }, [router.pathname]);
+
+  const handleButtonClick = (name) => {
+    setSelectedButton(name);
   };
 
   const renderButton = (iconName, label, name) => (

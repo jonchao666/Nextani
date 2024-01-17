@@ -3,13 +3,13 @@ import Sidebar from "./Sidebar";
 import MiniSidebar from "./MiniSidebar";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleSidebar, setShowSidebar } from "@/reducers/sidebarSlice";
-
 import useMainResponsive from "@/hooks/useMainResponsive";
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
+import { fetchUserData } from "@/reducers/userSlice";
+
 const Layout = ({ children, col1Width }) => {
   useMainResponsive();
-
   const showSidebar = useSelector((state) => state.sidebar.showSidebar);
   const showSidebars = useSelector(
     (state) => state.sidebarVisibility.showSidebars
@@ -17,6 +17,15 @@ const Layout = ({ children, col1Width }) => {
   const dispatch = useDispatch();
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [mainWidth, setMainWidth] = useState();
+
+  const jwt =
+    typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
+
+  useEffect(() => {
+    if (jwt) {
+      dispatch(fetchUserData(jwt));
+    }
+  }, [jwt, dispatch]);
 
   useEffect(() => {
     if (!showSidebars) {

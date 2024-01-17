@@ -1,14 +1,20 @@
 import Layout from "@/components/layout/Layout";
-import { Button } from "@nextui-org/react";
-import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
-import { genres, types, years } from "@/constans/categoryData";
+import { genres, types } from "@/constans/categoryData";
 import ShowIndex from "@/components/animeIndexPage/ShowIndex";
+import { useRouter } from "next/router";
+import {
+  getLastSeasonAndYear,
+  getNextSeasonAndYear,
+} from "@/helpers/getSeasonAndYear";
+import Selector from "@/components/animeIndexPage/Selector";
 
 export default function AnimeIndex() {
-  const { theme } = useTheme();
+  const router = useRouter();
+  const { category } = router.query;
   const [isMounted, setIsMounted] = useState(false);
-  const [selectedButtonSortby, setSelectedButtonSortby] = useState("Popular");
+  const [selectedButtonSortby, setSelectedButtonSortby] =
+    useState("Popularity");
   const [selectedButtonGenres, setSelectedButtonGenres] =
     useState("All Genres");
   const [selectedButtonTypes, setSelectedButtonTypes] = useState("All Types");
@@ -19,71 +25,46 @@ export default function AnimeIndex() {
     useState("All Season");
   const [selectedButtonRated, setSelectedButtonRated] = useState("All Rated");
 
-  const selectedButton = [
-    selectedButtonSortby,
-    selectedButtonGenres,
-    selectedButtonTypes,
-    selectedButtonStatus,
-    selectedButtonYear,
-    selectedButtonSeason,
-    selectedButtonRated,
-  ];
-  const header = [
-    "Sort by",
-    "Genres",
-    "Types",
-    "Status",
-    "Year",
-    "Season",
-    "Rated",
-  ];
-  const renderButton = (label, name, group) => (
-    <Button
-      key={name}
-      isDisabled={header.includes(label) ? true : false}
-      size="sm"
-      disableAnimation
-      color="primary"
-      radius="sm"
-      onClick={
-        group === "Sort by"
-          ? () => setSelectedButtonSortby(label)
-          : group === "Genres"
-          ? () => setSelectedButtonGenres(label)
-          : group === "Types"
-          ? () => setSelectedButtonTypes(label)
-          : group === "Status"
-          ? () => setSelectedButtonStatus(label)
-          : group === "Year"
-          ? () => setSelectedButtonYear(label)
-          : group === "Rated"
-          ? () => setSelectedButtonRated(label)
-          : group === "Season"
-          ? () => setSelectedButtonSeason(label)
-          : null
-      }
-      variant={
-        selectedButton.includes(label)
-          ? theme === "light"
-            ? "flat"
-            : "solid"
-          : theme === "light"
-          ? "light"
-          : "ghost"
-      }
-      className={
-        selectedButton.includes(label)
-          ? "border-none text-sm py-1 px-2 my-1 mr-4 min-w-0  "
-          : "border-none text-sm py-1 px-2 my-1 mr-4 min-w-0 text-foreground opacity-100 justify-start"
-      }
-    >
-      {name}
-    </Button>
-  );
-
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    if (category !== undefined) {
+      setSelectedButtonSortby("Popularity");
+      setSelectedButtonGenres("All Genres");
+      setSelectedButtonTypes("All Types");
+      setSelectedButtonStatus("All Status");
+      setSelectedButtonYear("All Year");
+      setSelectedButtonSeason("All Season");
+      setSelectedButtonRated("All Rated");
+      if (genres.includes(category)) {
+        setSelectedButtonGenres(category);
+        setSelectedButtonSortby("Popularity");
+      } else if (types.includes(category)) {
+        setSelectedButtonTypes(category);
+        setSelectedButtonSortby("Score");
+      } else if (category === "thisSeasonPopular") {
+        const seasonYear = getLastSeasonAndYear();
+        setSelectedButtonYear(seasonYear[0].year);
+
+        setSelectedButtonSeason(seasonYear[0].season);
+        setSelectedButtonSortby("Popularity");
+      } else if (category === "thisSeasonTop") {
+        const seasonYear = getLastSeasonAndYear();
+        setSelectedButtonYear(seasonYear[0].year);
+
+        setSelectedButtonSeason(seasonYear[0].season);
+        setSelectedButtonSortby("Score");
+      } else if (category === "nextSeason") {
+        const seasonYear = getNextSeasonAndYear();
+        setSelectedButtonYear(seasonYear[0].year);
+        setSelectedButtonSeason(seasonYear[0].season);
+        setSelectedButtonSortby("Popularity");
+      } else if (category === "Popularity") {
+        setSelectedButtonSortby("Popularity");
+      } else if (category === "Top") {
+        setSelectedButtonSortby("Score");
+      }
+      setIsMounted(true);
+    }
+  }, [category]);
 
   if (!isMounted) {
     return null;
@@ -91,65 +72,23 @@ export default function AnimeIndex() {
 
   return (
     <Layout>
-      <div className="w-screen   custom458:w-full ml-custom458 custom458:ml-0 grid grid-cols-[70px_1fr] gap-x-4 gap-y-2 pb-6   h-full border-b-1  dark:border-customGray ">
-        {renderButton("Genres", "Genres", "Genres")}
-        <div>
-          {renderButton("All Genres", "All", "Genres")}
-          {genres.map((genre) => renderButton(genre, genre, "Genres"))}
-        </div>
+      <Selector
+        selectedButtonSortby={selectedButtonSortby}
+        selectedButtonGenres={selectedButtonGenres}
+        selectedButtonTypes={selectedButtonTypes}
+        selectedButtonStatus={selectedButtonStatus}
+        selectedButtonYear={selectedButtonYear}
+        selectedButtonSeason={selectedButtonSeason}
+        selectedButtonRated={selectedButtonRated}
+        setSelectedButtonSortby={setSelectedButtonSortby}
+        setSelectedButtonGenres={setSelectedButtonGenres}
+        setSelectedButtonTypes={setSelectedButtonTypes}
+        setSelectedButtonStatus={setSelectedButtonStatus}
+        setSelectedButtonYear={setSelectedButtonYear}
+        setSelectedButtonSeason={setSelectedButtonSeason}
+        setSelectedButtonRated={setSelectedButtonRated}
+      />
 
-        {renderButton("Types", "Types", "Types")}
-        <div>
-          {renderButton("All Types", "All", "Types")}
-          {types.map((type) => renderButton(type, type, "Types"))}
-        </div>
-
-        {renderButton("Status", "Status", "Status")}
-        <div>
-          {renderButton("All Status", "All", "Status")}
-          {renderButton("Finished Airing", "Finished Airing", "Status")}
-          {renderButton("Currently Airing", "Currently Airing", "Status")}
-          {renderButton("Not yet aired", "Not yet aired", "Status")}
-        </div>
-
-        {renderButton("Year", "Year", "Year")}
-        <div>
-          {renderButton("All Year", "All", "Year")}
-          {years.map((year) => renderButton(year, year, "Year"))}
-        </div>
-
-        {renderButton("Season", "Season", "Season")}
-        <div>
-          {renderButton("All Season", "All", "Season")}
-          {renderButton("winter", "Winter", "Season")}
-          {renderButton("spring", "Spring", "Season")}
-          {renderButton("summer", "Summer", "Season")}
-          {renderButton("fall", "Fall", "Season")}
-        </div>
-        {renderButton("Rated", "Rated", "Rated")}
-        <div>
-          {renderButton("All Rated", "All", "Rated")}
-          {renderButton("G - All Ages", "G - All Ages", "Rated")}
-          {renderButton("PG - Children", "PG - Children", "Rated")}
-          {renderButton(
-            "PG-13 - Teens 13 or older",
-            "PG-13 - Teens 13 or older",
-            "Rated"
-          )}
-          {renderButton(
-            "R - 17+ (violence & profanity)",
-            "R - 17+ (violence & profanity)",
-            "Rated"
-          )}
-          {renderButton("R+ - Mild Nudity", "R+ - Mild Nudity", "Rated")}
-          {renderButton("Rx - Hentai", "Rx - Hentai", "Rated")}
-        </div>
-        {renderButton("Sort by", "Sort by", "Sort by")}
-        <div>
-          {renderButton("Popular", "Popular", "Sort by")}
-          {renderButton("Score", "Score", "Sort by")}
-        </div>
-      </div>
       <ShowIndex
         selectedButtonSortby={selectedButtonSortby}
         selectedButtonGenres={selectedButtonGenres}

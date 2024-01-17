@@ -113,8 +113,9 @@ function ShowSlider({ data, title, category }) {
           variant={theme === "light" ? "light" : "ghost"}
           radius="full"
           color="primary"
-          className="border-none hover:opacity-100"
-          href={`/category?category=${category}`}
+          size="md"
+          className="border-none hover:opacity-100 h-[36px]"
+          href={`/animeIndex?category=${category}`}
           as={Link}
         >
           View All

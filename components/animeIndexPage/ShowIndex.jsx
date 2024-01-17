@@ -31,7 +31,7 @@ export default function ShowIndex({
 
     params.page = page;
     params.sortBy =
-      selectedButtonSortby === "Popular"
+      selectedButtonSortby === "Popularity"
         ? "members"
         : selectedButtonSortby === "Score"
         ? "score"
@@ -119,8 +119,9 @@ export default function ShowIndex({
 
   return (
     <div>
-      <div className={`w-full grid ${colToShow} gap-y-6 mt-6 `}>
-        {data && data.map((item) => <ImageCard key={item._id} data={item} />)}
+      <div className={`w-full grid ${colToShow} gap-y-6  `}>
+        {data &&
+          data.map((item, index) => <ImageCard key={index} data={item} />)}
       </div>
       {loading && (
         <CircularProgress

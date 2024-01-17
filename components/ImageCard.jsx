@@ -1,4 +1,11 @@
-import { Card, CardFooter, CardBody, Image, Link } from "@nextui-org/react";
+import {
+  Card,
+  CardFooter,
+  CardBody,
+  Image,
+  Link,
+  CardHeader,
+} from "@nextui-org/react";
 import { useState } from "react";
 
 export default function ImageCard({ data, ep }) {
@@ -15,12 +22,14 @@ export default function ImageCard({ data, ep }) {
     <div className=" w-[210px]">
       <Card
         as={Link}
+        shadow="none"
+        radius="sm"
         href={`/animeDetails/default?mal_id=${data.mal_id}`}
-        className={`isPressable hover:opacity-100 rounded-lg shadow-none ${
+        className={`isPressable hover:opacity-100  ${
           isLoaded ? "visible" : "invisible"
         }`}
       >
-        <CardBody className="p-0 overflow-hidden">
+        <CardBody className="p-0 overflow-hidden ">
           <Image
             isZoomed
             className="h-[302px] w-[210px] object-cover "

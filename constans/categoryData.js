@@ -1,7 +1,11 @@
 export const categoryTitles = {
-  thisSeasonPopular: "Popular this season",
-  nextSeason: "Upcoming next season",
-
+  thisSeasonPopular: "This Season Popular",
+  nextSeason: "Upcoming Next Season",
+  thisSeasonTop: "This Season Top",
+  Top: "Top Anime",
+  Popular: "All-Time Popular anime",
+  Movie: "Top Movie",
+  Music: "Top Music",
   "Miyazaki, Hayao": "Hayao Miyazaki",
   "Kon, Satoshi": "Satoshi Kon",
   "Kawaguchi, Yuichiro": "Yuichiro Kawaguchi",
@@ -21,32 +25,27 @@ export const categoryTitles = {
 };
 export const categories = [
   "thisSeasonPopular",
-  "Slice of Life",
+  "thisSeasonTop",
   "nextSeason",
+  "Slice of Life",
   "Adventure",
   "Fantasy",
   "Drama",
   "Avant Garde",
   "Action",
   "Sci-Fi",
-  "Miyazaki, Hayao",
-  "Shinkai, Makoto",
+
   "Supernatural",
   "Mystery",
   "Comedy",
   "Romance",
-  "Kon, Satoshi",
-  "Anno, Hideaki",
-  "Yuasa, Masaaki",
+
   "Sports",
-  "Watanabe, Shinichirou",
-  "Shinbou, Akiyuki",
+
   "Horror",
-  "Hosoda, Mamoru",
+
   "Suspense",
-  "Imaishi, Hiroyuki",
-  "Yamada, Naoko",
-  "Oshii, Mamoru",
+
   "Gourmet",
 ];
 

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
-import { Tooltip } from "@nextui-org/react";
+
 import axios from "axios";
 import {
   Card,
@@ -12,9 +12,9 @@ import {
 } from "@nextui-org/react";
 import { HeartIcon } from "@/icons";
 import Layout from "@/components/layout/Layout";
-import CharactersDisplay from "@/components/personPage/CharactersDisplay";
+import CardDisplay from "@/components/personPage/CardDisplay";
 
-export default function VoiceActor() {
+export default function Person() {
   const router = useRouter();
   const { mal_id } = router.query;
 
@@ -89,12 +89,8 @@ export default function VoiceActor() {
               <span>{data.favorites} favorites</span>
             </div>
           </div>
-          <div
-            ref={tooltipRef}
-            onClick={toggleVisibility}
-            className="relative cursor-pointer"
-          >
-            <div className="my-1 flex items-center">
+          <div ref={tooltipRef} className="relative cursor-pointer">
+            <div onClick={toggleVisibility} className="my-1 flex items-center">
               <span className="text-sm   ">About</span>
 
               <span
@@ -135,7 +131,7 @@ export default function VoiceActor() {
           </Button>
         </div>
       </div>
-      <CharactersDisplay data={data} />
+      <CardDisplay data={data} />
     </Layout>
   );
 }
