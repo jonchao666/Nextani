@@ -2,14 +2,14 @@ import AnimeDetailsLayout from "@/components/animeDetails/AnimeDetailsLayout";
 import MainAreaDefault from "@/components/animeDetails/mainArea/MainAreaDefault";
 import MainAreaCharaters from "@/components/animeDetails/mainArea/MainAreaCharaters";
 import MainAreaStaff from "@/components/animeDetails/mainArea/MainAreaStaff";
-import useAnimeData from "@/hooks/useAnimeData";
+import useAnimeDataJikanApi from "@/hooks/useAnimeDataJikanApi";
 import { useRouter } from "next/router";
 
 export default function AnimeDetails() {
   const router = useRouter();
   const { section, mal_id } = router.query;
   const { data, characters, staff, recommendations, videos } =
-    useAnimeData(mal_id);
+    useAnimeDataJikanApi(mal_id);
 
   switch (section) {
     case "characters":
@@ -17,9 +17,8 @@ export default function AnimeDetails() {
         <AnimeDetailsLayout
           data={data}
           characters={characters}
-          staff={staff}
-          recommendations={recommendations}
           videos={videos}
+          mal_id={mal_id}
         >
           <MainAreaCharaters
             data={data}
@@ -33,8 +32,8 @@ export default function AnimeDetails() {
         <AnimeDetailsLayout
           data={data}
           characters={characters}
-          staff={staff}
           videos={videos}
+          mal_id={mal_id}
         >
           <MainAreaDefault
             data={data}
@@ -50,9 +49,8 @@ export default function AnimeDetails() {
         <AnimeDetailsLayout
           data={data}
           characters={characters}
-          staff={staff}
-          recommendations={recommendations}
           videos={videos}
+          mal_id={mal_id}
         >
           <MainAreaStaff data={data} characters={characters} staff={staff} />
         </AnimeDetailsLayout>

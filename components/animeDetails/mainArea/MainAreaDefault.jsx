@@ -16,9 +16,6 @@ export default function MainAreaDefault({
     setComment(event.target.value);
   };
 
-  if (!characters || !staff) {
-    return null;
-  }
   const validVoiceActors = characters.data
     .filter(
       (character) =>
@@ -44,56 +41,59 @@ export default function MainAreaDefault({
   }
   return (
     <div className="flex flex-col grow ">
-      {validCharacters.length > 0 && (
-        <div className="mb-6">
-          <div className="text-sm font-medium mb-2.5 flex justify-between">
-            <span>Characters</span>
-            {validCharacters.length > 6 && (
-              <Link
-                href={`/animeDetails/characters?mal_id=${data.mal_id}`}
-                scroll={false}
-                className="text-sm text-primary font-normal"
-              >
-                View all
-              </Link>
-            )}
-          </div>
+      <div className="mb-6">
+        <div className="text-sm font-medium mb-2.5 flex justify-between">
+          <span>Characters</span>
+          {validCharacters.length > 6 && (
+            <Link
+              href={`/animeDetails/characters?mal_id=${data.mal_id}`}
+              scroll={false}
+              className="text-sm text-primary font-normal"
+            >
+              View all
+            </Link>
+          )}
+        </div>
 
+        {validCharacters.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 3xl:grid-cols-3 gap-y-4 gap-x-8 ">
             {validCharacters.slice(0, 6).map((character, index) => (
               <CharacterCard key={index} character={character} />
             ))}
           </div>
+        ) : (
+          "No characters have been added to this title. "
+        )}
+      </div>
+
+      <div className="mb-8">
+        <div className="text-sm font-medium mb-2.5 flex justify-between">
+          <span>Staff</span>
+          {staff.length > 3 && (
+            <Link
+              href={`/animeDetails/staff?mal_id=${data.mal_id}`}
+              scroll={false}
+              className="text-sm text-primary font-normal"
+            >
+              View all
+            </Link>
+          )}
         </div>
-      )}
 
-      {staff.length > 0 && (
-        <div className="mb-8">
-          <div className="text-sm font-medium mb-2.5 flex justify-between">
-            <span>Staff</span>
-            {staff.length > 3 && (
-              <Link
-                href={`/animeDetails/staff?mal_id=${data.mal_id}`}
-                scroll={false}
-                className="text-sm text-primary font-normal"
-              >
-                View all
-              </Link>
-            )}
-          </div>
-
+        {staff.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 3xl:grid-cols-3 gap-y-4 gap-x-8 ">
             {staff.slice(0, 3).map((person, index) => (
               <StaffCard key={index} person={person} />
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          "No staff for this anime have been added to this title. "
+        )}
+      </div>
 
       {recommendations.length > 0 && (
         <RecommendationsCardInfinityScorll recommendations={recommendations} />
       )}
-
       <div className="mb-6">
         <div className="text-lg font-medium mb-6">0 Comments</div>
         <div className="mr-4">
@@ -108,6 +108,7 @@ export default function MainAreaDefault({
               ></Image>
             </div>
             <Textarea
+              classNames={{ inputWrapper: "after:h-[1px]" }}
               variant="underlined"
               minRows="1"
               size="sm"

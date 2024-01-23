@@ -7,6 +7,8 @@ const LogOutCallback = () => {
   useEffect(() => {
     router.replace("/");
   }, [router]);
+
+  return <div>Please wait...</div>;
 };
 
 export default LogOutCallback;

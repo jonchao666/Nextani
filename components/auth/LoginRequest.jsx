@@ -4,7 +4,7 @@ import Layout from "../layout/Layout";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 export default function LoginRequest() {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function LoginRequest() {
           startContent={<SignInIcon size={24} />}
           className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-customGray "
           size="sm"
-          variant={theme === "light" ? "light" : "ghost"}
+          variant={resolvedTheme === "light" ? "light" : "ghost"}
           radius="full"
           color="primary"
         >

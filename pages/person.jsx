@@ -73,7 +73,12 @@ export default function Person() {
           <Image
             radius="full"
             alt={data.name}
-            src={data.images.jpg.image_url}
+            src={
+              data.images.jpg.image_url ===
+              "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png"
+                ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
+                : data.images.jpg.image_url
+            }
             className="object-cover w-[160px] h-[160px]"
           ></Image>
         </div>
@@ -103,7 +108,7 @@ export default function Person() {
               </span>
             </div>
             {visible && (
-              <div className="absolute z-20 whitespace-pre-line m-3  bg-white p-5 rounded-2xl shadow-lg min-w-max w-full">
+              <div className="absolute z-20 whitespace-pre-line m-3  bg-background p-5 rounded-2xl shadow-lg min-w-max w-full">
                 <div className="mb-2.5 text-xl font-bold">About</div>
                 <div className="text-sm">{data.about}</div>
               </div>

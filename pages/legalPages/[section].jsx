@@ -41,7 +41,7 @@ const ContactPage = () => (
               className="underline font-bold"
               href="mailto:nextani.net@gmail.com"
             >
-              contact@nextani.net
+              nextani.net@gmail.com
             </a>
             . As the sole creator of NextAni, I&apos;m committed to continuously
             improving your experience on this platform. Your insights are

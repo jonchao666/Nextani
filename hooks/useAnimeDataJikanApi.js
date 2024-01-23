@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export default function useAnimeData(mal_id) {
+export default function useAnimeDataJikanApi(mal_id) {
   const [data, setData] = useState(null);
   const [recommendations, setRecommendations] = useState(null);
   const [staff, setStaff] = useState(null);

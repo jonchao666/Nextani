@@ -13,6 +13,7 @@ export default function AnimeDetailsLayout({
   data,
   characters,
   videos,
+  mal_id,
 }) {
   const dispatch = useDispatch();
   const showSidebar = useSelector((state) => state.sidebar.showSidebar);
@@ -92,6 +93,7 @@ export default function AnimeDetailsLayout({
             videos={videos}
             synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}
             setVideoUrl={setVideoUrl}
+            mal_id={mal_id}
           />
           <div className="flex flex-col sm:flex-row mt-6 w-full">
             <AnimeInformation data={data} />

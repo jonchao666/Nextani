@@ -27,6 +27,7 @@ const initialState = {
   changingDisplayName: false,
   deletingAccount: false,
   showDeleteAccountPage: false,
+  verifyingDeleteAccount: false,
 };
 
 const userSlice = createSlice({
@@ -53,6 +54,9 @@ const userSlice = createSlice({
     },
     setShowDeleteAccountPage: (state, action) => {
       state.showDeleteAccountPage = action.payload;
+    },
+    setVerifyingDeleteAccount: (state, action) => {
+      state.verifyingDeleteAccount = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -82,6 +86,7 @@ export const {
   setChangingDisplayName,
   setDeletingAccount,
   setShowDeleteAccountPage,
+  setVerifyingDeleteAccount,
 } = userSlice.actions;
 
 export default userSlice.reducer;

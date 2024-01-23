@@ -6,9 +6,12 @@ const AuthCallback = () => {
 
   useEffect(() => {
     const token = router.query.token;
+    const redirectTo = localStorage.getItem("redirect") || "/";
+
     if (token) {
       localStorage.setItem("jwt", token);
-      router.replace("/"); // 重定向到主页或其他页面
+      router.replace(redirectTo);
+      localStorage.removeItem("redirect");
     }
   }, [router]);
 

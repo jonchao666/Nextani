@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 export default function MiniSidebar() {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [selectedButton, setSelectedButton] = useState("");
 
   const router = useRouter();
@@ -15,15 +15,8 @@ export default function MiniSidebar() {
       case "/":
         setSelectedButton("home");
         break;
-      case "/watchlist":
-        setSelectedButton("watchlist");
-        break;
-
-      case "/favorites":
-        setSelectedButton("favorites");
-        break;
-      case "/history":
-        setSelectedButton("history");
+      case "/you":
+        setSelectedButton("you");
         break;
     }
   }, [router.pathname]);
@@ -34,11 +27,11 @@ export default function MiniSidebar() {
 
   const renderButton = (iconName, label, name) => (
     <Button
-      href={name === "home" ? "/" : undefined}
+      href={name === "home" ? "/" : name === "you" ? "/you" : undefined}
       disableAnimation
       as={Link}
       onClick={() => handleButtonClick(name)}
-      variant={theme === "light" ? "light" : "ghost"}
+      variant={resolvedTheme === "light" ? "light" : "ghost"}
       className="flex flex-col hover:opacity-100 pt-4 pb-3.5 px-0 w-full h-[74px] border-none min-w-0 min-h-0"
     >
       <span
@@ -62,9 +55,7 @@ export default function MiniSidebar() {
     <div className="fixed w-[72px] px-1 top-16">
       <div className="flex flex-col mt-1 ">
         {renderButton("home", "Home", "home")}
-        {renderButton("subscriptions", "Watchlist", "watchlist")}
-        {renderButton("favorite", "Favorites", "favorites")}
-        {renderButton("history", "History", "history")}
+        {renderButton("video_library", "You", "you")}
       </div>
     </div>
   );

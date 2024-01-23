@@ -12,6 +12,7 @@ export default function DetailsPanelContents({
   synopsisWithoutLastParagraph,
   videos,
   setVideoUrl,
+  mal_id,
 }) {
   const [synopsisOpened, setSynopsisOpened] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -41,6 +42,7 @@ export default function DetailsPanelContents({
           mainCharacters={mainCharacters}
           videos={videos}
           setVideoUrl={setVideoUrl}
+          mal_id={mal_id}
         />
         {synopsisOpened ? (
           <DetailsPanelBottomOpened

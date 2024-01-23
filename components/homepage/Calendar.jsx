@@ -13,7 +13,7 @@ export default function Calendar({ calendarData }) {
 
   const [selected, setSelected] = useState(moment().format("dddd"));
   const [data, setData] = useState({});
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const convertToLocaleDayAndTime = useCallback(
     (day, time) => {
@@ -74,10 +74,10 @@ export default function Calendar({ calendarData }) {
         color="primary"
         className="p-0 mb-4  "
         classNames={{
-          cursor: theme === "light" ? "bg-[#4C93FF1A] " : "",
+          cursor: resolvedTheme === "light" ? "bg-[#4C93FF1A] " : "",
           tab: "  text-xs ",
           tabContent:
-            theme === "light"
+            resolvedTheme === "light"
               ? "group-data-[selected=true]:text-[#4c93ff]"
               : "",
           panel: "p-0 ",

@@ -75,7 +75,7 @@ export default function ImageCard({ data, ep }) {
                 .slice(0, 2)
                 .map((genre) => genre.name)
                 .join("&")
-            : "Anime"}{" "}
+            : data.apiData.type}{" "}
           {data.apiData.aired.prop.from.year && (
             <span className="text-2xl align-[-4px]"> &middot;</span>
           )}{" "}

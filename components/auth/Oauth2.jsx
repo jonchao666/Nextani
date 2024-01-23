@@ -2,8 +2,8 @@ import { Button, Image, Input, Link } from "@nextui-org/react";
 import { GoogleIcon, MicrosoftIcon, AppleIcon } from "@/icons";
 import { useTheme } from "next-themes";
 
-export default function Oauth2() {
-  const { theme } = useTheme();
+export default function Oauth2({ redirect }) {
+  const { resolvedTheme } = useTheme();
 
   return (
     <div className="flex flex-col  w-[320px] gap-2 mt-4">
@@ -16,7 +16,7 @@ export default function Oauth2() {
         variant="ghost"
         startContent={<GoogleIcon />}
       >
-        <span>Continue with Google</span>
+        Continue with Google
       </Button>
       <Button
         className="justify-start border-1"
@@ -33,7 +33,7 @@ export default function Oauth2() {
         size="lg"
         variant="ghost"
         startContent={
-          <AppleIcon fill={theme === "dark" ? "#FFFFFF" : "#000000"} />
+          <AppleIcon fill={resolvedTheme === "dark" ? "#FFFFFF" : "#000000"} />
         }
       >
         Continue with Apple

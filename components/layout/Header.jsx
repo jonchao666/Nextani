@@ -1,12 +1,15 @@
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
-import { SearchIcon, SignInIcon, GuideButtonIcon } from "@/icons";
+import { SearchIcon, SignInIcon, GuideButtonIcon, Logo } from "@/icons";
 import { Button, Link, Avatar } from "@nextui-org/react";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import useSearch from "@/hooks/useSearch";
-import useAuth from "@/hooks/useAuth";
+
 import { useRouter } from "next/router";
 import AvatarDropdown from "./AvatarDropdown";
+import { useSelector, useDispatch } from "react-redux";
+import { checkAuthState } from "@/reducers/authSlice";
+
 import {
   Input,
   Navbar,
@@ -16,15 +19,16 @@ import {
 } from "@nextui-org/react";
 
 export default function Header({ toggleSidebar, noMenu }) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const router = useRouter();
+  const dispatch = useDispatch();
   const [isMounted, setIsMounted] = useState(false);
   const { query, setQuery, results, isLoading } = useSearch();
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const blurTimeoutRef = useRef();
-  const isAuthenticated = useAuth();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleFocus = () => {
     if (blurTimeoutRef.current) {
@@ -54,6 +58,10 @@ export default function Header({ toggleSidebar, noMenu }) {
   };
 
   useEffect(() => {
+    dispatch(checkAuthState());
+  }, [dispatch]);
+
+  useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setShowResults(false);
@@ -70,7 +78,7 @@ export default function Header({ toggleSidebar, noMenu }) {
   if (!isMounted) {
     return null;
   }
-
+  localStorage.setItem("redirect", router.asPath);
   return (
     <Navbar
       isBlurred="false"
@@ -94,7 +102,9 @@ export default function Header({ toggleSidebar, noMenu }) {
       )}
 
       <NavbarBrand href="/" as={Link}>
-        <p className="font-bold text-2xl hidden sm:block">NEXTANI</p>
+        <p className="font-bold text-2xl hidden sm:block text-foreground">
+          NextAni
+        </p>
       </NavbarBrand>
       <NavbarContent className="relative max-w-[650px] w-full" justify="center">
         <Input
@@ -162,7 +172,7 @@ export default function Header({ toggleSidebar, noMenu }) {
               startContent={<SignInIcon size={24} />}
               className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-customGray "
               size="sm"
-              variant={theme === "light" ? "light" : "ghost"}
+              variant={resolvedTheme === "light" ? "light" : "ghost"}
               radius="full"
               color="primary"
             >

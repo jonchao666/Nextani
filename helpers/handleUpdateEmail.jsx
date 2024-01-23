@@ -18,10 +18,13 @@ export default async function handleUpdateEmail(newEmail, token) {
     const data = await response.json();
     if (response.ok) {
       console.log("email updated:", data);
+      return true;
     } else {
       console.error("Failed to update email:", data);
+      return false;
     }
   } catch (error) {
     console.error("Error updating email:", error);
+    return false;
   }
 }

@@ -1,8 +1,8 @@
 import CharacterCard from "./CharacterCard";
 
 import Link from "next/link";
-export default function MainAreaCharaters({ characters, staff, data }) {
-  if (!characters || !staff) {
+export default function MainAreaCharaters({ characters, data }) {
+  if (!characters) {
     return null;
   }
   const validVoiceActors = characters.data

@@ -4,15 +4,17 @@ import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { GuideButtonIcon } from "@/icons";
+import { GuideButtonIcon, Logo } from "@/icons";
 import { Navbar, NavbarBrand } from "@nextui-org/react";
-import useAuth from "@/hooks/useAuth";
+
+import { useSelector } from "react-redux";
 export default function Sidebar({ absolute, toggleSidebar }) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const [selectedButton, setSelectedButton] = useState("");
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { category } = router.query;
   useEffect(() => {
     // 根据当前路由来设置 selectedButton
@@ -20,15 +22,9 @@ export default function Sidebar({ absolute, toggleSidebar }) {
       case "/":
         setSelectedButton("home");
         break;
-      case "/watchlist":
-        setSelectedButton("watchlist");
-        break;
 
-      case "/favorites":
-        setSelectedButton("favorites");
-        break;
-      case "/history":
-        setSelectedButton("history");
+      case "/you":
+        setSelectedButton("you");
         break;
     }
 
@@ -51,7 +47,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
   const handleButtonClick = (name) => {
     setSelectedButton(name);
   };
-  const isAuthenticated = useAuth();
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -67,6 +63,8 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         href={
           name === "home"
             ? "/"
+            : name === "you"
+            ? "/you"
             : Explore.includes(name)
             ? `/animeIndex?category=${name}`
             : undefined
@@ -75,7 +73,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         onClick={() => handleButtonClick(name)}
         as={Link}
         variant={
-          theme === "light"
+          resolvedTheme === "light"
             ? selectedButton === name
               ? "flat"
               : "light"
@@ -121,13 +119,13 @@ export default function Sidebar({ absolute, toggleSidebar }) {
               isIconOnly
               radius="full"
               variant="ghost"
-              className="border-none -ml-2"
+              className="border-none "
             >
               <GuideButtonIcon />
             </Button>
 
             <NavbarBrand href="/" as={Link}>
-              <p className="font-bold text-2xl ">NEXTANI</p>
+              <p className="font-bold text-2xl  text-foreground">NextAni</p>
             </NavbarBrand>
           </Navbar>
         )}
@@ -136,9 +134,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         <div>
           <div className="border-b-1 flex flex-col p-3 ">
             {renderButton("home", "Home", "home")}
-            {renderButton("subscriptions", "Watchlist", "watchlist")}
-            {renderButton("favorite", "Favorites", "favorites")}
-            {renderButton("history", "History", "history")}
+            {renderButton("video_library", "You", "you")}
           </div>
 
           {isAuthenticated ? null : (
@@ -152,7 +148,7 @@ export default function Sidebar({ absolute, toggleSidebar }) {
                 startContent={<SignInIcon size={24} />}
                 className="text-sm font-medium pl-2 pr-3 border-1 dark:border-customGray mt-3"
                 size="sm"
-                variant={theme === "light" ? "light" : "ghost"}
+                variant={resolvedTheme === "light" ? "light" : "ghost"}
                 color="primary"
                 radius="full"
               >

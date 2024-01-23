@@ -8,7 +8,7 @@ import { useResponsive } from "../../hooks/useResponsive";
 import { useTheme } from "next-themes";
 
 function ShowSlider({ data, title, category }) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
@@ -110,7 +110,7 @@ function ShowSlider({ data, title, category }) {
         <span className="text-xl  font-bold line-clamp-1">{title}</span>
 
         <Button
-          variant={theme === "light" ? "light" : "ghost"}
+          variant={resolvedTheme === "light" ? "light" : "ghost"}
           radius="full"
           color="primary"
           size="md"

@@ -1,10 +1,12 @@
 import { Button, Image, Input, Link } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import Oauth2 from "@/components/auth/oauth2";
+import { useRouter } from "next/router";
 
 export default function Login() {
   const [isMounted, setIsMounted] = useState(false);
-
+  const router = useRouter();
+  const { redirect } = router.query;
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -16,7 +18,7 @@ export default function Login() {
       <div className="w-full h-full flex justify-center items-center">
         <div className="flex flex-col">
           <div className="text-3xl font-bold mx-auto mb-8">
-            Log in to Nextani
+            Log in to NextAni
           </div>
           <Input type="email" label="Email" />
           <Button
@@ -40,7 +42,7 @@ export default function Login() {
             <div className="border-t  flex-grow"></div>
           </div>
 
-          <Oauth2 />
+          <Oauth2 redirect={redirect} />
         </div>
       </div>
     </div>

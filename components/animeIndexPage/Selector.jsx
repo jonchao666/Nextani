@@ -27,8 +27,9 @@ export default function Selector({
         label="Genres"
         variant="bordered"
         classNames={{
-          trigger: "border-none shadow-none",
-          value: "text-foreground",
+          trigger: "border-none shadow-none ",
+          value: "text-primary",
+          popoverContent: "rounded-lg",
         }}
         selectedKeys={
           selectedButtonGenres === "All Genres" || selectedButtonGenres === ""
@@ -50,7 +51,8 @@ export default function Selector({
         variant="bordered"
         classNames={{
           trigger: "border-none shadow-none",
-          value: "text-foreground",
+          value: "text-primary",
+          popoverContent: "rounded-lg",
         }}
         selectedKeys={
           selectedButtonTypes === "All Types" || selectedButtonTypes === ""
@@ -72,7 +74,8 @@ export default function Selector({
         variant="bordered"
         classNames={{
           trigger: "border-none shadow-none",
-          value: "text-foreground",
+          value: "text-primary",
+          popoverContent: "rounded-lg",
         }}
         selectedKeys={
           selectedButtonStatus === "All Status" || selectedButtonStatus === ""
@@ -110,7 +113,8 @@ export default function Selector({
         variant="bordered"
         classNames={{
           trigger: "border-none shadow-none",
-          value: "text-foreground",
+          value: "text-primary",
+          popoverContent: "rounded-lg",
         }}
         selectedKeys={
           selectedButtonYear === "All Year" || selectedButtonYear === ""
@@ -132,7 +136,8 @@ export default function Selector({
         variant="bordered"
         classNames={{
           trigger: "border-none shadow-none",
-          value: "text-foreground",
+          value: "text-primary",
+          popoverContent: "rounded-lg",
         }}
         selectedKeys={
           selectedButtonSeason === "All Season" || selectedButtonSeason === ""
@@ -161,7 +166,8 @@ export default function Selector({
         variant="bordered"
         classNames={{
           trigger: "border-none shadow-none",
-          value: "text-foreground",
+          value: "text-primary",
+          popoverContent: "rounded-lg",
         }}
         selectedKeys={
           selectedButtonRated === "All Rated" || "" ? [] : [selectedButtonRated]
@@ -218,7 +224,8 @@ export default function Selector({
         variant="bordered"
         classNames={{
           trigger: "border-none shadow-none",
-          value: "text-foreground",
+          value: "text-primary",
+          popoverContent: "rounded-lg",
         }}
         selectedKeys={[selectedButtonSortby]}
         onChange={(e) => setSelectedButtonSortby(e.target.value)}

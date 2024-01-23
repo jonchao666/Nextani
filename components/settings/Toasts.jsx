@@ -166,3 +166,59 @@ export const showDeleteAccountToast = (type) => {
     </div>
   ));
 };
+
+export const showDeletingAccountToast = (type, error) => {
+  const isSuccess = type === "success";
+  const backgroundColor = isSuccess ? "bg-primary" : "bg-danger";
+  const message = isSuccess ? (
+    <div>
+      <p>We have sent you an email with a confirmation link.</p>
+    </div>
+  ) : (
+    `An error occurred. Please try again.${error}`
+  );
+
+  toast.custom((t) => (
+    <div
+      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+    >
+      <div className=" text-sm text-white">{message}</div>
+
+      <span
+        onClick={() => toast.remove(t.id)}
+        className="material-symbols-outlined text-white hover:bg-primary-600 rounded-full cursor-pointer p-1"
+        style={{
+          fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
+        }}
+      >
+        close
+      </span>
+    </div>
+  ));
+};
+
+//UserActivity
+
+export const userActivityToast = (type, data) => {
+  const isSuccess = type === "success";
+  const backgroundColor = isSuccess ? "bg-foreground" : "bg-danger";
+  const message = data;
+
+  toast.custom((t) => (
+    <div
+      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+    >
+      <div className=" text-sm text-background">{message}</div>
+
+      <span
+        onClick={() => toast.remove(t.id)}
+        className="material-symbols-outlined text-background hover:bg-primary-600 rounded-full cursor-pointer p-1"
+        style={{
+          fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
+        }}
+      >
+        close
+      </span>
+    </div>
+  ));
+};

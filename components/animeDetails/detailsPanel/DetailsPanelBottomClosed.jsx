@@ -6,7 +6,11 @@ export default function DetailsPanelBottomOpened({
   setSynopsisOpened,
 }) {
   if (!synopsisWithoutLastParagraph) {
-    return null;
+    return (
+      <p className="font-sm">
+        Synopsis: No synopsis information has been added to this title.
+      </p>
+    );
   }
 
   const paragraphs = synopsisWithoutLastParagraph.split("\n");
@@ -18,9 +22,9 @@ export default function DetailsPanelBottomOpened({
   return (
     <div className="h-full flex flex-col justify-between">
       {firstParagraph && (
-        <span className="whitespace-pre-line font-sm">
+        <p className="whitespace-pre-line font-sm">
           Synopsis: {firstParagraph}
-        </span>
+        </p>
       )}
       <div className="flex justify-between">
         <div className="flex flex-col">

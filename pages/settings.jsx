@@ -12,8 +12,8 @@ import {
 import handleUpdateDisplayName from "@/helpers/handleUpdateDisplayName";
 import handleFileUpload from "@/helpers/handleFileUpload";
 import handleVerifyEmail from "@/helpers/handleVerifyEmail";
-import handleDeleteAccount from "@/helpers/handleDeleteAccount";
-import useAuth from "@/hooks/useAuth";
+import handleVerifyDeleteAccount from "@/helpers/handleVerifyDeleteAccount";
+
 import LoginRequest from "@/components/auth/LoginRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -25,10 +25,10 @@ import {
   setChangingDisplayName,
   setDeletingAccount,
   setShowDeleteAccountPage,
+  setVerifyingDeleteAccount,
 } from "@/reducers/userSlice";
 
 export default function Settings() {
-  const isAuthenticated = useAuth();
   const dispatch = useDispatch();
   const {
     email,
@@ -37,12 +37,14 @@ export default function Settings() {
     changingDisplayName,
     deletingAccount,
     showDeleteAccountPage,
+    verifyingDeleteAccount,
   } = useSelector((state) => state.user);
 
   const [displayNameChange, setDisplayNameChange] = useState("");
   const [emailChange, setEmailChange] = useState("");
   const router = useRouter();
   const { userData } = useSelector((state) => state.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
     if (userData) {
@@ -98,10 +100,10 @@ export default function Settings() {
                 Cancel
               </Button>
               <Button
-                isLoading={deletingAccount ? true : false}
+                isLoading={verifyingDeleteAccount ? true : false}
                 onClick={() => {
-                  handleDeleteAccount(dispatch, router),
-                    dispatch(setDeletingAccount(true));
+                  handleVerifyDeleteAccount(dispatch, router),
+                    dispatch(setVerifyingDeleteAccount(true));
                 }}
                 radius="sm"
                 className="bg-black  text-white dark:bg-white dark:text-black "
@@ -219,15 +221,28 @@ export default function Settings() {
           </CardFooter>
         </Card>
 
-        <Card radius="sm" className="max-w-[888px] mb-8" shadow="sm">
+        <Card
+          radius="sm"
+          className="max-w-[888px] mb-8"
+          shadow="sm"
+          isDisabled={verifyingDeleteAccount ? true : false}
+        >
           <CardBody className="h-[150px] p-6 ">
             <div className="flex flex-col  justify-between ">
               <h4 className="text-xl font-medium">Delete Account</h4>
-              <p className="my-3 text-sm">
-                Permanently remove your Personal Account and all of its contents
-                from the NextAni platform. This action is not reversible, so
-                please continue with caution.
-              </p>
+              {!verifyingDeleteAccount ? (
+                <p className="my-3 text-sm">
+                  Permanently remove your Personal Account and all of its
+                  contents from the NextAni platform. This action is not
+                  reversible, so please continue with caution.
+                </p>
+              ) : (
+                <p className="my-3 text-sm">
+                  We have sent you an email with a confirmation link. To delete
+                  your account permanently, please confirm your decision by
+                  clicking the link in the email.
+                </p>
+              )}
             </div>
           </CardBody>
           <Divider />
