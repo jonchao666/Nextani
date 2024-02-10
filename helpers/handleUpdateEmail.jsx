@@ -1,5 +1,5 @@
 import { setEmail, setVerifyingEmail } from "@/reducers/userSlice";
-import { showEmailToast } from "@/components/settings/Toasts";
+import { ShowEmailToast } from "@/components/settings/Toasts";
 
 export default async function handleUpdateEmail(newEmail, token) {
   try {

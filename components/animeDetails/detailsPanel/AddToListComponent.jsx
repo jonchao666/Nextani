@@ -1,17 +1,22 @@
 import { Button, Checkbox, CheckboxGroup, Input } from "@nextui-org/react";
 import { useState, useEffect, useMemo } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import useUserActivity from "@/hooks/useUserActivity";
 export default function AddToListComponent({
   setAddToListOpen,
-  createWatchlist,
-  fetchwatchlists,
   watchlists,
   mal_id,
-  addWatchlistItem,
-  removeWatchlistItem,
+  setWatchlists,
   watchlistsHasAnime,
-  fetchWatchlistsContainingAnime,
+  setWatchlistsHasAnime,
 }) {
+  const {
+    fetchWatchlistsWithoutAnimeDetails,
+    fetchWatchlistsContainingAnime,
+    createWatchlist,
+    addWatchlistItem,
+    removeWatchlistItem,
+  } = useUserActivity();
   const [listNameInputOpen, setListNameInputOpen] = useState(false);
   const [listName, setListName] = useState("");
   const [createListIsLoading, setCreateListIsLoading] = useState(false);
@@ -19,8 +24,11 @@ export default function AddToListComponent({
     try {
       setCreateListIsLoading(true);
       await createWatchlist(name, mal_id);
-      await fetchwatchlists(1, 0);
-      await fetchWatchlistsContainingAnime(mal_id);
+      let data = await fetchWatchlistsWithoutAnimeDetails();
+      setWatchlists(data);
+      let res = await fetchWatchlistsContainingAnime(mal_id);
+
+      setWatchlistsHasAnime(res);
       setCreateListIsLoading(false);
       setAddToListOpen(false);
     } catch (error) {
@@ -34,10 +42,12 @@ export default function AddToListComponent({
     try {
       if (checked) {
         await addWatchlistItem(name, mal_id);
-        await fetchWatchlistsContainingAnime(mal_id);
+        let data = await fetchWatchlistsContainingAnime(mal_id);
+        setWatchlistsHasAnime(data);
       } else {
         await removeWatchlistItem(name, mal_id);
-        await fetchWatchlistsContainingAnime(mal_id);
+        let data = await fetchWatchlistsContainingAnime(mal_id);
+        setWatchlistsHasAnime(data);
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -45,7 +55,7 @@ export default function AddToListComponent({
   };
 
   return (
-    <div className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl w-[210px]   bg-background">
+    <div className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl max-w-[650px]   bg-white dark:bg-[rgb(40,40,40)]">
       <div className="py-4 px-6 flex justify-between">
         <p>Save anime to...</p>
         <span
@@ -59,38 +69,25 @@ export default function AddToListComponent({
         </span>
       </div>
       <div className="py-4 px-6 overflow-y-auto max-h-[300px]">
-        <Checkbox
-          isDisabled={createListIsLoading}
-          defaultSelected={watchlistsHasAnime.some((w) => w.name === "Default")}
-          onChange={(e) => handleAddDeleteAnime(e, "Default", mal_id)}
-          value={"default"}
-          classNames={{
-            label:
-              "pl-3 text-ellipsis overflow-hidden  whitespace-nowrap text-sm",
-            base: "overflow-hidden flex",
-          }}
-        >
-          Default
-        </Checkbox>
-
-        {watchlists.map((list, index) => (
-          <Checkbox
-            isDisabled={createListIsLoading}
-            defaultSelected={watchlistsHasAnime.some(
-              (w) => w.name === list.name
-            )}
-            onChange={(e) => handleAddDeleteAnime(e, list.name, mal_id)}
-            key={index}
-            value={"default"}
-            classNames={{
-              label:
-                "pl-3 text-ellipsis overflow-hidden  whitespace-nowrap text-sm",
-              base: "overflow-hidden flex",
-            }}
-          >
-            {list.name}
-          </Checkbox>
-        ))}
+        {watchlists &&
+          watchlists.map((list, index) => (
+            <Checkbox
+              isDisabled={createListIsLoading}
+              defaultSelected={watchlistsHasAnime.some(
+                (w) => w.name === list.name
+              )}
+              onChange={(e) => handleAddDeleteAnime(e, list.name, mal_id)}
+              key={index}
+              value={"default"}
+              classNames={{
+                label:
+                  "pl-3 text-ellipsis overflow-hidden  whitespace-nowrap text-sm",
+                base: "overflow-hidden flex",
+              }}
+            >
+              {list.name}
+            </Checkbox>
+          ))}
       </div>
       {listNameInputOpen ? (
         <div>

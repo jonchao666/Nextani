@@ -1,8 +1,8 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import {
-  showDeletingAccountToast,
-  showDeleteAccountToast,
+  ShowDeletingAccountToast,
+  ShowDeleteAccountToast,
 } from "@/components/settings/Toasts";
 
 import {
@@ -27,7 +27,7 @@ export default async function handleVerifyDeleteAccount(dispatch, router) {
     if (response.status === 200) {
       dispatch(setVerifyingDeleteAccount(true));
       dispatch(setShowDeleteAccountPage(false));
-      showDeletingAccountToast("success");
+      ShowDeletingAccountToast("success");
       const startPolling = () => {
         const intervalId = setInterval(async () => {
           try {
@@ -44,7 +44,7 @@ export default async function handleVerifyDeleteAccount(dispatch, router) {
             if (response.data.accountDeleted === true) {
               clearInterval(intervalId);
               router.push("/");
-              showDeleteAccountToast("success");
+              ShowDeleteAccountToast("success");
             }
             console.log(response.data);
           } catch (error) {
@@ -57,11 +57,11 @@ export default async function handleVerifyDeleteAccount(dispatch, router) {
       // 调用轮询函数
       startPolling();
     } else {
-      showDeletingAccountToast("error", error);
+      ShowDeletingAccountToast("error", error);
     }
   } catch (error) {
     console.error("Error requesting account delete:", error);
     dispatch(setVerifyingDeleteAccount(false));
-    showDeletingAccountToast("error", error);
+    ShowDeletingAccountToast("error", error);
   }
 }

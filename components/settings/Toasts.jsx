@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-export const showEmailChangeToast = (emailChange, type, error) => {
+export const ShowEmailChangeToast = (emailChange, type, error) => {
   const isSuccess = type === "success";
   const backgroundColor = isSuccess ? "bg-primary" : "bg-danger";
   const message = isSuccess ? (
@@ -86,7 +86,7 @@ export const EmailChangedToast = () => {
 //   ));
 // };
 
-export const showDisplayNameToast = (type) => {
+export const ShowDisplayNameToast = (type) => {
   const isSuccess = type === "success";
   const backgroundColor = isSuccess ? "bg-primary" : "bg-danger";
   const message = isSuccess
@@ -113,7 +113,7 @@ export const showDisplayNameToast = (type) => {
   ));
 };
 
-export const showAvatarUploadToast = (type) => {
+export const ShowAvatarUploadToast = (type) => {
   const isSuccess = type === "success";
   const backgroundColor = isSuccess ? "bg-primary" : "bg-danger";
   const message = isSuccess
@@ -140,7 +140,7 @@ export const showAvatarUploadToast = (type) => {
   ));
 };
 
-export const showDeleteAccountToast = (type) => {
+export const ShowDeleteAccountToast = (type) => {
   const isSuccess = type === "success";
   const backgroundColor = isSuccess ? "bg-primary" : "bg-danger";
   const message = isSuccess
@@ -167,7 +167,7 @@ export const showDeleteAccountToast = (type) => {
   ));
 };
 
-export const showDeletingAccountToast = (type, error) => {
+export const ShowDeletingAccountToast = (type, error) => {
   const isSuccess = type === "success";
   const backgroundColor = isSuccess ? "bg-primary" : "bg-danger";
   const message = isSuccess ? (
@@ -199,7 +199,7 @@ export const showDeletingAccountToast = (type, error) => {
 
 //UserActivity
 
-export const userActivityToast = (type, data) => {
+export const UserActivityToast = (type, data) => {
   const isSuccess = type === "success";
   const backgroundColor = isSuccess ? "bg-foreground" : "bg-danger";
   const message = data;

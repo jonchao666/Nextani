@@ -13,19 +13,46 @@ import {
 import { HeartIcon } from "@/icons";
 import Layout from "@/components/layout/Layout";
 import CardDisplay from "@/components/personPage/CardDisplay";
-
+import { useSelector, useDispatch } from "react-redux";
+import useUserActivity from "@/hooks/useUserActivity";
+import ReactHtmlParser from "react-html-parser";
 export default function Person() {
   const router = useRouter();
   const { mal_id } = router.query;
-
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [data, setData] = useState();
   const [visible, setVisible] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
-
+  const [loginReLike, setLoginReLike] = useState(false);
+  const [isPersonLiked, setIsPersonLiked] = useState(false);
   const maxRetries = 3;
   const tooltipRef = useRef(null);
+
+  const { addLikedPerson, removeLikedPerson, checkIsPersonLiked } =
+    useUserActivity();
+
   const toggleVisibility = () => {
     setVisible(!visible);
+  };
+
+  useEffect(() => {
+    async function fetchIsPersonLiked() {
+      const response = await checkIsPersonLiked(mal_id);
+
+      setIsPersonLiked(response.isLiked); // Access the isLiked property
+    }
+    if (isAuthenticated) fetchIsPersonLiked();
+  }, [checkIsPersonLiked, mal_id, isAuthenticated]);
+
+  const handleClickLikedButton = (mal_id) => {
+    const newIsPersonLiked = !isPersonLiked;
+    setIsPersonLiked(newIsPersonLiked);
+
+    if (newIsPersonLiked) {
+      addLikedPerson(mal_id);
+    } else {
+      removeLikedPerson(mal_id);
+    }
   };
 
   const handleClickOutside = (event) => {
@@ -64,6 +91,27 @@ export default function Person() {
 
   if (!data) {
     return null;
+  }
+
+  //add personal website url to about
+  if (data.about && data.about.includes("Profile")) {
+    const profileIndex = data.about.indexOf("Profile");
+    const insertPoint = profileIndex + "Profile".length;
+
+    const nextLineIndex =
+      data.about.indexOf("\n", insertPoint) > -1
+        ? data.about.indexOf("\n", insertPoint)
+        : data.about.length;
+
+    if (data.website_url) {
+      data.about =
+        data.about.substring(0, insertPoint) +
+        ": " +
+        data.website_url +
+        data.about.substring(nextLineIndex);
+    } else {
+      data.about = data.about.substring(0, profileIndex);
+    }
   }
 
   return (
@@ -108,17 +156,22 @@ export default function Person() {
               </span>
             </div>
             {visible && (
-              <div className="absolute z-20 whitespace-pre-line m-3  bg-background p-5 rounded-2xl shadow-lg min-w-max w-full">
+              <div className="absolute z-20 whitespace-pre-line m-3  bg-background dark:bg-[rgb(40,40,40)] p-5 rounded-2xl shadow-lg min-w-max w-full">
                 <div className="mb-2.5 text-xl font-bold">About</div>
-                <div className="text-sm">{data.about}</div>
+                <div className="text-sm">{ReactHtmlParser(data.about)}</div>
               </div>
             )}
           </div>
 
           <Button
+            onClick={() =>
+              isAuthenticated
+                ? handleClickLikedButton(mal_id)
+                : setLoginReLike(true)
+            }
             size="sm"
             color="danger"
-            variant="ghost"
+            variant={isPersonLiked && isAuthenticated ? "solid" : "ghost"}
             className="mt-3 border-1"
             startContent={
               <span
@@ -134,6 +187,24 @@ export default function Person() {
           >
             Favorites
           </Button>
+          {loginReLike && (
+            <div className="absolute z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line bg-white  dark:bg-[rgb(40,40,40)]  shadow-lg w-[387px] overflow-hidden">
+              <p className="mt-6 mb-4 px-6">Like this person?</p>
+              <p className="mb-8 px-6">
+                Sign in to save this person to your favorite.
+              </p>
+              <Button
+                as={Link}
+                href="/login"
+                radius="full"
+                color="primary"
+                variant="light"
+                className="my-2 ml-1.5 "
+              >
+                Sign in
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       <CardDisplay data={data} />

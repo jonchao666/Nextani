@@ -42,16 +42,21 @@ export default function MainAreaDefault({
   return (
     <div className="flex flex-col grow ">
       <div className="mb-6">
-        <div className="text-sm font-medium mb-2.5 flex justify-between">
-          <span>Characters</span>
+        <div className="text-sm font-medium mb-2.5 flex justify-between items-center">
+          <h3>Characters</h3>
           {validCharacters.length > 6 && (
-            <Link
+            <Button
+              size="sm"
+              variant="light"
+              color="primary"
+              radius="full"
+              as={Link}
               href={`/animeDetails/characters?mal_id=${data.mal_id}`}
               scroll={false}
-              className="text-sm text-primary font-normal"
+              className="text-sm text-primary font-medium"
             >
               View all
-            </Link>
+            </Button>
           )}
         </div>
 
@@ -67,16 +72,21 @@ export default function MainAreaDefault({
       </div>
 
       <div className="mb-8">
-        <div className="text-sm font-medium mb-2.5 flex justify-between">
-          <span>Staff</span>
+        <div className="text-sm font-medium mb-2.5 flex justify-between items-center">
+          <h3>Staff</h3>
           {staff.length > 3 && (
-            <Link
+            <Button
+              size="sm"
+              as={Link}
+              variant="light"
+              color="primary"
+              radius="full"
               href={`/animeDetails/staff?mal_id=${data.mal_id}`}
               scroll={false}
-              className="text-sm text-primary font-normal"
+              className="text-sm text-primary font-medium"
             >
               View all
-            </Link>
+            </Button>
           )}
         </div>
 
@@ -94,7 +104,9 @@ export default function MainAreaDefault({
       {recommendations.length > 0 && (
         <RecommendationsCardInfinityScorll recommendations={recommendations} />
       )}
-      <div className="mb-6">
+
+      {/* comment */}
+      {/* <div className="mb-6">
         <div className="text-lg font-medium mb-6">0 Comments</div>
         <div className="mr-4">
           <div className="flex ">
@@ -131,7 +143,7 @@ export default function MainAreaDefault({
             </Button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

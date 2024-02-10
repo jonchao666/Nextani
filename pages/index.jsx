@@ -9,10 +9,10 @@ import {
 } from "@/helpers/getSeasonAndYear";
 import axios from "axios";
 import {
-  categoryTitles,
-  categories,
-  genres,
-  directors,
+  CategoryTitles,
+  Categories,
+  Genres,
+  Directors,
 } from "@/constans/categoryData";
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -44,7 +44,7 @@ export default function HomePage({ slidersData, calendarData }) {
         <ShowSlider
           category={title}
           key={title}
-          title={categoryTitles[title] || title}
+          title={CategoryTitles[title] || title}
           data={data}
         />
       ))}
@@ -56,14 +56,14 @@ export default function HomePage({ slidersData, calendarData }) {
 export async function getStaticProps() {
   const slidersData = await Promise.all(
     //get sliders data
-    categories.slice(0, 5).map(async (category) => {
+    Categories.slice(0, 5).map(async (category) => {
       let params = {};
 
-      if (genres.includes(category)) {
+      if (Genres.includes(category)) {
         // 如果是流派类别
         params.genre = category;
         params.sortBy = "members";
-      } else if (directors.includes(category)) {
+      } else if (Directors.includes(category)) {
         // 如果是导演类别
         params.director = category;
         params.sortBy = "members";
@@ -84,6 +84,9 @@ export async function getStaticProps() {
         params.year = seasonYear[0].year;
         params.season = seasonYear[0].season;
         params.sortBy = "members";
+      } else if (category === "topAiring") {
+        params.status = "Currently Airing";
+        params.sortBy = "score";
       }
 
       const url = `${process.env.API_URL}/anime`;

@@ -15,13 +15,13 @@ export default function StaffCard({ data }) {
   return (
     <div className=" w-[305px]">
       <Card
-        className={`isPressable hover:opacity-100 rounded-sm shadow-none flex flex-row justify-between bg-[#edf1f5] dark:bg-background ${
+        className={`isPressable hover:opacity-100 rounded-sm shadow-none flex flex-row justify-between bg-[#edf1f5] dark:bg-background dark:hover:bg-[rgba(255,255,255,0.13)] ${
           isLoaded ? "visible" : "invisible"
         }`}
       >
         <Link
           href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}
-          className="p-0 overflow-hidden min-w-[80px] "
+          className="p-0 overflow-hidden w-[80px] shrink-0"
         >
           <Image
             isZoomed

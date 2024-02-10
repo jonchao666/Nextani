@@ -1,14 +1,7 @@
-import {
-  Card,
-  CardFooter,
-  CardBody,
-  Image,
-  Link,
-  CardHeader,
-} from "@nextui-org/react";
+import { Card, CardFooter, CardBody, Image, Link } from "@nextui-org/react";
 import { useState } from "react";
 
-export default function ImageCard({ data, ep }) {
+export default function ImageCard({ data, ep, smallSize }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false); // 新增状态用于追踪图片加载是否失败
   const url =
@@ -18,8 +11,12 @@ export default function ImageCard({ data, ep }) {
     )
       ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
       : data.apiData.images.webp.large_image_url;
+
+  const height = smallSize ? "h-[221px] " : " h-[302px]";
+  const width = smallSize ? " w-[154px]" : " w-[210px]";
+
   return (
-    <div className=" w-[210px]">
+    <div className={width}>
       <Card
         as={Link}
         shadow="none"
@@ -32,7 +29,7 @@ export default function ImageCard({ data, ep }) {
         <CardBody className="p-0 overflow-hidden ">
           <Image
             isZoomed
-            className="h-[302px] w-[210px] object-cover "
+            className={`${height} ${width} object-cover`}
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
@@ -63,13 +60,16 @@ export default function ImageCard({ data, ep }) {
       </Card>
 
       <div>
-        <span className="mt-2 line-clamp-2 text-sm font-medium">
-          {/* matchedTitles is for the searchResult page */}
-          {data.matchedTitles && data.matchedTitles[0].title
-            ? data.matchedTitles[0].title
-            : data.apiData.title}
-        </span>
-        <span className="text-xs mt-1.5 text-gray-600 ">
+        <Link href={`/animeDetails/default?mal_id=${data.mal_id}`}>
+          <p className="mt-2 line-clamp-2 text-sm font-medium text-foreground">
+            {/* matchedTitles is for the searchResult page */}
+            {data.matchedTitles && data.matchedTitles[0].title
+              ? data.matchedTitles[0].title
+              : data.apiData.title}
+          </p>
+        </Link>
+
+        <p className="text-xs  text-gray-600 dark:text-[rgb(170,170,170)] ">
           {data.apiData.genres && data.apiData.genres.length > 0
             ? data.apiData.genres
                 .slice(0, 2)
@@ -80,7 +80,7 @@ export default function ImageCard({ data, ep }) {
             <span className="text-2xl align-[-4px]"> &middot;</span>
           )}{" "}
           {data.apiData.aired.prop.from.year}
-        </span>
+        </p>
       </div>
     </div>
   );

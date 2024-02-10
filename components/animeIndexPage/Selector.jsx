@@ -1,5 +1,5 @@
 import { Button, Select, SelectItem } from "@nextui-org/react";
-import { genres, types, years, categoryTitles } from "@/constans/categoryData";
+import { Genres, Types, Years, CategoryTitles } from "@/constans/categoryData";
 export default function Selector({
   selectedButtonSortby,
   selectedButtonGenres,
@@ -38,7 +38,7 @@ export default function Selector({
         }
         onChange={(e) => setSelectedButtonGenres(e.target.value)}
       >
-        {genres.map((genre) => (
+        {Genres.map((genre) => (
           <SelectItem textValue={genre} key={genre} value={genre}>
             {genre}
           </SelectItem>
@@ -61,7 +61,7 @@ export default function Selector({
         }
         onChange={(e) => setSelectedButtonTypes(e.target.value)}
       >
-        {types.map((type) => (
+        {Types.map((type) => (
           <SelectItem textValue={type} key={type}>
             {type}
           </SelectItem>
@@ -123,7 +123,7 @@ export default function Selector({
         }
         onChange={(e) => setSelectedButtonYear(e.target.value)}
       >
-        {years.map((year) => (
+        {Years.map((year) => (
           <SelectItem textValue={year} key={year.toString()}>
             {year}
           </SelectItem>

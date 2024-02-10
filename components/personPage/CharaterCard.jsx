@@ -14,7 +14,7 @@ export default function CharaterCard({ data }) {
   return (
     <div className=" w-[305px]">
       <Card
-        className={`isPressable hover:opacity-100 rounded-sm shadow-none flex flex-row justify-between bg-[#edf1f5] dark:bg-background ${
+        className={`isPressable hover:opacity-100 rounded-sm shadow-none flex flex-row justify-between bg-[#edf1f5] dark:bg-background  dark:hover:bg-[rgba(255,255,255,0.13)] ${
           isLoaded ? "visible" : "invisible"
         }`}
       >

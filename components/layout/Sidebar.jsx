@@ -172,26 +172,26 @@ export default function Sidebar({ absolute, toggleSidebar }) {
           <div className="pt-4 px-6 flex flex-wrap">
             <Link
               href="/legalPages/About"
-              className="text-xs mr-2 font-medium text-gray-600 "
+              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
             >
               About
             </Link>
 
             <Link
               href="/legalPages/ContactUs"
-              className="text-xs mr-2 font-medium text-gray-600"
+              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
             >
               Contact us
             </Link>
             <Link
               href="/legalPages/TermsOfService"
-              className="text-xs mr-2 font-medium text-gray-600"
+              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
             >
               Terms of Service
             </Link>
             <Link
               href="/legalPages/PrivacyPolicy"
-              className="text-xs mr-2 font-medium text-gray-600"
+              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
             >
               Privacy Policy
             </Link>

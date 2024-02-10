@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
+import axios from "axios";
 export default function useAnimeDataLocal() {
   const [data, setData] = useState(null);
 
-  async function fetchData(mal_id) {
+  const fetchData = useCallback(async (mal_id) => {
     let params = {};
+
     params.mal_id = mal_id;
 
     try {
@@ -19,8 +20,7 @@ export default function useAnimeDataLocal() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
-
+  }, []);
   return {
     fetchData,
     data,

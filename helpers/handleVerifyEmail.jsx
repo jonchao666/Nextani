@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import {
-  showEmailChangeToast,
+  ShowEmailChangeToast,
   EmailChangedToast,
 } from "@/components/settings/Toasts";
 import { setVerifyingEmail, setEmail } from "@/reducers/userSlice";
@@ -23,7 +23,7 @@ export default async function handleVerifyEmail(newEmail, dispatch) {
     );
 
     if (response.status === 200) {
-      showEmailChangeToast(newEmail, "success");
+      ShowEmailChangeToast(newEmail, "success");
       const startPolling = () => {
         const intervalId = setInterval(async () => {
           try {
@@ -57,10 +57,10 @@ export default async function handleVerifyEmail(newEmail, dispatch) {
       // 调用轮询函数
       startPolling();
     } else {
-      showEmailChangeToast(newEmail, "error");
+      ShowEmailChangeToast(newEmail, "error");
     }
   } catch (error) {
     console.error("Error requesting email update:", error);
-    showEmailChangeToast(newEmail, "error", error);
+    ShowEmailChangeToast(newEmail, "error", error);
   }
 }

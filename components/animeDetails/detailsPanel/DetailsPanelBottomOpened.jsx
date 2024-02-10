@@ -1,4 +1,4 @@
-import { Link } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 
 export default function DetailsPanelBottomOpened({
   data,
@@ -22,12 +22,15 @@ export default function DetailsPanelBottomOpened({
             {data.scored_by ? data.scored_by : "- "}users
           </span>
         </div>
-        <Link
+        <Button
+          variant="light"
+          radius="full"
+          size="sm"
           onClick={() => setSynopsisOpened(false)}
-          className="cursor-pointer"
+          className="cursor-pointer text-sm font-medium"
         >
           Show less
-        </Link>
+        </Button>
       </div>
     </div>
   );

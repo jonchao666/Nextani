@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
 import { fetchUserData } from "@/reducers/userSlice";
 
-const Layout = ({ children, col1Width }) => {
+const Layout = ({ children, col1Width, youPage }) => {
   useMainResponsive();
   const showSidebar = useSelector((state) => state.sidebar.showSidebar);
   const showSidebars = useSelector(
@@ -33,27 +33,38 @@ const Layout = ({ children, col1Width }) => {
     }
   }, [dispatch, showSidebars]);
 
+  //main area width
   useEffect(() => {
     const width = isXl
-      ? "1284px"
+      ? youPage
+        ? "1260px"
+        : "1280px"
       : isLg
-      ? "1070px"
+      ? youPage
+        ? "1102px"
+        : "1066px"
       : isMd
-      ? "856px"
+      ? youPage
+        ? "786px"
+        : "852px"
       : isSm
-      ? "642px"
+      ? youPage
+        ? "628px"
+        : "638px"
       : isXs
-      ? "428px"
+      ? youPage
+        ? "312px"
+        : "424px"
       : col1Width
       ? col1Width
       : "210px";
     setMainWidth(width);
-  }, [isXl, isLg, isMd, isSm, isXs, col1Width]);
+  }, [isXl, isLg, isMd, isSm, isXs, col1Width, youPage]);
 
   return (
     <div>
       {!showSidebars && showSidebar && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40" />
+        <div className="fixed inset-0  bg-[rgba(0,0,0,0.5)] z-40" />
       )}
       <Header toggleSidebar={() => dispatch(toggleSidebar())} />
 

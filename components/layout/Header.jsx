@@ -101,10 +101,13 @@ export default function Header({ toggleSidebar, noMenu }) {
         </Button>
       )}
 
-      <NavbarBrand href="/" as={Link}>
-        <p className="font-bold text-2xl hidden sm:block text-foreground">
+      <NavbarBrand>
+        <Link
+          href="/"
+          className="font-bold text-2xl hidden sm:block text-foreground"
+        >
           NextAni
-        </p>
+        </Link>
       </NavbarBrand>
       <NavbarContent className="relative max-w-[650px] w-full" justify="center">
         <Input
@@ -137,8 +140,8 @@ export default function Header({ toggleSidebar, noMenu }) {
           }}
           onKeyDown={handleKeyDown}
         />
-        {showResults && isSearchFocused && (
-          <div className="absolute z-10 flex flex-col bg-background  border left-0 top-14 border-gray-300 py-4 rounded-2xl shadow-lg min-w-max w-full ">
+        {showResults && isSearchFocused && !isLoading && results.length > 0 && (
+          <div className="absolute z-10 flex flex-col bg-background dark:bg-[rgb(40,40,40)] border dark:border-none left-0 top-14 border-gray-300 py-4 rounded-2xl shadow-lg min-w-max w-full ">
             {results.map((result, index) => (
               <Link
                 href={`/animeDetails/default?mal_id=${result.mal_id}`}

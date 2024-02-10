@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import { useState, useEffect } from "react";
-import { genres, types } from "@/constans/categoryData";
+import { Genres, Types } from "@/constans/categoryData";
 import ShowIndex from "@/components/animeIndexPage/ShowIndex";
 import { useRouter } from "next/router";
 import {
@@ -34,10 +34,10 @@ export default function AnimeIndex() {
       setSelectedButtonYear("All Year");
       setSelectedButtonSeason("All Season");
       setSelectedButtonRated("All Rated");
-      if (genres.includes(category)) {
+      if (Genres.includes(category)) {
         setSelectedButtonGenres(category);
         setSelectedButtonSortby("Popularity");
-      } else if (types.includes(category)) {
+      } else if (Types.includes(category)) {
         setSelectedButtonTypes(category);
         setSelectedButtonSortby("Score");
       } else if (category === "thisSeasonPopular") {
@@ -57,6 +57,9 @@ export default function AnimeIndex() {
         setSelectedButtonYear(seasonYear[0].year);
         setSelectedButtonSeason(seasonYear[0].season);
         setSelectedButtonSortby("Popularity");
+      } else if (category === "topAiring") {
+        setSelectedButtonStatus("Currently Airing");
+        setSelectedButtonSortby("Score");
       } else if (category === "Popularity") {
         setSelectedButtonSortby("Popularity");
       } else if (category === "Top") {

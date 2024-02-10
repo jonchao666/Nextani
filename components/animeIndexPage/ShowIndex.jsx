@@ -119,7 +119,7 @@ export default function ShowIndex({
 
   return (
     <div>
-      <div className={`w-full grid ${colToShow} gap-y-6  `}>
+      <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 `}>
         {data &&
           data.map((item, index) => <ImageCard key={index} data={item} />)}
       </div>

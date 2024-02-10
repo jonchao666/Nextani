@@ -1,7 +1,8 @@
-export const categoryTitles = {
+export const CategoryTitles = {
   thisSeasonPopular: "This Season Popular",
   nextSeason: "Upcoming Next Season",
   thisSeasonTop: "This Season Top",
+  topAiring: "Top Airing",
   Top: "Top Anime",
   Popular: "All-Time Popular anime",
   Movie: "Top Movie",
@@ -23,10 +24,12 @@ export const categoryTitles = {
   "Watanabe, Shinichirou": "Shinichirou Watanabe",
   "Imaishi, Hiroyuki": "Hiroyuki Imaishi",
 };
-export const categories = [
+export const Categories = [
+  "topAiring",
+  "nextSeason",
   "thisSeasonPopular",
   "thisSeasonTop",
-  "nextSeason",
+
   "Slice of Life",
   "Adventure",
   "Fantasy",
@@ -49,7 +52,7 @@ export const categories = [
   "Gourmet",
 ];
 
-export const genres = [
+export const Genres = [
   "Fantasy",
   "Sci-Fi",
   "Drama",
@@ -68,7 +71,7 @@ export const genres = [
   "Award Winning",
 ];
 
-export const directors = [
+export const Directors = [
   "Miyazaki, Hayao",
   "Shinkai, Makoto",
   "Kon, Satoshi",
@@ -81,9 +84,9 @@ export const directors = [
   "Yamada, Naoko",
   "Oshii, Mamoru",
 ];
-export const types = ["TV", "OVA", "Movie", "Special", "ONA", "Music"];
+export const Types = ["TV", "OVA", "Movie", "Special", "ONA", "Music"];
 
-export const themes = [
+export const Themes = [
   "Music",
   "School",
   "Historical",
@@ -136,7 +139,7 @@ export const themes = [
 ];
 const date = new Date();
 const currentYear = date.getFullYear();
-const years = [
+const Years = [
   "2014-2010",
   "2009-2005",
   "2004-2000",
@@ -145,6 +148,6 @@ const years = [
   "Earlier",
 ];
 for (let i = 2015; i <= currentYear; i++) {
-  years.unshift(i);
+  Years.unshift(i);
 }
-export { years };
+export { Years };

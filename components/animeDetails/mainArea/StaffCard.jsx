@@ -3,7 +3,7 @@ import { Card, Image, Link } from "@nextui-org/react";
 export default function StaffCard({ person }) {
   return (
     <div>
-      <Card className=" flex-row rounded-sm bg-[#edf1f5] dark:bg-background shadow-none ">
+      <Card className=" flex-row rounded-sm bg-[#edf1f5] dark:bg-[rgb(40,40,40)] shadow-none ">
         <Link href={`/person?mal_id=${person.person.mal_id}`}>
           <Image
             radius="none"

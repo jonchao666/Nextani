@@ -62,7 +62,7 @@ export default function AnimeDetailsLayout({
   return (
     <div>
       {showSidebar && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40" />
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-40" />
       )}
       <Header toggleSidebar={() => dispatch(toggleSidebar())} />
       {showSidebar ? (

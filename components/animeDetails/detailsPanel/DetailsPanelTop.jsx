@@ -1,4 +1,3 @@
-import DetailsPanelButton from "./DetailsPanelButton";
 import { Button, Link } from "@nextui-org/react";
 import { SearchIcon, SignInIcon, GuideButtonIcon, Logo } from "@/icons";
 import { useState, useEffect, useMemo, useRef } from "react";
@@ -15,9 +14,6 @@ export default function DetailsPanelTop({
   mal_id,
 }) {
   const {
-    watchlists,
-    watchlistsHasAnime,
-
     addLikedAnime,
     checkIsAnimeLiked,
     removeLikedAnime,
@@ -25,12 +21,12 @@ export default function DetailsPanelTop({
 
     fetchLikedPerson,
     addLikedPerson,
-    removelikedPerson,
+    removeLikedPerson,
     fetchHistory,
     addHistory,
     removeHistory,
     fetSelectedWatchlist,
-    fetchwatchlists,
+    fetchWatchlistsWithoutAnimeDetails,
     fetchWatchlistsContainingAnime,
     createWatchlist,
 
@@ -41,6 +37,7 @@ export default function DetailsPanelTop({
     renameWatchlist,
     updateWatchlistDescription,
   } = useUserActivity();
+  const [watchlistsHasAnime, setWatchlistsHasAnime] = useState(null);
   const [isAnimeLiked, setIsAnimeLiked] = useState(false);
   const [addToListOpen, setAddToListOpen] = useState(false);
   const [loginReLike, setLoginReLike] = useState(false);
@@ -49,11 +46,26 @@ export default function DetailsPanelTop({
   const tooltipRefList = useRef(null);
   const tooltipRefLike = useRef(null);
   const { resolvedTheme } = useTheme();
+  const [watchlists, setWatchlists] = useState(null);
 
   useEffect(() => {
-    fetchwatchlists(1, 0);
-    fetchWatchlistsContainingAnime(mal_id);
-  }, [fetchwatchlists, fetchWatchlistsContainingAnime, mal_id]);
+    async function fetchData() {
+      if (isAuthenticated) {
+        let data = await fetchWatchlistsWithoutAnimeDetails();
+        setWatchlists(data);
+        let res = await fetchWatchlistsContainingAnime(mal_id);
+        setWatchlistsHasAnime(res);
+        addHistory(mal_id);
+      }
+    }
+    fetchData();
+  }, [
+    fetchWatchlistsWithoutAnimeDetails,
+    addHistory,
+    fetchWatchlistsContainingAnime,
+    mal_id,
+    isAuthenticated,
+  ]);
 
   useEffect(() => {
     async function fetchIsAnimeLiked() {
@@ -130,15 +142,12 @@ export default function DetailsPanelTop({
       {addToListOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40">
           <AddToListComponent
-            setAddToListOpen={setAddToListOpen}
-            createWatchlist={createWatchlist}
+            setWatchlists={setWatchlists}
             watchlists={watchlists}
-            fetchwatchlists={fetchwatchlists}
+            setAddToListOpen={setAddToListOpen}
             mal_id={mal_id}
-            addWatchlistItem={addWatchlistItem}
-            removeWatchlistItem={removeWatchlistItem}
-            fetchWatchlistsContainingAnime={fetchWatchlistsContainingAnime}
             watchlistsHasAnime={watchlistsHasAnime}
+            setWatchlistsHasAnime={setWatchlistsHasAnime}
           />
         </div>
       )}
@@ -168,13 +177,15 @@ export default function DetailsPanelTop({
               >
                 playlist_add
               </span>
-              Add to list
+              Save to list
             </Button>
           </div>
           {loginReList && (
-            <div className="absolute z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background   shadow-lg w-[387px] overflow-hidden">
+            <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]   shadow-lg w-[387px] overflow-hidden">
               <p className="mt-6 mb-4 px-6">Want to see this again later?</p>
-              <p className="mb-8 px-6">Sign in to add this anime to a list.</p>
+              <p className="mb-8 px-6">
+                Sign in to save this anime to a watchlist.
+              </p>
               <Button
                 as={Link}
                 href="/login"
@@ -211,10 +222,10 @@ export default function DetailsPanelTop({
               </span>
             </Button>
             {loginReLike && (
-              <div className="absolute z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background   shadow-lg w-[387px] overflow-hidden">
+              <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]  shadow-lg w-[387px] overflow-hidden">
                 <p className="mt-6 mb-4 px-6">Like this anime?</p>
                 <p className="mb-8 px-6">
-                  Sign in to add this anime to your favorite.
+                  Sign in to save this anime to your favorite.
                 </p>
                 <Button
                   as={Link}

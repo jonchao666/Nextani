@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import RecommendationsCard from "./RecommendationsCard";
 import { CircularProgress } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
 export default function RecommendationsCardInfinityScorll({ recommendations }) {
   const [displayedImages, setDisplayedImages] = useState([]);
@@ -43,14 +44,18 @@ export default function RecommendationsCardInfinityScorll({ recommendations }) {
   };
   return (
     <div className="mb-6">
-      <div className="text-sm font-medium mb-2.5 flex justify-between">
-        <span>Recommendations</span>
-        <div
+      <div className="text-sm font-medium mb-2.5 flex justify-between items-center">
+        <h3>Recommendations</h3>
+        <Button
+          variant="light"
+          color="primary"
+          radius="full"
+          size="sm"
           onClick={handleViewAllClick}
-          className="text-sm text-primary font-normal cursor-pointer"
+          className="text-sm text-primary  cursor-pointer font-medium"
         >
           {showViewAll ? (isViewAll ? "View Less" : "View All") : ""}
-        </div>
+        </Button>
       </div>
       <div
         className={

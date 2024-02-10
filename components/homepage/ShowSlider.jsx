@@ -114,7 +114,7 @@ function ShowSlider({ data, title, category }) {
           radius="full"
           color="primary"
           size="md"
-          className="border-none hover:opacity-100 h-[36px]"
+          className="border-none hover:opacity-100 h-9 font-medium"
           href={`/animeIndex?category=${category}`}
           as={Link}
         >

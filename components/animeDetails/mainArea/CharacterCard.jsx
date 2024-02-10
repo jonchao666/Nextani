@@ -4,7 +4,7 @@ export default function CharacterCard({ character }) {
   if (!character) return null;
   return (
     <div>
-      <Card className=" flex-row justify-between rounded-sm bg-[#edf1f5] dark:bg-background shadow-none">
+      <Card className=" flex-row justify-between rounded-sm bg-[#edf1f5] dark:bg-[rgb(40,40,40)]  shadow-none">
         <Image
           radius="none"
           className="w-[60px] h-[81px] object-cover"

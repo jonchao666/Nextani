@@ -1,5 +1,5 @@
 import { setDisplayName, setChangingDisplayName } from "@/reducers/userSlice";
-import { showDisplayNameToast } from "@/components/settings/Toasts";
+import { ShowDisplayNameToast } from "@/components/settings/Toasts";
 
 export default async function handleUpdateDisplayName(
   displayNameChange,
@@ -27,13 +27,13 @@ export default async function handleUpdateDisplayName(
       dispatch(setDisplayName(newDisplayName));
       dispatch(setChangingDisplayName(false));
       console.log("Display name updated:", data);
-      showDisplayNameToast("success");
+      ShowDisplayNameToast("success");
     } else {
       console.error("Failed to update display name:", data);
-      showDisplayNameToast("error");
+      ShowDisplayNameToast("error");
     }
   } catch (error) {
     console.error("Error updating display name:", error);
-    showDisplayNameToast("error");
+    ShowDisplayNameToast("error");
   }
 }

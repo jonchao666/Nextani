@@ -1,6 +1,6 @@
 import { setDisplayImageUrl } from "@/reducers/userSlice";
 import toast from "react-hot-toast";
-import { showAvatarUploadToast } from "@/components/settings/Toasts";
+import { ShowAvatarUploadToast } from "@/components/settings/Toasts";
 
 export default async function handleFileUpload(event, dispatch) {
   const jwt =
@@ -76,13 +76,13 @@ export default async function handleFileUpload(event, dispatch) {
           const uploadedImageUrl = `${process.env.API_URL}${data.profilePicture}`;
 
           dispatch(setDisplayImageUrl(uploadedImageUrl));
-          showAvatarUploadToast("success");
+          ShowAvatarUploadToast("success");
         } catch (error) {
           console.error(
             "There has been a problem with your fetch operation:",
             error
           );
-          showAvatarUploadToast("error");
+          ShowAvatarUploadToast("error");
         }
       }
 
