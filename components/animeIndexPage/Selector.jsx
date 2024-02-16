@@ -32,7 +32,7 @@ export default function Selector({
           popoverContent: "rounded-lg",
         }}
         selectedKeys={
-          selectedButtonGenres === "All Genres" || selectedButtonGenres === ""
+          selectedButtonGenres === "All Genres" || !selectedButtonGenres
             ? []
             : [selectedButtonGenres]
         }
@@ -55,7 +55,7 @@ export default function Selector({
           popoverContent: "rounded-lg",
         }}
         selectedKeys={
-          selectedButtonTypes === "All Types" || selectedButtonTypes === ""
+          selectedButtonTypes === "All Types" || !selectedButtonTypes
             ? []
             : [selectedButtonTypes]
         }
@@ -78,7 +78,7 @@ export default function Selector({
           popoverContent: "rounded-lg",
         }}
         selectedKeys={
-          selectedButtonStatus === "All Status" || selectedButtonStatus === ""
+          selectedButtonStatus === "All Status" || !selectedButtonStatus
             ? []
             : [selectedButtonStatus]
         }
@@ -117,7 +117,7 @@ export default function Selector({
           popoverContent: "rounded-lg",
         }}
         selectedKeys={
-          selectedButtonYear === "All Year" || selectedButtonYear === ""
+          selectedButtonYear === "All Year" || !selectedButtonYear
             ? []
             : [selectedButtonYear.toString()]
         }
@@ -140,7 +140,7 @@ export default function Selector({
           popoverContent: "rounded-lg",
         }}
         selectedKeys={
-          selectedButtonSeason === "All Season" || selectedButtonSeason === ""
+          selectedButtonSeason === "All Season" || !selectedButtonSeason
             ? []
             : [selectedButtonSeason]
         }
@@ -170,7 +170,9 @@ export default function Selector({
           popoverContent: "rounded-lg",
         }}
         selectedKeys={
-          selectedButtonRated === "All Rated" || "" ? [] : [selectedButtonRated]
+          selectedButtonRated === "All Rated" || !selectedButtonRated
+            ? []
+            : [selectedButtonRated]
         }
         onChange={(e) => setSelectedButtonRated(e.target.value)}
       >

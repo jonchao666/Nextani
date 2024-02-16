@@ -6,7 +6,7 @@ import handleDeleteAccount from "@/helpers/handleDeleteAccount";
 
 const AccountDeleted = () => {
   const router = useRouter();
-  const [isDeleted, setIsDeleted] = useState(false); // 新增状态变量
+  const [isDeleted, setIsDeleted] = useState(null); // 新增状态变量
 
   useEffect(() => {
     const deleteAccount = async () => {
@@ -21,9 +21,10 @@ const AccountDeleted = () => {
     deleteAccount();
   }, [router]);
 
+  if (isDeleted === null) return <div>Please wait...</div>;
   return (
     <div className="h-screen">
-      <Navbar maxWidth="full" className="sticky h-16 border">
+      <Navbar maxWidth="full" className="sticky h-16 ">
         <NavbarBrand href="/" as={Link}>
           <p className="font-bold text-2xl text-foreground">NextAni</p>
         </NavbarBrand>

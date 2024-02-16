@@ -32,20 +32,12 @@ export default function AvatarDropdown() {
 
   useEffect(() => {
     if (userData) {
-      dispatch(
-        setEmail(userData.google ? userData.google.email : userData.email)
-      );
-      dispatch(
-        setDisplayName(
-          userData.google ? userData.google.displayName : userData.displayName
-        )
-      );
-      console.log(userData.profilePicture);
+      dispatch(setEmail(userData.email));
+      dispatch(setDisplayName(userData.displayName));
+
       dispatch(
         setDisplayImageUrl(
-          userData.google
-            ? userData.google.profilePicture
-            : userData.profilePicture
+          userData.profilePicture
             ? `${process.env.API_URL}${userData.profilePicture}`
             : `${process.env.API_URL}/profilePicture/defaultImage.svg`
         )
@@ -53,7 +45,6 @@ export default function AvatarDropdown() {
     }
   }, [userData, dispatch]);
 
-  if (!userData) return;
   return (
     <Dropdown radius="sm">
       <DropdownTrigger>

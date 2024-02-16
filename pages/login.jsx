@@ -1,16 +1,49 @@
 import { Button, Image, Input, Link } from "@nextui-org/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Oauth2 from "@/components/auth/oauth2";
 import { useRouter } from "next/router";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons";
+import useUserActivity from "@/hooks/useUserActivity";
 
 export default function Login() {
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const { redirect } = router.query;
+
+  //email validate
+  const [email, setEmail] = useState("");
+
+  const validateEmail = (email) => email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
+
+  const isInvalid = useMemo(() => {
+    if (email === "") return false;
+
+    return validateEmail(email) ? false : true;
+  }, [email]);
+
+  // local login
+  const { localLogin } = useUserActivity();
+  const [isLocalLogin, setIsLocalLogin] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+  const handleLogin = async (email, password) => {
+    setIsLoading(true);
+    let token = await localLogin(email, password);
+    console.log(token);
+    setIsLoading(false);
+    if (token) {
+      router.push(`/auth-callback?token=${token}`);
+    } else {
+      setLoginError(true);
+    }
+  };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
   if (!isMounted) return null;
 
   return (
@@ -18,31 +51,82 @@ export default function Login() {
       <div className="w-full h-full flex justify-center items-center">
         <div className="flex flex-col">
           <div className="text-3xl font-bold mx-auto mb-8">
-            Log in to NextAni
+            {isLocalLogin ? "Enter your password" : "Log in to NextAni"}
           </div>
-          <Input type="email" label="Email" />
+          <Input
+            type="email"
+            variant="bordered"
+            isDisabled={isLocalLogin}
+            isInvalid={isInvalid}
+            color={isInvalid ? "danger" : "primary"}
+            errorMessage={isInvalid && "Please enter a valid email"}
+            onValueChange={setEmail}
+            label="Email"
+            className={`${isLocalLogin && "mb-3"} opacity-100`}
+          />
+          {isLocalLogin && (
+            <Input
+              isDisabled={isLoading}
+              className="sm:w-[320px] "
+              label="Password"
+              variant="bordered"
+              placeholder="Enter your password"
+              onValueChange={setPassword}
+              errorMessage={loginError && "Incorrect email or password."}
+              endContent={
+                <button
+                  className="focus:outline-none"
+                  type="button"
+                  onClick={toggleVisibility}
+                >
+                  {isVisible ? (
+                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  ) : (
+                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  )}
+                </button>
+              }
+              type={isVisible ? "text" : "password"}
+            />
+          )}
           <Button
+            isLoading={isLoading}
             variant="solid"
             color="primary"
             radius="sm"
             size="lg"
             className="mt-6"
+            onClick={() => {
+              !isLocalLogin &&
+                !isInvalid &&
+                email !== "" &&
+                setIsLocalLogin(true),
+                isLocalLogin && handleLogin(email, password);
+            }}
           >
             Continue
           </Button>
           <div className="mt-4 text-center">
             <span>Don&apos;t have an account?</span>{" "}
-            <Link href="/signup" className="cursor-pointer">
+            <Link
+              href="/signup"
+              isDisabled={isLoading}
+              className="cursor-pointer"
+            >
               Sign up
             </Link>
           </div>
-          <div className="flex items-center justify-center pt-4">
-            <div className="border-t  flex-grow"></div>
-            <span className="mx-4 text-xs">or</span>
-            <div className="border-t  flex-grow"></div>
-          </div>
+          {!isLocalLogin && (
+            <div>
+              <div className="flex items-center justify-center pt-4">
+                <div className="border-t  flex-grow"></div>
+                <span className="mx-4 text-xs">or</span>
+                <div className="border-t  flex-grow"></div>
+              </div>
 
-          <Oauth2 redirect={redirect} />
+              <Oauth2 redirect={redirect} />
+            </div>
+          )}
         </div>
       </div>
     </div>

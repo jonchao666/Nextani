@@ -440,9 +440,57 @@ function useUserActivity() {
     }
   }
 
+  // local login
+  async function localLogin(email, password) {
+    try {
+      const response = await axios.post(
+        `${process.env.API_URL}/auth/localLogin`,
+        {
+          email,
+          password,
+        }
+      );
+      console.log("Login Successful");
+
+      return response.data.token;
+    } catch (error) {
+      console.error("Error login:", error);
+      return false;
+    }
+  }
+
+  //localSignUp
+  const localSignUp = useCallback(async (token) => {
+    try {
+      await axios.post(`${process.env.API_URL}/auth/localSignUp`, {
+        token,
+      });
+      console.log("Registration Successful");
+      return true;
+    } catch (error) {
+      console.error("Error login:", error);
+      return false;
+    }
+  }, []);
+
+  //localVerifyEmail
+  async function localVerifyEmail(email, password) {
+    try {
+      await axios.post(`${process.env.API_URL}/auth/localVerifyEmail`, {
+        email,
+        password,
+      });
+    } catch (error) {
+      console.error("Error login:", error);
+      return error.response.data;
+    }
+  }
+
   // return state variables and functions
   return {
-    //state
+    localLogin,
+    localSignUp,
+    localVerifyEmail,
 
     // Functions
     fetchLikedAnime,

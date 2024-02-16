@@ -69,7 +69,7 @@ export default function AddToListComponent({
         </span>
       </div>
       <div className="py-4 px-6 overflow-y-auto max-h-[300px]">
-        {watchlists &&
+        {watchlists.length !== 0 ? (
           watchlists.map((list, index) => (
             <Checkbox
               isDisabled={createListIsLoading}
@@ -87,7 +87,13 @@ export default function AddToListComponent({
             >
               {list.name}
             </Checkbox>
-          ))}
+          ))
+        ) : (
+          <div>
+            <p>You haven&apos;t created any lists yet.</p>
+            <p>Tap the &apos;+&apos; button below to create one.</p>
+          </div>
+        )}
       </div>
       {listNameInputOpen ? (
         <div>

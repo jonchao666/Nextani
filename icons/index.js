@@ -9,3 +9,5 @@ export { GoogleIcon } from "./GoogleIcon";
 export { MicrosoftIcon } from "./MicrosoftIcon";
 export { AppleIcon } from "./AppleIcon";
 export { Logo } from "./Logo";
+export { EyeFilledIcon } from "./EyeFilledIcon";
+export { EyeSlashFilledIcon } from "./EyeSlashFilledIcon";

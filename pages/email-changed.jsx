@@ -6,7 +6,7 @@ import { Logo } from "@/icons";
 
 const EmailChanged = () => {
   const router = useRouter();
-  const [isUpdated, setIsUpdated] = useState(false); // 新增状态变量
+  const [isUpdated, setIsUpdated] = useState(null);
 
   useEffect(() => {
     const updateEmail = async () => {
@@ -14,16 +14,16 @@ const EmailChanged = () => {
 
       if (email && token) {
         const result = await handleUpdateEmail(email, token);
-        setIsUpdated(result); // 根据结果更新状态
+        setIsUpdated(result);
       }
     };
 
     updateEmail();
   }, [router.query]);
-
+  if (isUpdated === null) return <div>Please wait...</div>;
   return (
     <div className="h-screen">
-      <Navbar maxWidth="full" className="sticky h-16 border">
+      <Navbar maxWidth="full" className="sticky h-16 ">
         <NavbarBrand href="/" as={Link}>
           <p className="font-bold text-2xl text-foreground">NextAni</p>
         </NavbarBrand>

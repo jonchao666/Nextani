@@ -18,26 +18,6 @@ export default function Oauth2({ redirect }) {
       >
         Continue with Google
       </Button>
-      <Button
-        className="justify-start border-1"
-        radius="sm"
-        size="lg"
-        variant="ghost"
-        startContent={<MicrosoftIcon />}
-      >
-        Continue with Microsoft Account
-      </Button>
-      <Button
-        className="justify-start border-1"
-        radius="sm"
-        size="lg"
-        variant="ghost"
-        startContent={
-          <AppleIcon fill={resolvedTheme === "dark" ? "#FFFFFF" : "#000000"} />
-        }
-      >
-        Continue with Apple
-      </Button>
     </div>
   );
 }
