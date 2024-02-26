@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import {
   ShowEmailChangeToast,
   EmailChangedToast,
-} from "@/components/settings/Toasts";
+} from "@/components/layout/Toasts";
 import { setVerifyingEmail, setEmail } from "@/reducers/userSlice";
 export default async function handleVerifyEmail(newEmail, dispatch) {
   const jwt =

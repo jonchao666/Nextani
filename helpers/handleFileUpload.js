@@ -1,6 +1,6 @@
 import { setDisplayImageUrl } from "@/reducers/userSlice";
 import toast from "react-hot-toast";
-import { ShowAvatarUploadToast } from "@/components/settings/Toasts";
+import { ShowAvatarUploadToast } from "@/components/layout/Toasts";
 
 export default async function handleFileUpload(event, dispatch) {
   const jwt =

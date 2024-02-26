@@ -25,7 +25,7 @@ export default function HomepageInfiniteScroll() {
       if (Genres.includes(category)) {
         // 如果是流派类别
         params.genre = category;
-        params.sortBy = "members";
+        params.sortBy = "popularity";
       }
 
       const url = `${process.env.API_URL}/anime`;

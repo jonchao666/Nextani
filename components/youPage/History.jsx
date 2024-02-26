@@ -1,9 +1,10 @@
-import ImageCard from "@/components/ImageCard";
+import ImageCard from "@/components/layout/ImageCard";
 import { Button, Link } from "@nextui-org/react";
 import { CircularProgress } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useResponsive } from "@/hooks/useResponsive";
 export default function History({ colToShow }) {
   let numToShow = 2 * parseInt(colToShow.split("-")[2]);
   numToShow = numToShow > 14 ? 14 : numToShow;
@@ -12,7 +13,9 @@ export default function History({ colToShow }) {
 
   const [history, setHistory] = useState(null);
   const [isHistoryEmpty, setIsHistoryEmpty] = useState(false);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
+  const { isXs } = useResponsive();
   useEffect(() => {
     async function fetchData() {
       let data = await fetchHistory();
@@ -25,9 +28,17 @@ export default function History({ colToShow }) {
   }, [fetchHistory]);
 
   return (
-    <div className="border-b-1 py-6">
-      <div className="flex justify-between items-center">
-        <div className="flex">
+    <div
+      className={`border-b-1 dark:border-[rgba(255,255,255,0.2)] ${
+        isMobileDevice || !isXs ? "pb-6 pt-2" : "py-5"
+      }`}
+    >
+      <div
+        className={`flex justify-between items-center ${
+          isMobileDevice || !isXs ? "px-3" : ""
+        }`}
+      >
+        <div className="flex items-center">
           <span
             className="material-symbols-outlined mr-4"
             style={{
@@ -40,36 +51,45 @@ export default function History({ colToShow }) {
         </div>
         {!isHistoryEmpty && (
           <Button
-            as={Link}
-            href="/history"
-            variant="light"
-            color="primary"
+            variant={isMobileDevice || !isXs ? "bordered" : "light"}
             radius="full"
-            className="font-medium text-sm h-9"
+            color={isMobileDevice || !isXs ? "default" : "primary"}
+            size={isMobileDevice || !isXs ? "sm" : "md"}
+            className={` hover:opacity-100  font-medium ${
+              isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
+            }`}
+            href="/history"
+            as={Link}
           >
-            See all
+            View All
           </Button>
         )}
       </div>
       {isHistoryEmpty ? (
-        <div className="text-sm text-gray-600 dark:text-[rgb(170,170,170)] mt-2">
+        <div
+          className={`text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-2 ${
+            isMobileDevice || !isXs ? "px-3" : ""
+          }`}
+        >
           Animes you view will show up here.
         </div>
+      ) : !history ? (
+        <CircularProgress size="sm" color="default" label="Loading..." />
+      ) : isMobileDevice || !isXs ? (
+        <div
+          className={`mt-2.5 px-3 flex overflow-x-auto touch-pan gap-3 overflow-hidden ${
+            isMobileDevice ? "scrollbar-hide" : ""
+          }`}
+        >
+          {history.map((data, index) => (
+            <ImageCard key={index} data={data.animeDetail} smallSize={true} />
+          ))}
+        </div>
       ) : (
-        <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 mt-4 `}>
-          {history ? (
-            history
-              .slice(0, numToShow)
-              .map((data, index) => (
-                <ImageCard
-                  key={index}
-                  data={data.animeDetail}
-                  smallSize={true}
-                />
-              ))
-          ) : (
-            <CircularProgress size="sm" color="default" label="Loading..." />
-          )}
+        <div className={`grid ${colToShow} gap-y-6 gap-x-1 mt-4 `}>
+          {history.slice(0, numToShow).map((data, index) => (
+            <ImageCard key={index} data={data.animeDetail} smallSize={true} />
+          ))}
         </div>
       )}
     </div>

@@ -2,13 +2,17 @@ import { Image, Link, Button } from "@nextui-org/react";
 import { CircularProgress } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
-
+import { useSelector, useDispatch } from "react-redux";
+import FavoritePersonCard from "./FavoritePersonCard";
+import { useResponsive } from "@/hooks/useResponsive";
 export default function FavoritePerson({ colToShow }) {
   const numToShow = parseInt(colToShow.split("-")[2]);
   const { fetchLikedPerson } = useUserActivity();
   const [likedPerson, setLikedPerson] = useState(null);
   const [isLikedPersonEmpty, setIsLikedPersonEmpty] = useState(false);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
+  const { isXs } = useResponsive();
   useEffect(() => {
     async function fetchData() {
       let data = await fetchLikedPerson();
@@ -20,9 +24,17 @@ export default function FavoritePerson({ colToShow }) {
   }, [fetchLikedPerson]);
 
   return (
-    <div className=" py-6 ">
-      <div className="flex justify-between items-center">
-        <div className="flex">
+    <div
+      className={`border-b-1 dark:border-[rgba(255,255,255,0.2)] ${
+        isMobileDevice || !isXs ? "pb-6 pt-3" : "py-5"
+      }`}
+    >
+      <div
+        className={`flex justify-between items-center ${
+          isMobileDevice || !isXs ? "px-3" : ""
+        }`}
+      >
+        <div className="flex items-center">
           <span
             className="material-symbols-outlined mr-4"
             style={{
@@ -31,60 +43,49 @@ export default function FavoritePerson({ colToShow }) {
           >
             favorite
           </span>
-          <h3 className="text-xl font-bold">Liked people</h3>
+          <h3 className="text-xl font-bold">Favorite people</h3>
         </div>
         {!isLikedPersonEmpty && (
           <Button
-            as={Link}
-            href="/likedPeople"
-            variant="light"
-            color="primary"
+            variant={isMobileDevice || !isXs ? "bordered" : "light"}
             radius="full"
-            className="font-medium text-sm h-9"
+            color={isMobileDevice || !isXs ? "default" : "primary"}
+            size={isMobileDevice || !isXs ? "sm" : "md"}
+            className={` hover:opacity-100  font-medium ${
+              isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
+            }`}
+            href="/likedPeople"
+            as={Link}
           >
-            See all
+            View All
           </Button>
         )}
       </div>
       {isLikedPersonEmpty ? (
-        <div className="text-sm text-gray-600 dark:text-[rgb(170,170,170)] mt-2">
+        <div
+          className={`text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-2 ${
+            isMobileDevice || !isXs ? "px-3" : ""
+          }`}
+        >
           Use the favorite icon to like people. Your list shows up right here.
         </div>
+      ) : !likedPerson ? (
+        <CircularProgress size="sm" color="default" label="Loading..." />
+      ) : isMobileDevice || !isXs ? (
+        <div
+          className={`mt-2.5 px-3 flex overflow-x-auto touch-pan gap-3 overflow-hidden ${
+            isMobileDevice ? "scrollbar-hide" : ""
+          }`}
+        >
+          {likedPerson.map((data, index) => (
+            <FavoritePersonCard key={index} data={data} />
+          ))}
+        </div>
       ) : (
-        <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 mt-4 `}>
-          {likedPerson ? (
-            likedPerson.slice(0, numToShow).map((data, index) => (
-              <div key={index}>
-                <Link
-                  className="hover:opacity-100"
-                  as={Link}
-                  href={`/person?mal_id=${data.mal_id}`}
-                >
-                  <Image
-                    isZoomed
-                    radius="sm"
-                    alt={data.apiData.name}
-                    key={index}
-                    src={
-                      data.apiData.images.jpg.image_url ===
-                      "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png"
-                        ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
-                        : data.apiData.images.jpg.image_url
-                    }
-                    className="object-cover h-[210px] w-[154px] "
-                  ></Image>
-                </Link>
-                <Link
-                  href={`/person?mal_id=${data.mal_id}`}
-                  className="mt-2 line-clamp-2 text-sm font-medium text-foreground"
-                >
-                  {data.apiData.name}
-                </Link>
-              </div>
-            ))
-          ) : (
-            <CircularProgress size="sm" color="default" label="Loading..." />
-          )}
+        <div className={` grid ${colToShow} gap-y-6 gap-x-1 mt-4 `}>
+          {likedPerson.slice(0, numToShow).map((data, index) => (
+            <FavoritePersonCard key={index} data={data} />
+          ))}
         </div>
       )}
     </div>

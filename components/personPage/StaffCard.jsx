@@ -1,7 +1,12 @@
 import { Card, CardFooter, CardBody, Image } from "@nextui-org/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useResponsive } from "@/hooks/useResponsive";
 export default function StaffCard({ data }) {
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+
+  const { isXs } = useResponsive();
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false); // 新增状态用于追踪图片加载是否失败
   const url =
@@ -13,19 +18,19 @@ export default function StaffCard({ data }) {
       : data.anime.images.jpg.image_url;
 
   return (
-    <div className=" w-[305px]">
+    <div className=" min-w-[305px]">
       <Card
-        className={`isPressable hover:opacity-100 rounded-sm shadow-none flex flex-row justify-between bg-[#edf1f5] dark:bg-background dark:hover:bg-[rgba(255,255,255,0.13)] ${
+        className={`isPressable hover:opacity-100 hover:scale-105 rounded-lg shadow-lg flex flex-row justify-between bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)] ${
           isLoaded ? "visible" : "invisible"
         }`}
       >
         <Link
           href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}
-          className="p-0 overflow-hidden w-[80px] shrink-0"
+          className="p-0 overflow-hidden shrink-0"
         >
           <Image
-            isZoomed
-            className="h-[118px]  w-full object-cover "
+            isZoomed={!isMobileDevice}
+            className="h-[81px] w-[60px]  object-cover "
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
@@ -42,7 +47,7 @@ export default function StaffCard({ data }) {
           </div>
 
           <div>
-            <div className="line-clamp-2 text-[#61666d]  text-xs">
+            <div className="line-clamp-2 break-words text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]  text-xs">
               {data.position}
             </div>
           </div>

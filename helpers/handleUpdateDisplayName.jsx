@@ -1,5 +1,5 @@
 import { setDisplayName, setChangingDisplayName } from "@/reducers/userSlice";
-import { ShowDisplayNameToast } from "@/components/settings/Toasts";
+import { ShowDisplayNameToast } from "@/components/layout/Toasts";
 
 export default async function handleUpdateDisplayName(
   displayNameChange,

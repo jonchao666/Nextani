@@ -22,31 +22,28 @@ export default function DetailsPanelBottomOpened({
   return (
     <div className="h-full flex flex-col justify-between">
       {firstParagraph && (
-        <p className="whitespace-pre-line font-sm">
+        <p className="whitespace-pre-line line-clamp-2 text-sm">
           Synopsis: {firstParagraph}
         </p>
       )}
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <div className="flex flex-col">
-          <span className="text-[#ffa058] text-xl font-bold">
+          <p className="text-[#ffa058] text-xl font-bold">
             {data.score ? data.score.toFixed(2) : "N/A"}
-          </span>
+          </p>
 
-          <span className="text-xs text-[#61666d] mt-0.5">
+          <p className="text-xs text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-0.5">
             {data.scored_by ? data.scored_by : "- "}users
-          </span>
+          </p>
         </div>
 
         {hasMoreThanOneParagraph && (
-          <Button
-            variant="light"
-            radius="full"
-            size="sm"
+          <div
             onClick={() => setSynopsisOpened(true)}
             className="cursor-pointer text-sm  font-medium"
           >
             Show more
-          </Button>
+          </div>
         )}
       </div>
     </div>

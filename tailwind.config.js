@@ -31,6 +31,9 @@ module.exports = {
       fontFamily: {
         sans: ["Roboto", "Arial", "sans-serif"],
       },
+      spacing: {
+        "safe-bottom": "env(safe-area-inset-bottom)",
+      },
     },
   },
   darkMode: "class",
@@ -42,9 +45,6 @@ module.exports = {
           layout: {},
         },
         dark: {
-          colors: {
-            customGray: "rgba(255,255,255,0.2)",
-          },
           layout: {},
         },
       },

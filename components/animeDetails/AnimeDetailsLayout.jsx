@@ -1,13 +1,13 @@
 import DetailsPanel from "@/components/animeDetails/detailsPanel/DetailsPanel";
 
 import AnimeInformation from "@/components/animeDetails/AnimeInformation";
-import Header from "@/components/layout/Header";
+import Layout from "@/components/layout/Layout";
 import { useSelector, useDispatch } from "react-redux";
-import { setShowSidebar, toggleSidebar } from "@/reducers/sidebarSlice";
+
 import Sidebar from "@/components/layout/Sidebar";
 import { useEffect, useState } from "react";
 import { fetchUserData } from "@/reducers/userSlice";
-
+import { useResponsive } from "@/hooks/useResponsive";
 export default function AnimeDetailsLayout({
   children,
   data,
@@ -16,11 +16,10 @@ export default function AnimeDetailsLayout({
   mal_id,
 }) {
   const dispatch = useDispatch();
-  const showSidebar = useSelector((state) => state.sidebar.showSidebar);
+  const { isXs } = useResponsive();
+
   const [videoUrl, setVideoUrl] = useState("");
-  useEffect(() => {
-    dispatch(setShowSidebar(false));
-  }, [dispatch]);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   const mainCharacters = [];
   const jwt =
@@ -31,6 +30,22 @@ export default function AnimeDetailsLayout({
       dispatch(fetchUserData(jwt));
     }
   }, [jwt, dispatch]);
+
+  const [PV, setPV] = useState(null);
+  useEffect(() => {
+    let tempPV = [];
+    if (videos && videos.length > 0) {
+      for (let i = videos.length - 1; i >= 0; i--) {
+        if (videos[i].title.startsWith("Character")) continue;
+        tempPV.push(videos[i]);
+      }
+
+      setPV(tempPV);
+      setVideoUrl(
+        tempPV[0].trailer.embed_url.replace("autoplay=1", "autoplay=0")
+      );
+    }
+  }, [videos]);
 
   if (characters && characters.data) {
     for (let character of characters.data) {
@@ -60,33 +75,21 @@ export default function AnimeDetailsLayout({
 
   if (!data) return null;
   return (
-    <div>
-      {showSidebar && (
-        <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-40" />
-      )}
-      <Header toggleSidebar={() => dispatch(toggleSidebar())} />
-      {showSidebar ? (
-        <Sidebar
-          absolute={true}
-          toggleSidebar={() => dispatch(toggleSidebar())}
-        />
-      ) : null}
-      <div className="h-16"></div>
+    <Layout youPage={true}>
       <div className="flex justify-center">
-        <main className="ml-6 pt-6 pr-6 pb-6 w-full h-full max-w-[1280px] ">
-          {data.trailer && data.trailer.embed_url && (
+        <main className="  w-full h-full max-w-[1280px] ">
+          {data.trailer && data.trailer.embed_url ? (
             <iframe
-              className="aspect-video w-full h-full rounded-xl "
-              src={
-                videoUrl === ""
-                  ? data.trailer.embed_url.replace("autoplay=1", "autoplay=0")
-                  : videoUrl
-              }
+              className={`aspect-video w-full h-full ${
+                isMobileDevice || !isXs ? "" : "rounded-xl mt-6"
+              } `}
+              src={videoUrl}
               title={data.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
-          )}
+          ) : null}
+
           <DetailsPanel
             data={data}
             mainCharacters={mainCharacters}
@@ -94,13 +97,18 @@ export default function AnimeDetailsLayout({
             synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}
             setVideoUrl={setVideoUrl}
             mal_id={mal_id}
+            PV={PV}
           />
-          <div className="flex flex-col sm:flex-row mt-6 w-full">
+          <div
+            className={`flex flex-col  mt-6 w-full ${
+              isMobileDevice || !isXs ? "flex-row" : "md:flex-row"
+            }`}
+          >
             <AnimeInformation data={data} />
             {children}
           </div>
         </main>
       </div>
-    </div>
+    </Layout>
   );
 }

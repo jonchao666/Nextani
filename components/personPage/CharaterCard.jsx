@@ -12,16 +12,18 @@ export default function CharaterCard({ data }) {
       ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
       : data.character.images.jpg.image_url;
   return (
-    <div className=" w-[305px]">
+    <div className=" min-w-[305px] ">
       <Card
-        className={`isPressable hover:opacity-100 rounded-sm shadow-none flex flex-row justify-between bg-[#edf1f5] dark:bg-background  dark:hover:bg-[rgba(255,255,255,0.13)] ${
+        className={`isPressable hover:opacity-100 hover:scale-105 rounded-lg shadow-md flex flex-row justify-between bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]   ${
           isLoaded ? "visible" : "invisible"
         }`}
       >
-        <div className="p-0 overflow-hidden min-w-[80px] ">
+        <Link
+          href={`/character?mal_id=${data.character.mal_id}`}
+          className="p-0 overflow-hidden shrink-0 "
+        >
           <Image
-            isZoomed
-            className="h-[118px]  w-full object-cover "
+            className="h-[81px] w-[60px]   object-cover "
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
@@ -29,21 +31,23 @@ export default function CharaterCard({ data }) {
             alt={data.character.name}
             src={url}
           />
-        </div>
+        </Link>
         <div className="flex flex-col justify-between text-xs  text-right p-2.5">
           <div>
-            <div>
+            <Link href={`/character?mal_id=${data.character.mal_id}`}>
               <span className="text-sm">{data.character.name}</span>
-            </div>
+            </Link>
             <div>
-              <span className="text-[#61666d] ">{data.role}</span>
+              <span className="text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] ">
+                {data.role}
+              </span>
             </div>
           </div>
 
           <div>
             <Link
               href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}
-              className="line-clamp-2  mt-1 text-xs"
+              className="line-clamp-2 break-words  mt-1 text-xs"
             >
               {data.anime.title}
             </Link>

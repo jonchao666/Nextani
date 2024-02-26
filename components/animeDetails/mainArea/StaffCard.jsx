@@ -1,10 +1,21 @@
 import { Card, Image, Link } from "@nextui-org/react";
-
+import { useSelector, useDispatch } from "react-redux";
 export default function StaffCard({ person }) {
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+  if (!person) return null;
   return (
     <div>
-      <Card className=" flex-row rounded-sm bg-[#edf1f5] dark:bg-[rgb(40,40,40)] shadow-none ">
-        <Link href={`/person?mal_id=${person.person.mal_id}`}>
+      <Card
+        className={
+          isMobileDevice
+            ? " flex-row rounded-lg shadow-md  bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)] shadow-sm "
+            : " flex-row rounded-lg shadow-md hover:scale-105 bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)] shadow-sm "
+        }
+      >
+        <Link
+          href={`/person?mal_id=${person.person.mal_id}`}
+          className="shrink-0"
+        >
           <Image
             radius="none"
             className="w-[60px] h-[81px] object-cover"
@@ -26,7 +37,9 @@ export default function StaffCard({ person }) {
           >
             {person.person.name}
           </Link>
-          <div className="text-[#61666d]">{person.positions[0]}</div>
+          <div className="text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]">
+            {person.positions[0]}
+          </div>
         </div>
       </Card>
     </div>

@@ -50,8 +50,8 @@ export default function SignUp() {
     }
   };
   return (
-    <div className="w-screen h-screen">
-      <div className="w-full h-full flex justify-center items-center">
+    <div className="h-screen w-screen">
+      <div className="w-full h-2/3 flex justify-center items-center">
         <div className="flex flex-col">
           <div className="text-3xl font-bold mx-auto mb-8">
             Create your account
@@ -67,9 +67,11 @@ export default function SignUp() {
             onValueChange={setEmail}
             label="Email"
             className={`${isLocalSignUp && "mb-3"} `}
+            classNames={{ input: "text-md" }}
           />
           {isLocalSignUp && (
             <Input
+              classNames={{ input: "text-md" }}
               isDisabled={verifyingEmail}
               isInvalid={isPasswordInvalid}
               className="sm:w-[320px] "
@@ -120,7 +122,7 @@ export default function SignUp() {
             Continue
           </Button>
           <div className="mt-4 text-center">
-            <span>Already have an account?</span>{" "}
+            <p>Already have an account?</p>{" "}
             <Link
               href="/login"
               isDisabled={verifyingEmail}

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import {
   ShowDeletingAccountToast,
   ShowDeleteAccountToast,
-} from "@/components/settings/Toasts";
+} from "@/components/layout/Toasts";
 
 import {
   setVerifyingDeleteAccount,

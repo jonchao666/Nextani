@@ -1,69 +1,18 @@
 import { Button, Link } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import ImageCard from "../ImageCard";
-import { useResponsive } from "../../hooks/useResponsive";
-import { useTheme } from "next-themes";
 
+import ImageCard from "../layout/ImageCard";
+import { useResponsive } from "@/hooks/useResponsive";
+import { useTheme } from "next-themes";
+import { useSelector, useDispatch } from "react-redux";
+import { SampleNextArrow, SamplePrevArrow } from "@/helpers/sliderArrow";
 function ShowSlider({ data, title, category }) {
-  const { resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
+
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [slidesToShow, setSlidesToShow] = useState(1);
-
-  function SampleNextArrow(props) {
-    const { onClick, slideCount, currentSlide } = props;
-    return (
-      <Button
-        onClick={onClick}
-        variant="solid"
-        isIconOnly
-        style={{
-          display:
-            currentSlide === slideCount - slidesToShow ? "none" : "inline-flex",
-        }}
-        className="z-30 bg-background dark:bg-default-100 hover:bg-default dark:hover:bg-default-300 absolute top-[145px] -right-4  
-           rounded-full   shadow-sliderArrow
-         "
-      >
-        <span
-          className={`material-symbols-outlined`}
-          style={{
-            fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
-          }}
-        >
-          navigate_next
-        </span>
-      </Button>
-    );
-  }
-
-  function SamplePrevArrow(props) {
-    const { currentSlide, onClick } = props;
-    return (
-      <Button
-        onClick={onClick}
-        variant="solid"
-        isIconOnly
-        style={{ display: currentSlide === 0 ? "none" : "inline-flex" }}
-        className="z-30 bg-background dark:bg-default-100 hover:bg-default dark:hover:bg-default-300 absolute top-[145px] -left-5  
-           rounded-full  shadow-sliderArrow 
-          "
-      >
-        <span
-          className="material-symbols-outlined "
-          style={{
-            fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
-          }}
-        >
-          navigate_before
-        </span>
-      </Button>
-    );
-  }
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   useEffect(() => {
     // 根据屏幕尺寸更新 slidesToShow 的值
@@ -80,14 +29,10 @@ function ShowSlider({ data, title, category }) {
       : 1;
     setSlidesToShow(newSlidesToShow);
   }, [isXl, isLg, isMd, isSm, isXs]);
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) {
-    return null;
-  }
   // Slider settings
   const settings = {
     dots: false,
@@ -96,25 +41,40 @@ function ShowSlider({ data, title, category }) {
     speed: 200,
     slidesToShow: slidesToShow,
     slidesToScroll: slidesToShow,
-    nextArrow: <SampleNextArrow />,
+    nextArrow: <SampleNextArrow slidesToShow={slidesToShow} />,
     prevArrow: <SamplePrevArrow />,
     autoplay: false,
 
     draggable: false,
-    beforeChange: (next) => setCurrentSlide(next),
   };
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
-    <div className="mx-auto w-full  border-t-1  dark:border-customGray">
-      <div className="mt-5   flex items-center justify-between">
-        <span className="text-xl  font-bold line-clamp-1">{title}</span>
+    <div className="mx-auto w-full border-b-1 pb-6  dark:border-[rgba(255,255,255,0.2)]">
+      <div
+        className={` flex items-center justify-between  ${
+          isMobileDevice || !isXs ? "mt-3 px-3" : "mt-5"
+        }  `}
+      >
+        <span
+          className={`  font-bold line-clamp-1 ${
+            isMobileDevice || !isXs ? "text-lg" : "text-xl"
+          }  `}
+        >
+          {title}
+        </span>
 
         <Button
-          variant={resolvedTheme === "light" ? "light" : "ghost"}
+          variant={isMobileDevice || !isXs ? "bordered" : "light"}
           radius="full"
-          color="primary"
-          size="md"
-          className="border-none hover:opacity-100 h-9 font-medium"
+          color={isMobileDevice || !isXs ? "default" : "primary"}
+          size={isMobileDevice || !isXs ? "sm" : "md"}
+          className={` hover:opacity-100  font-medium ${
+            isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
+          }`}
           href={`/animeIndex?category=${category}`}
           as={Link}
         >
@@ -122,9 +82,23 @@ function ShowSlider({ data, title, category }) {
         </Button>
       </div>
 
-      <Slider {...settings} className="mt-5 mb-6 bg-background">
-        {data && data.map((item) => <ImageCard key={item._id} data={item} />)}
-      </Slider>
+      {isMobileDevice || !isXs ? (
+        <div
+          className={`mt-2.5 px-3 flex overflow-x-auto touch-pan gap-3 overflow-hidden ${
+            isMobileDevice ? "scrollbar-hide" : ""
+          }`}
+        >
+          {data &&
+            data.map((item, index) => (
+              <ImageCard key={index} data={item} smallSize={true} />
+            ))}
+        </div>
+      ) : (
+        <Slider {...settings} className="mt-5  ">
+          {data &&
+            data.map((item, index) => <ImageCard key={index} data={item} />)}
+        </Slider>
+      )}
     </div>
   );
 }

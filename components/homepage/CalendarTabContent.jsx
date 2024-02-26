@@ -1,15 +1,17 @@
-import ImageCard from "@/components/ImageCard";
+import ImageCard from "@/components/layout/ImageCard";
 import { useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useResponsive } from "../../hooks/useResponsive";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function CalendarTabContent({ data }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [slidesToShow, setSlidesToShow] = useState(1);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   function SampleNextArrow(props) {
     const { onClick, slideCount, currentSlide } = props;
@@ -22,7 +24,7 @@ export default function CalendarTabContent({ data }) {
           display:
             currentSlide === slideCount - slidesToShow ? "none" : "inline-flex",
         }}
-        className="z-30 bg-background dark:bg-default-100 hover:bg-default dark:hover:bg-default-300 absolute top-[145px] -right-4  
+        className="z-30 bg-background dark:bg-default-100 hover:bg-default dark:hover:bg-default-300 absolute top-[145px] -right-5 
            rounded-full   shadow-sliderArrow
          "
       >
@@ -93,7 +95,18 @@ export default function CalendarTabContent({ data }) {
     beforeChange: (next) => setCurrentSlide(next),
   };
 
-  return (
+  return isMobileDevice || !isXs ? (
+    <div
+      className={`flex  overflow-x-auto touch-pan gap-3 overflow-hidden ${
+        isMobileDevice ? "scrollbar-hide" : ""
+      }`}
+    >
+      {data &&
+        data.map((d) => (
+          <ImageCard key={d._id} data={d} ep={true} smallSize={true} />
+        ))}
+    </div>
+  ) : (
     <Slider {...settings}>
       {data && data.map((d) => <ImageCard key={d._id} data={d} ep={true} />)}
     </Slider>

@@ -6,36 +6,24 @@ import AddToListComponent from "./AddToListComponent";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
+import { useResponsive } from "@/hooks/useResponsive";
 export default function DetailsPanelTop({
   data,
   mainCharacters,
   videos,
   setVideoUrl,
   mal_id,
+  PV,
 }) {
   const {
     addLikedAnime,
     checkIsAnimeLiked,
     removeLikedAnime,
-    fetchLikedAnime,
 
-    fetchLikedPerson,
-    addLikedPerson,
-    removeLikedPerson,
-    fetchHistory,
     addHistory,
-    removeHistory,
-    fetSelectedWatchlist,
+
     fetchWatchlistsWithoutAnimeDetails,
     fetchWatchlistsContainingAnime,
-    createWatchlist,
-
-    removeWatchlist,
-
-    addWatchlistItem,
-    removeWatchlistItem,
-    renameWatchlist,
-    updateWatchlistDescription,
   } = useUserActivity();
   const [watchlistsHasAnime, setWatchlistsHasAnime] = useState(null);
   const [isAnimeLiked, setIsAnimeLiked] = useState(false);
@@ -47,7 +35,9 @@ export default function DetailsPanelTop({
   const tooltipRefLike = useRef(null);
   const { resolvedTheme } = useTheme();
   const [watchlists, setWatchlists] = useState(null);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
+  const { isXs } = useResponsive();
   useEffect(() => {
     async function fetchData() {
       if (isAuthenticated) {
@@ -118,19 +108,10 @@ export default function DetailsPanelTop({
     };
   }, []);
 
-  const PV = useMemo(() => {
-    let tempPV = [];
-    if (videos) {
-      for (let v of videos) {
-        tempPV.unshift(v);
-      }
-    }
-    return tempPV;
-  }, [videos]);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState();
 
   useEffect(() => {
-    setSelectedButtonIndex(PV.length - 1);
+    PV && setSelectedButtonIndex(0);
   }, [PV]);
 
   const handleButtonClick = (video, index) => {
@@ -153,9 +134,13 @@ export default function DetailsPanelTop({
       )}
       <div className="flex justify-between">
         <div className="flex">
-          <span className="mb-2.5 line-clamp-2 text-lg font-medium mr-4">
+          <p
+            className={`mb-2.5 line-clamp-2 break-words ${
+              isMobileDevice || !isXs ? "text-lg" : "text-xl"
+            } font-bold mr-4`}
+          >
             {data.title}
-          </span>
+          </p>
         </div>
         <div className="shrink-0 flex">
           <div ref={tooltipRefList}>
@@ -181,21 +166,31 @@ export default function DetailsPanelTop({
             </Button>
           </div>
           {loginReList && (
-            <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]   shadow-lg w-[387px] overflow-hidden">
+            <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]   shadow-lg min-w-max  overflow-hidden">
               <p className="mt-6 mb-4 px-6">Want to see this again later?</p>
-              <p className="mb-8 px-6">
+              <p className="mb-4 px-6">
                 Sign in to save this anime to a watchlist.
               </p>
-              <Button
-                as={Link}
-                href="/login"
-                radius="full"
-                color="primary"
-                variant="light"
-                className="my-2 ml-1.5 "
-              >
-                Sign in
-              </Button>
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => setLoginReList(false)}
+                  radius="full"
+                  variant="light"
+                  className="my-2  "
+                >
+                  Cancel
+                </Button>
+                <Button
+                  as={Link}
+                  href="/login"
+                  radius="full"
+                  color="primary"
+                  variant="light"
+                  className="my-2 mr-1.5 "
+                >
+                  Sign in
+                </Button>
+              </div>
             </div>
           )}
           <div ref={tooltipRefLike}>
@@ -209,7 +204,7 @@ export default function DetailsPanelTop({
               size="sm"
               color="danger"
               variant={isAnimeLiked && isAuthenticated ? "solid" : "ghost"}
-              className=" border-1 "
+              className={`${isAnimeLiked && isAuthenticated ? "" : "border-1"}`}
             >
               <span
                 className="material-symbols-outlined "
@@ -222,57 +217,70 @@ export default function DetailsPanelTop({
               </span>
             </Button>
             {loginReLike && (
-              <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]  shadow-lg w-[387px] overflow-hidden">
+              <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]  shadow-lg min-w-max overflow-hidden">
                 <p className="mt-6 mb-4 px-6">Like this anime?</p>
                 <p className="mb-8 px-6">
                   Sign in to save this anime to your favorite.
                 </p>
-                <Button
-                  as={Link}
-                  href="/login"
-                  radius="full"
-                  color="primary"
-                  variant="light"
-                  className="my-2 ml-1.5 "
-                >
-                  Sign in
-                </Button>
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => setLoginReLike(false)}
+                    radius="full"
+                    variant="light"
+                    className="my-2  "
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    as={Link}
+                    href="/login"
+                    radius="full"
+                    color="primary"
+                    variant="light"
+                    className="my-2 mr-1.5 "
+                  >
+                    Sign in
+                  </Button>
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
-      {PV.map((video, index) => (
-        <Button
-          size="sm"
-          variant={selectedButtonIndex === index ? "solid" : "ghost"}
-          color="primary"
-          radius="sm"
-          className="mr-2 border-1 mb-2 "
-          key={index}
-          onClick={() => handleButtonClick(video, index)}
-        >
-          {video.title}
-        </Button>
-      ))}
-      <div className="text-sm text-[#61666d] mb-1.5">
+      {PV &&
+        PV.map((video, index) => (
+          <Button
+            size="sm"
+            variant={selectedButtonIndex === index ? "solid" : "ghost"}
+            color="primary"
+            radius="sm"
+            className={`mr-2  mb-2 ${
+              selectedButtonIndex !== index && "border-1"
+            }`}
+            key={index}
+            onClick={() => handleButtonClick(video, index)}
+          >
+            {video.title}
+          </Button>
+        ))}
+      <p className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]  mb-1.5 line-clamp-1">
         {data.genres && data.genres.length > 0
           ? data.genres.map((genre) => genre.name).join("/")
           : "Anime"}{" "}
         {data.aired.prop.from.year && <span> &middot;</span>}{" "}
         {data.aired.prop.from.year}
         <span> &middot;</span> {data.status}
-      </div>
-      <div className="text-sm mb-1.5 text-[#61666d]">
+      </p>
+      <p className="text-sm mb-1.5 text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] line-clamp-2">
         <span>Voice actors: </span>
         {mainCharacters.length > 0
-          ? mainCharacters.map(([characterName, actorName]) => (
+          ? mainCharacters.map(([characterName, actorName], index, arr) => (
               <span key={characterName} className="mr-2">
-                {characterName}: {actorName}{" "}
+                {characterName}: {actorName} {index !== arr.length - 1 && "/"}
               </span>
             ))
           : "No voice actors have been added to this title."}
-      </div>
+      </p>
     </div>
   );
 }

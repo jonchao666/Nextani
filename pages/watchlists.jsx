@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/Layout";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import LoginRequest from "@/components/auth/LoginRequest";
 import WatchlistCard from "@/components/youPage/WatchlistCard";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -7,17 +7,27 @@ import { useEffect, useState } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
-
+import { setPageName } from "@/reducers/pageNameSlice";
+import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
 export default function Watchlists() {
-  //get watchlists data
-  const { fetchWatchlists } = useUserActivity();
+  const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
+  const [colToShow, setColToShow] = useState("grid-cols-1");
+  const { fetchWatchlists } = useUserActivity();
   const [watchlists, setWatchlists] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [placeholdersNeeded, setPlaceholdersNeeded] = useState(0);
   const [isMoreWatchlistsAvailable, setIsMoreWatchlistsAvailable] =
     useState(true);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setPageName("Watchlists"));
+  }, [dispatch]);
 
+  //get watchlists data
   async function fetchData() {
     if (loading || !isMoreWatchlistsAvailable) return;
     setLoading(true);
@@ -29,8 +39,7 @@ export default function Watchlists() {
   }
 
   //get column to show
-  const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
-  const [colToShow, setColToShow] = useState("grid-cols-1");
+
   useEffect(() => {
     const newColToshow = isXl
       ? " grid-cols-8"
@@ -48,22 +57,60 @@ export default function Watchlists() {
 
   const lastElementRef = useInfiniteScroll(fetchData);
 
+  //get last Pseudo-element need when use flex-evenly
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      let containerWidth = window.innerWidth;
+      let itemWidth = 154;
+      let itemsCount = watchlists ? watchlists.length : 0;
+      setPlaceholdersNeeded(
+        calculatePlaceholdersForLastRow(containerWidth, itemWidth, itemsCount)
+      );
+    }
+  }, [watchlists, placeholdersNeeded]);
+
   //show Login Request when is not Authenticated
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   if (!isAuthenticated) {
     return <LoginRequest />;
   }
 
   return (
     <Layout youPage={true}>
-      <h2 className="text-4xl font-bold ">Watchlist</h2>
+      {isMobileDevice || !isXs ? null : (
+        <h2
+          className={
+            isMobileDevice || !isXs
+              ? "text-3xl font-bold pl- pt-6"
+              : "text-4xl font-bold pt-6"
+          }
+        >
+          Watchlists
+        </h2>
+      )}
       {watchlists && watchlists.length === 0 ? (
-        <div className="text-sm text-gray-600 dark:text-[rgb(170,170,170)] mt-2">
+        <div className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-2">
           Watchlist you create or save will show up here.
         </div>
+      ) : isMobileDevice || !isXs ? (
+        <div className="  flex flex-wrap justify-evenly mb-6 gap-y-6 after:content-[''] after:w-[154px]">
+          {watchlists &&
+            watchlists.map((data, index) => (
+              <WatchlistCard
+                key={index}
+                data={data}
+                setWatchlists={setWatchlists}
+              />
+            ))}
+          {Array.from({ length: placeholdersNeeded }, (_, index) => (
+            <div
+              key={`placeholder-${index}`}
+              className="w-[154px] h-0 invisible"
+            ></div>
+          ))}
+        </div>
       ) : (
-        <div className="pt-2 mb-6">
-          <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 mt-4 `}>
+        <div className=" my-6">
+          <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1  `}>
             {watchlists &&
               watchlists.map((data, index) => (
                 <WatchlistCard

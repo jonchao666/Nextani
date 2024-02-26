@@ -1,9 +1,10 @@
 import Layout from "@/components/layout/Layout";
 import ShowSlider from "@/components/homepage/ShowSlider";
-import HomepageInfiniteScroll from "@/components/homepage/HomepageInfiniteScroll";
+
 import Calendar from "@/components/homepage/Calendar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
+  getLastTwoSeasonAndYears,
   getLastSeasonAndYear,
   getNextSeasonAndYear,
 } from "@/helpers/getSeasonAndYear";
@@ -16,27 +17,13 @@ import {
 } from "@/constans/categoryData";
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
-
+import { setPageName } from "@/reducers/pageNameSlice";
 export default function HomePage({ slidersData, calendarData }) {
-  const showSidebars = useSelector(
-    (state) => state.sidebarVisibility.showSidebars
-  );
-  const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
-  const [mainWidth, setMainWidth] = useState();
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const width = isXl
-      ? "1284px"
-      : isLg
-      ? "1070px"
-      : isMd
-      ? "856px"
-      : isSm
-      ? "642px"
-      : isXs
-      ? "428px"
-      : "214px";
-    setMainWidth(width);
-  }, [isXl, isLg, isMd, isSm, isXs]);
+    dispatch(setPageName("home"));
+  }, [dispatch]);
   return (
     <Layout>
       <Calendar calendarData={calendarData} />
@@ -48,7 +35,6 @@ export default function HomePage({ slidersData, calendarData }) {
           data={data}
         />
       ))}
-      <HomepageInfiniteScroll />
     </Layout>
   );
 }
@@ -56,37 +42,42 @@ export default function HomePage({ slidersData, calendarData }) {
 export async function getStaticProps() {
   const slidersData = await Promise.all(
     //get sliders data
-    Categories.slice(0, 5).map(async (category) => {
+    Categories.slice(0, 6).map(async (category) => {
       let params = {};
-
+      params.limit = 12;
       if (Genres.includes(category)) {
-        // 如果是流派类别
         params.genre = category;
-        params.sortBy = "members";
+        params.sortBy = "popularity";
       } else if (Directors.includes(category)) {
-        // 如果是导演类别
         params.director = category;
-        params.sortBy = "members";
+        params.sortBy = "popularity";
       } else if (category === "thisSeasonPopular") {
         const seasonYear = getLastSeasonAndYear();
 
         params.year = seasonYear[0].year;
         params.season = seasonYear[0].season;
-        params.sortBy = "members";
-      } else if (category === "thisSeasonTop") {
-        const seasonYear = getLastSeasonAndYear();
-
-        params.year = seasonYear[0].year;
-        params.season = seasonYear[0].season;
+        params.sortBy = "popularity";
+      } else if (category === "allTimePopular") {
+        params.sortBy = "popularity";
+      } else if (category === "allTimeTop") {
         params.sortBy = "score";
       } else if (category === "nextSeason") {
         const seasonYear = getNextSeasonAndYear();
         params.year = seasonYear[0].year;
         params.season = seasonYear[0].season;
-        params.sortBy = "members";
+        params.sortBy = "popularity";
       } else if (category === "topAiring") {
         params.status = "Currently Airing";
         params.sortBy = "score";
+      } else if (category === "RecentlyCompleted") {
+        const seasonYear = getLastTwoSeasonAndYears();
+        params.yearAndSeason = [
+          [seasonYear[0].year, seasonYear[0].season],
+          [seasonYear[1].year, seasonYear[1].season],
+        ];
+
+        params.status = "Finished Airing";
+        params.sortBy = "overall";
       }
 
       const url = `${process.env.API_URL}/anime`;

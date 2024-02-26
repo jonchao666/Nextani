@@ -3,7 +3,8 @@ import { Tabs, Tab } from "@nextui-org/react";
 import moment from "moment-timezone";
 import CalendarTabContent from "@/components/homepage/CalendarTabContent";
 import { useTheme } from "next-themes";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useResponsive } from "../../hooks/useResponsive";
 export default function Calendar({ calendarData }) {
   const timezoneOffset = useMemo(() => {
     const localTime = moment();
@@ -14,7 +15,10 @@ export default function Calendar({ calendarData }) {
   const [selected, setSelected] = useState(moment().format("dddd"));
   const [data, setData] = useState({});
   const { resolvedTheme } = useTheme();
+  const { isXs } = useResponsive();
+  const [isMounted, setIsMounted] = useState(false);
 
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const convertToLocaleDayAndTime = useCallback(
     (day, time) => {
       let localTime = moment
@@ -65,25 +69,38 @@ export default function Calendar({ calendarData }) {
       <CalendarTabContent data={data[day]} />
     </Tab>
   ));
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    return null;
+  }
 
   return (
-    <div className="flex  flex-col mb-6 ">
+    <div
+      className={
+        isMobileDevice || !isXs
+          ? "flex  flex-col  pb-3 px-3 border-b-1 dark:border-[rgba(255,255,255,0.2)]"
+          : "flex  flex-col  pt-3 pb-6 border-b-1 dark:border-[rgba(255,255,255,0.2)]"
+      }
+    >
       <Tabs
+        fullWidth={isMobileDevice||!isXs}
         selectedKey={selected}
         onSelectionChange={setSelected}
-        color="primary"
-        className="p-0 mb-4  "
-        classNames={{
-          cursor: resolvedTheme === "light" ? "bg-[#4C93FF1A] " : "",
-          tab: "  text-xs ",
-          tabContent:
-            resolvedTheme === "light"
-              ? "group-data-[selected=true]:text-[#4c93ff]"
-              : "",
-          panel: "p-0 ",
-          tabList:
-            "p-0  w-screen   custom458:w-[376px] ml-custom458 custom458:ml-0 overflow-visible",
-        }}
+        color="default"
+        size="sm"
+        radius="sm"
+        variant="underlined"
+        classNames={
+          isMobileDevice || !isXs
+            ? {
+                base: "-mx-3 w-screen",
+                tabList: "gap-1 px-0 justify-between",
+                panel: " pr-0 px-0",
+              }
+            : { base: "-ml-3", tabList: "px-0", panel: "px-0" }
+        }
       >
         {tabs}
       </Tabs>

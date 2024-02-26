@@ -2,18 +2,23 @@ import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useResponsive } from "@/hooks/useResponsive";
 export default function WatchlistCardInfo({
   data,
   setWatchlists,
   editShowLeft,
+  NoneEdit,
 }) {
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   // open and close edit watchlist
   const [editingWatchlist, setEditingWatchlist] = useState(false);
   const tooltipRef = useRef(null);
 
+  const { isXs } = useResponsive();
+
   function handleEditWatchlist() {
-    setEditingWatchlist(true);
+    setEditingWatchlist(!editingWatchlist);
   }
 
   //close login request when ClickOutside
@@ -49,7 +54,9 @@ export default function WatchlistCardInfo({
   const { renameWatchlist } = useUserActivity();
   const [editingName, setEditingName] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
   const [renameLoading, setRenameLoading] = useState(false);
+
   const handleChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -77,16 +84,20 @@ export default function WatchlistCardInfo({
     <div className="mt-2 flex justify-between">
       <Link
         href={`/watchlist?name=${data.name}`}
-        className="font-medium line-clamp-2 break-words  text-sm "
+        className={` line-clamp-2  break-words w-[154px] text-sm  ${
+          isMobileDevice || !isXs
+            ? " leading-[17.5px]"
+            : "leading-[20px] font-medium"
+        }`}
       >
-        {data.name}
+        <p className="">{data.name}</p>
       </Link>
 
       {showDelete && (
-        <div className="fixed z-30  shadow-[0_4px_32px_0px_rgba(0,0,0,0.1)] bg-background  dark:bg-[rgb(40,40,40)] rounded-xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2   ">
+        <div className="fixed z-30  shadow-[0_4px_32px_0px_rgba(0,0,0,0.1)] bg-background  dark:bg-[rgb(40,40,40)] rounded-xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  sm:max-w-[450px] w-full ">
           <div className="mt-6">
-            <p className="px-6 mb-4 text-[#0F0F0F]">Delete watchlist</p>
-            <div className="mb-6 mt-1 text-sm text-[#606060]">
+            <p className="px-6 mb-4 ">Delete watchlist</p>
+            <div className="mb-6 mt-1 text-sm ">
               <p className="px-6 mb-2">
                 <span>Are you sure you want to delete </span>
                 <span className="font-medium">{data.name}</span> <span>?</span>
@@ -120,7 +131,8 @@ export default function WatchlistCardInfo({
           </div>
         </div>
       )}
-      {data.name !== "Default list" && (
+
+      {!NoneEdit && (
         <div className="relative" ref={tooltipRef}>
           <span
             onClick={() => handleEditWatchlist()}
@@ -133,9 +145,7 @@ export default function WatchlistCardInfo({
           </span>
           {editingWatchlist && !editingName ? (
             <div
-              className={`absolute z-30 top-6 ${
-                editShowLeft ? "right-0" : ""
-              } rounded-xl shadow-[0_4px_32px_0px_rgba(0,0,0,0.1)] bg-background dark:bg-[rgb(40,40,40)]`}
+              className={`absolute z-30 top-6 -left-[130px] rounded-xl shadow-[0_4px_32px_0px_rgba(0,0,0,0.1)] bg-background dark:bg-[rgb(40,40,40)]`}
             >
               <div className="flex flex-col py-2 items-start">
                 <Button
@@ -180,9 +190,13 @@ export default function WatchlistCardInfo({
             editingName && (
               <div className="fixed z-30  shadow-[0_4px_32px_0px_rgba(0,0,0,0.1)] bg-background  dark:bg-[rgb(40,40,40)] rounded-xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2   ">
                 <div className="mt-6 ">
-                  <p className="px-6 mb-4 text-[#0F0F0F]">Rename watchlist</p>
+                  <p className="px-6 mb-4 ">Rename watchlist</p>
                   <Input
-                    classNames={{ inputWrapper: "after:h-[1px]" }}
+                    classNames={
+                      isMobileDevice || !isXs
+                        ? { inputWrapper: "", input: "text-md" }
+                        : { inputWrapper: "after:h-[1px]", input: "text-md" }
+                    }
                     label="New name"
                     size="sm"
                     variant="underlined"

@@ -8,7 +8,7 @@ export default function MiniSidebar() {
   const [selectedButton, setSelectedButton] = useState("");
 
   const router = useRouter();
-
+  const { category } = router.query;
   useEffect(() => {
     // 根据当前路由来设置 selectedButton
     switch (router.pathname) {
@@ -19,6 +19,11 @@ export default function MiniSidebar() {
         setSelectedButton("you");
         break;
     }
+    switch (category) {
+      case "Top":
+        setSelectedButton("explore");
+        break;
+    }
   }, [router.pathname]);
 
   const handleButtonClick = (name) => {
@@ -27,7 +32,15 @@ export default function MiniSidebar() {
 
   const renderButton = (iconName, label, name) => (
     <Button
-      href={name === "home" ? "/" : name === "you" ? "/you" : undefined}
+      href={
+        name === "home"
+          ? "/"
+          : name === "you"
+          ? "/you"
+          : name === "explore"
+          ? `/animeIndex?category=Top`
+          : undefined
+      }
       disableAnimation
       as={Link}
       onClick={() => handleButtonClick(name)}
@@ -56,6 +69,7 @@ export default function MiniSidebar() {
       <div className="flex flex-col mt-1 ">
         {renderButton("home", "Home", "home")}
         {renderButton("video_library", "You", "you")}
+        {renderButton("explore", "Explore", "explore")}
       </div>
     </div>
   );

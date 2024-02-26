@@ -1,9 +1,13 @@
 import { Card, CardFooter, CardBody, Image, Link } from "@nextui-org/react";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useResponsive } from "@/hooks/useResponsive";
 
-export default function ImageCard({ data, ep, smallSize }) {
+export default function ImageCard({ data, ep, smallSize, rank }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false); // 新增状态用于追踪图片加载是否失败
+  const [hasError, setHasError] = useState(false);
+  const { isXs } = useResponsive();
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const url =
     hasError ||
     data.apiData.images.webp.large_image_url.startsWith(
@@ -13,22 +17,22 @@ export default function ImageCard({ data, ep, smallSize }) {
       : data.apiData.images.webp.large_image_url;
 
   const height = smallSize ? "h-[221px] " : " h-[302px]";
-  const width = smallSize ? " w-[154px]" : " w-[210px]";
+  const width = smallSize ? " w-[154px]" : " w-[210px] ";
 
   return (
-    <div className={width}>
+    <div className={`${width} shrink-0`}>
       <Card
         as={Link}
         shadow="none"
         radius="sm"
         href={`/animeDetails/default?mal_id=${data.mal_id}`}
-        className={`isPressable hover:opacity-100  ${
+        className={`isPressable hover:opacity-100 active:opacity-100 ${
           isLoaded ? "visible" : "invisible"
         }`}
       >
         <CardBody className="p-0 overflow-hidden ">
           <Image
-            isZoomed
+            isZoomed={!isMobileDevice}
             className={`${height} ${width} object-cover`}
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
@@ -37,23 +41,38 @@ export default function ImageCard({ data, ep, smallSize }) {
             alt={data.apiData.title}
             src={url}
           />
-          <div className="absolute z-10 bottom-0 left-0 right-0 h-10 bg-bottom-gradient"></div>
         </CardBody>
 
         {ep ? (
           <CardFooter className="absolute bottom-0 pb-0 z-10 justify-end pr-2">
             {data.apiData.broadcast.time && (
-              <span className="text-white font-medium text-sm mb-1  ">
+              <p
+                className={`text-white font-medium  mb-1 ${
+                  isMobileDevice || !isXs ? "text-xs" : " text-sm"
+                } `}
+                style={{
+                  textShadow:
+                    "1px 1px hsla(0,0%,6.7%,.2), -1px 1px hsla(0,0%,6.7%,.2), -1px -1px hsla(0,0%,6.7%,.2), 1px -1px hsla(0,0%,6.7%,.2)",
+                }}
+              >
                 update {data.apiData.broadcast.time}
-              </span>
+              </p>
             )}
           </CardFooter>
         ) : (
           <CardFooter className="absolute bottom-0 pb-0 z-10 justify-end">
             {data.apiData.score && (
-              <span className="text-white font-bold text-2xl italic">
+              <p
+                className={`text-white shadow-2xl font-bold ${
+                  isMobileDevice || !isXs ? "text-lg" : " text-2xl"
+                } italic`}
+                style={{
+                  textShadow:
+                    "1px 1px hsla(0,0%,6.7%,.2), -1px 1px hsla(0,0%,6.7%,.2), -1px -1px hsla(0,0%,6.7%,.2), 1px -1px hsla(0,0%,6.7%,.2)",
+                }}
+              >
                 {data.apiData.score.toFixed(1)}
-              </span>
+              </p>
             )}
           </CardFooter>
         )}
@@ -61,26 +80,19 @@ export default function ImageCard({ data, ep, smallSize }) {
 
       <div>
         <Link href={`/animeDetails/default?mal_id=${data.mal_id}`}>
-          <p className="mt-2 line-clamp-2 text-sm font-medium text-foreground">
+          <p
+            className={`mt-2 text-sm  line-clamp-2 break-words ${width} ${
+              isMobileDevice || !isXs
+                ? " leading-[17.5px]"
+                : "leading-[20px] font-medium"
+            }  text-foreground`}
+          >
             {/* matchedTitles is for the searchResult page */}
             {data.matchedTitles && data.matchedTitles[0].title
               ? data.matchedTitles[0].title
               : data.apiData.title}
           </p>
         </Link>
-
-        <p className="text-xs  text-gray-600 dark:text-[rgb(170,170,170)] ">
-          {data.apiData.genres && data.apiData.genres.length > 0
-            ? data.apiData.genres
-                .slice(0, 2)
-                .map((genre) => genre.name)
-                .join("&")
-            : data.apiData.type}{" "}
-          {data.apiData.aired.prop.from.year && (
-            <span className="text-2xl align-[-4px]"> &middot;</span>
-          )}{" "}
-          {data.apiData.aired.prop.from.year}
-        </p>
       </div>
     </div>
   );

@@ -2,16 +2,20 @@ import CharacterCard from "./CharacterCard";
 import StaffCard from "./StaffCard";
 import { Textarea, Button, Image } from "@nextui-org/react";
 import Link from "next/link";
-import { useState } from "react";
-import RecommendationsCardInfinityScorll from "@/components/animeDetails/RecommendationsCardInfinityScorll";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import Recommendations from "@/components/animeDetails/Recommendations";
+import { useResponsive } from "@/hooks/useResponsive";
 export default function MainAreaDefault({
   characters,
   staff,
   data,
   recommendations,
 }) {
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const [comment, setComment] = useState("");
+
+  const { isXs } = useResponsive();
   const handleInputChange = (event) => {
     setComment(event.target.value);
   };
@@ -40,20 +44,21 @@ export default function MainAreaDefault({
     }
   }
   return (
-    <div className="flex flex-col grow ">
-      <div className="mb-6">
-        <div className="text-sm font-medium mb-2.5 flex justify-between items-center">
+    <div className="flex flex-col grow">
+      <div className={` ${isMobileDevice || !isXs ? "px-3 mb-6" : " mb-6"}`}>
+        <div className=" font-medium mb-1.5 flex justify-between items-center">
           <h3>Characters</h3>
           {validCharacters.length > 6 && (
             <Button
-              size="sm"
-              variant="light"
-              color="primary"
+              variant={isMobileDevice || !isXs ? "bordered" : "light"}
               radius="full"
+              color={isMobileDevice || !isXs ? "default" : "primary"}
+              size={isMobileDevice || !isXs ? "sm" : "md"}
+              className={` hover:opacity-100  font-medium ${
+                isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
+              }`}
               as={Link}
               href={`/animeDetails/characters?mal_id=${data.mal_id}`}
-              scroll={false}
-              className="text-sm text-primary font-medium"
             >
               View all
             </Button>
@@ -61,7 +66,7 @@ export default function MainAreaDefault({
         </div>
 
         {validCharacters.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 3xl:grid-cols-3 gap-y-4 gap-x-8 ">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 gap-x-8 ">
             {validCharacters.slice(0, 6).map((character, index) => (
               <CharacterCard key={index} character={character} />
             ))}
@@ -71,19 +76,20 @@ export default function MainAreaDefault({
         )}
       </div>
 
-      <div className="mb-8">
-        <div className="text-sm font-medium mb-2.5 flex justify-between items-center">
+      <div className={` ${isMobileDevice || !isXs ? "px-3 mb-6" : "mb-8"}`}>
+        <div className=" font-medium mb-1.5 flex justify-between items-center">
           <h3>Staff</h3>
           {staff.length > 3 && (
             <Button
-              size="sm"
-              as={Link}
-              variant="light"
-              color="primary"
+              variant={isMobileDevice || !isXs ? "bordered" : "light"}
               radius="full"
+              color={isMobileDevice || !isXs ? "default" : "primary"}
+              size={isMobileDevice || !isXs ? "sm" : "md"}
+              className={` hover:opacity-100  font-medium ${
+                isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
+              }`}
+              as={Link}
               href={`/animeDetails/staff?mal_id=${data.mal_id}`}
-              scroll={false}
-              className="text-sm text-primary font-medium"
             >
               View all
             </Button>
@@ -91,8 +97,8 @@ export default function MainAreaDefault({
         </div>
 
         {staff.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 3xl:grid-cols-3 gap-y-4 gap-x-8 ">
-            {staff.slice(0, 3).map((person, index) => (
+          <div className="grid grid-cols-1 lg:grid-cols-2  gap-y-4 gap-x-8 ">
+            {staff.slice(0, 4).map((person, index) => (
               <StaffCard key={index} person={person} />
             ))}
           </div>
@@ -102,7 +108,7 @@ export default function MainAreaDefault({
       </div>
 
       {recommendations.length > 0 && (
-        <RecommendationsCardInfinityScorll recommendations={recommendations} />
+        <Recommendations recommendations={recommendations} />
       )}
 
       {/* comment */}

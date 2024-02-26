@@ -6,9 +6,10 @@ import { useRouter } from "next/router";
 import store from "@/store/store";
 import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
-
+import AuthInitializer from "@/components/AuthInitializer";
 export default function App({ Component, pageProps }) {
   const [domLoaded, setDomLoaded] = useState(false);
+
   const router = useRouter();
   useEffect(() => {
     setDomLoaded(true);
@@ -25,6 +26,7 @@ export default function App({ Component, pageProps }) {
           {domLoaded && (
             <Toaster position="bottom-right" reverseOrder={false} />
           )}
+          <AuthInitializer />
           <Component {...pageProps} />
         </ThemeProvider>
       </NextUIProvider>

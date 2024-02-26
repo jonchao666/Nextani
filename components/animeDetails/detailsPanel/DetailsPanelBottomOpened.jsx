@@ -8,29 +8,26 @@ export default function DetailsPanelBottomOpened({
   return (
     <div>
       {synopsisWithoutLastParagraph && (
-        <span className="whitespace-pre-line font-sm">
+        <p className="whitespace-pre-line text-sm">
           Synopsis: {synopsisWithoutLastParagraph}
-        </span>
+        </p>
       )}
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <div className=" flex flex-col">
-          <span className="text-[#ffa058] text-xl font-bold">
+          <p className="text-[#ffa058] text-xl font-bold">
             {data.score ? data.score.toFixed(2) : "N/A"}
-          </span>
+          </p>
 
-          <span className="text-xs text-[#61666d] mt-0.5">
+          <p className="text-xs text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-0.5">
             {data.scored_by ? data.scored_by : "- "}users
-          </span>
+          </p>
         </div>
-        <Button
-          variant="light"
-          radius="full"
-          size="sm"
+        <div
           onClick={() => setSynopsisOpened(false)}
           className="cursor-pointer text-sm font-medium"
         >
           Show less
-        </Button>
+        </div>
       </div>
     </div>
   );

@@ -27,19 +27,9 @@ export default function Sidebar({ absolute, toggleSidebar }) {
         setSelectedButton("you");
         break;
     }
-
     switch (category) {
       case "Top":
-        setSelectedButton("Top");
-        break;
-      case "Popular":
-        setSelectedButton("Popular");
-        break;
-      case "Movie":
-        setSelectedButton("Movie");
-        break;
-      case "Music":
-        setSelectedButton("Music");
+        setSelectedButton("explore");
         break;
     }
   }, [router.pathname, category]);
@@ -56,7 +46,6 @@ export default function Sidebar({ absolute, toggleSidebar }) {
     return null;
   }
 
-  const Explore = ["Popular", "Top", "Movie", "Music"];
   const renderButton = (iconName, label, name) => {
     return (
       <Button
@@ -65,8 +54,8 @@ export default function Sidebar({ absolute, toggleSidebar }) {
             ? "/"
             : name === "you"
             ? "/you"
-            : Explore.includes(name)
-            ? `/animeIndex?category=${name}`
+            : name === "explore"
+            ? `/animeIndex?category=Top`
             : undefined
         }
         disableAnimation
@@ -132,21 +121,22 @@ export default function Sidebar({ absolute, toggleSidebar }) {
       </div>
       <div className=" flex flex-col w-full h-full overscroll-none  hover:overflow-auto  justify-between">
         <div>
-          <div className="border-b-1 flex flex-col p-3 ">
+          <div className="flex flex-col p-3 ">
             {renderButton("home", "Home", "home")}
             {renderButton("video_library", "You", "you")}
+            {renderButton("explore", "Explore", "explore")}
           </div>
 
           {isAuthenticated ? null : (
             <div className="border-b-1 flex flex-col px-8 py-4 justify-start items-start">
-              <span className="text-sm">
+              <p className="text-sm">
                 Sign in to like Animes, comment, and add to watchlist.
-              </span>
+              </p>
               <Button
                 as={Link}
                 href="/login"
                 startContent={<SignInIcon size={24} />}
-                className="text-sm font-medium pl-2 pr-3 border-1 dark:border-customGray mt-3"
+                className="text-sm font-medium pl-2 pr-3 border-1 dark:border-[rgba(255,255,255,0.2)] mt-3"
                 size="sm"
                 variant={resolvedTheme === "light" ? "light" : "ghost"}
                 color="primary"
@@ -156,42 +146,31 @@ export default function Sidebar({ absolute, toggleSidebar }) {
               </Button>
             </div>
           )}
-
-          <div className="flex flex-col  p-3">
-            <span className="px-3 pt-1.5 pb-1 font-medium">Explore</span>
-            <div className="flex flex-col">
-              {renderButton("leaderboard", "Top", "Top")}
-              {renderButton("trending_up", "Popular", "Popular")}
-
-              {renderButton("movie", "Movie", "Movie")}
-              {renderButton("library_music", "Music", "Music")}
-            </div>
-          </div>
         </div>
         <footer className="flex flex-col border-t-1">
           <div className="pt-4 px-6 flex flex-wrap">
             <Link
               href="/legalPages/About"
-              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
+              className="text-xs mr-2 font-medium text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]"
             >
               About
             </Link>
 
             <Link
               href="/legalPages/ContactUs"
-              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
+              className="text-xs mr-2 font-medium text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]"
             >
               Contact us
             </Link>
             <Link
               href="/legalPages/TermsOfService"
-              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
+              className="text-xs mr-2 font-medium text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]"
             >
               Terms of Service
             </Link>
             <Link
               href="/legalPages/PrivacyPolicy"
-              className="text-xs mr-2 font-medium text-gray-600 dark:text-[rgb(170,170,170)]"
+              className="text-xs mr-2 font-medium text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]"
             >
               Privacy Policy
             </Link>

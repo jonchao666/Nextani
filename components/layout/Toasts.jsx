@@ -17,7 +17,7 @@ export const ShowEmailChangeToast = (emailChange, type, error) => {
   toast.custom(
     (t) => (
       <div
-        className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+        className={`max-h-[92px] sm:w-[420px] w-full p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
       >
         <div className=" text-sm text-white">{message}</div>
 
@@ -41,7 +41,7 @@ export const ShowEmailChangeToast = (emailChange, type, error) => {
 export const EmailChangedToast = () => {
   toast.custom((t) => (
     <div
-      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between bg-primary`}
+      className={`max-h-[92px] sm:w-[420px] w-full p-4 rounded-xl flex items-center justify-between bg-primary`}
     >
       <div className="text-sm text-white">
         <p>Your email address was changed successfully.</p>
@@ -95,7 +95,7 @@ export const ShowDisplayNameToast = (type) => {
 
   toast.custom((t) => (
     <div
-      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+      className={`max-h-[92px] sm:w-[420px] w-full p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
     >
       <div className="text-sm text-white">
         <p>{message}</p>
@@ -122,7 +122,7 @@ export const ShowAvatarUploadToast = (type) => {
 
   toast.custom((t) => (
     <div
-      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+      className={`max-h-[92px] sm:w-[420px] w-full p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
     >
       <div className="text-sm text-white">
         <p>{message}</p>
@@ -149,7 +149,7 @@ export const ShowDeleteAccountToast = (type) => {
 
   toast.custom((t) => (
     <div
-      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+      className={`max-h-[92px] sm:w-[420px] w-full p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
     >
       <div className="text-sm text-white">
         <p>{message}</p>
@@ -180,7 +180,7 @@ export const ShowDeletingAccountToast = (type, error) => {
 
   toast.custom((t) => (
     <div
-      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+      className={`max-h-[92px] sm:w-[420px] w-full p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
     >
       <div className=" text-sm text-white">{message}</div>
 
@@ -206,7 +206,7 @@ export const UserActivityToast = (type, data) => {
 
   toast.custom((t) => (
     <div
-      className={`max-h-[92px] w-[420px] p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
+      className={`max-h-[92px] sm:w-[420px] w-full p-4 rounded-xl flex items-center justify-between ${backgroundColor}`}
     >
       <div className=" text-sm text-background">{message}</div>
 

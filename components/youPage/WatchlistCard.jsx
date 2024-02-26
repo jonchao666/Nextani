@@ -9,6 +9,7 @@ export default function WatchlistCard({
   setWatchlists,
   index,
   colToShow,
+  NoneEdit,
 }) {
   //get majority color
   const defaultImageUrl = "#000000";
@@ -27,7 +28,7 @@ export default function WatchlistCard({
   }, [col, index]);
 
   return (
-    <div>
+    <div className="w-[154px]">
       <Link href={`/watchlist?name=${data.name}`}>
         <div className="relative z-10 h-[210px] w-[148px]">
           <WatchlistCardImage
@@ -40,6 +41,7 @@ export default function WatchlistCard({
         data={data}
         setWatchlists={setWatchlists}
         editShowLeft={editShowLeft}
+        NoneEdit={NoneEdit}
       />
     </div>
   );

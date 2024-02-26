@@ -67,10 +67,16 @@ const userSlice = createSlice({
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.loading = false;
         state.userData = action.payload;
+        // Set email, displayName, and displayImageUrl directly here
+        state.email = action.payload.email;
+        state.displayName = action.payload.displayName;
+        state.displayImageUrl = action.payload.profilePicture
+          ? `${process.env.API_URL}${action.payload.profilePicture}`
+          : `${process.env.API_URL}/profilePicture/defaultImage.svg`;
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
+        state.error = action.error.message;
       });
   },
 });

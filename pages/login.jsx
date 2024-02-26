@@ -47,9 +47,9 @@ export default function Login() {
   if (!isMounted) return null;
 
   return (
-    <div className="w-screen h-screen">
-      <div className="w-full h-full flex justify-center items-center">
-        <div className="flex flex-col">
+    <div className="h-screen w-screen">
+      <div className="flex items-center justify-center h-2/3">
+        <div className="flex flex-col mx-auto">
           <div className="text-3xl font-bold mx-auto mb-8">
             {isLocalLogin ? "Enter your password" : "Log in to NextAni"}
           </div>
@@ -62,12 +62,13 @@ export default function Login() {
             errorMessage={isInvalid && "Please enter a valid email"}
             onValueChange={setEmail}
             label="Email"
-            className={`${isLocalLogin && "mb-3"} opacity-100`}
+            className={`${isLocalLogin && "mb-3"} opacity-100 `}
+            classNames={{ input: "text-md" }}
           />
           {isLocalLogin && (
             <Input
+              classNames={{ input: "text-md" }}
               isDisabled={isLoading}
-              className="sm:w-[320px] "
               label="Password"
               variant="bordered"
               placeholder="Enter your password"
@@ -107,7 +108,7 @@ export default function Login() {
             Continue
           </Button>
           <div className="mt-4 text-center">
-            <span>Don&apos;t have an account?</span>{" "}
+            <p>Don&apos;t have an account?</p>{" "}
             <Link
               href="/signup"
               isDisabled={isLoading}

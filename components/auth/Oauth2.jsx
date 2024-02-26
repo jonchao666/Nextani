@@ -9,7 +9,7 @@ export default function Oauth2({ redirect }) {
     <div className="flex flex-col  w-[320px] gap-2 mt-4">
       <Button
         as={Link}
-        href="http://localhost:8080/auth/google"
+        href={process.env.GOOGLE_LOGIN_URL}
         className="justify-start border-1"
         radius="sm"
         size="lg"

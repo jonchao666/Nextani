@@ -1,9 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { UserActivityToast } from "@/components/settings/Toasts";
+import { UserActivityToast } from "@/components/layout/Toasts";
 import { useDispatch, useSelector } from "react-redux";
 
 function useUserActivity() {
+  const isSensitiveFilterDisabled = useSelector(
+    (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
+  );
   const jwt =
     typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
   // fetchLikedAnime
@@ -14,7 +17,7 @@ function useUserActivity() {
           `${process.env.API_URL}/userActivity/likedAnime`,
           {
             headers: { Authorization: `Bearer ${jwt}` },
-            params: { page, limit },
+            params: { page, limit, isSensitiveFilterDisabled },
           }
         );
         const data = response.data;
@@ -24,7 +27,7 @@ function useUserActivity() {
         console.error("Error fetching likedAnime:", error);
       }
     },
-    [jwt]
+    [jwt, isSensitiveFilterDisabled]
   );
 
   // Check if anime is liked
@@ -97,6 +100,7 @@ function useUserActivity() {
           }
         );
         const data = response.data;
+
         return data;
       } catch (error) {
         console.error("Error fetching likedPerson:", error);
@@ -168,7 +172,7 @@ function useUserActivity() {
           `${process.env.API_URL}/userActivity/history`,
           {
             headers: { Authorization: `Bearer ${jwt}` },
-            params: { page, limit },
+            params: { page, limit, isSensitiveFilterDisabled },
           }
         );
         const data = response.data;
@@ -246,7 +250,7 @@ function useUserActivity() {
         `${process.env.API_URL}/userActivity/watchlist/${name}`,
         {
           headers: { Authorization: `Bearer ${jwt}` },
-          params: { page, limit },
+          params: { page, limit, isSensitiveFilterDisabled },
         }
       );
       const data = response.data[0];
@@ -281,7 +285,7 @@ function useUserActivity() {
           `${process.env.API_URL}/userActivity/watchlists/`,
           {
             headers: { Authorization: `Bearer ${jwt}` },
-            params: { page, limit },
+            params: { page, limit, isSensitiveFilterDisabled },
           }
         );
 

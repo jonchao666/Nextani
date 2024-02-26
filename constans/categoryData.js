@@ -1,12 +1,11 @@
 export const CategoryTitles = {
+  Explore: "Explore",
   thisSeasonPopular: "This Season Popular",
   nextSeason: "Upcoming Next Season",
-  thisSeasonTop: "This Season Top",
+  allTimePopular: "All Time Popular",
   topAiring: "Top Airing",
-  Top: "Top Anime",
-  Popular: "All-Time Popular anime",
-  Movie: "Top Movie",
-  Music: "Top Music",
+  allTimeTop: "All Time Top",
+  RecentlyCompleted: "Recently Completed",
   "Miyazaki, Hayao": "Hayao Miyazaki",
   "Kon, Satoshi": "Satoshi Kon",
   "Kawaguchi, Yuichiro": "Yuichiro Kawaguchi",
@@ -26,10 +25,12 @@ export const CategoryTitles = {
 };
 export const Categories = [
   "topAiring",
-  "nextSeason",
   "thisSeasonPopular",
-  "thisSeasonTop",
+  "RecentlyCompleted",
+  "nextSeason",
 
+  "allTimePopular",
+  "allTimeTop",
   "Slice of Life",
   "Adventure",
   "Fantasy",

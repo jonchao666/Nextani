@@ -1,41 +1,23 @@
 import Header from "./Header";
-import Sidebar from "./Sidebar";
-import MiniSidebar from "./MiniSidebar";
+
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSidebar, setShowSidebar } from "@/reducers/sidebarSlice";
-import useMainResponsive from "@/hooks/useMainResponsive";
+
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
-import { fetchUserData } from "@/reducers/userSlice";
 
-const Layout = ({ children, col1Width, youPage }) => {
-  useMainResponsive();
-  const showSidebar = useSelector((state) => state.sidebar.showSidebar);
-  const showSidebars = useSelector(
-    (state) => state.sidebarVisibility.showSidebars
-  );
+import Footer from "./Footer";
+
+const Layout = ({ children, youPage }) => {
   const dispatch = useDispatch();
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [mainWidth, setMainWidth] = useState();
-
-  const jwt =
-    typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
-
-  useEffect(() => {
-    if (jwt) {
-      dispatch(fetchUserData(jwt));
-    }
-  }, [jwt, dispatch]);
-
-  useEffect(() => {
-    if (!showSidebars) {
-      dispatch(setShowSidebar(false));
-    }
-  }, [dispatch, showSidebars]);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   //main area width
   useEffect(() => {
-    const width = isXl
+    const width = isMobileDevice
+      ? "100vw"
+      : isXl
       ? youPage
         ? "1260px"
         : "1280px"
@@ -53,45 +35,39 @@ const Layout = ({ children, col1Width, youPage }) => {
         : "638px"
       : isXs
       ? youPage
-        ? "312px"
+        ? "470px"
         : "424px"
-      : col1Width
-      ? col1Width
-      : "210px";
+      : "100vw";
     setMainWidth(width);
-  }, [isXl, isLg, isMd, isSm, isXs, col1Width, youPage]);
-
+  }, [isXl, isLg, isMd, isSm, isXs, youPage, isMobileDevice]);
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    return null;
+  }
   return (
-    <div>
-      {!showSidebars && showSidebar && (
-        <div className="fixed inset-0  bg-[rgba(0,0,0,0.5)] z-40" />
-      )}
-      <Header toggleSidebar={() => dispatch(toggleSidebar())} />
-
-      {showSidebars ? (
-        showSidebar ? (
-          <Sidebar />
-        ) : (
-          <MiniSidebar />
-        )
-      ) : (
-        showSidebar && (
-          <Sidebar
-            absolute={true}
-            toggleSidebar={() => dispatch(toggleSidebar())}
-          />
-        )
-      )}
+    <div className="h-screen flex flex-col">
+      <Header width={mainWidth} />
+      <div className={isMobileDevice || !isXs ? "min-h-12" : "min-h-14"}></div>
       <main
-        style={{ height: "calc(100vh-64px)" }}
-        className={`bg-background mt-16 ${
-          showSidebars ? (showSidebar ? "ml-60" : "ml-[72px]") : "ml-0"
-        }`}
+        className={
+          isMobileDevice || !isXs
+            ? "bg-background grow pb-safe-bottom"
+            : "bg-background grow"
+        }
       >
-        <div className="mx-auto pt-3 h-full" style={{ maxWidth: mainWidth }}>
+        <div className="mx-auto" style={{ width: mainWidth }}>
           {children}
         </div>
       </main>
+      <div className={` ${isMobileDevice || !isXs ? "min-h-12" : ""}`}></div>
+      <Footer
+        mainWidth={mainWidth}
+        isMobileDevice={isMobileDevice}
+        isXs={isXs}
+      />
     </div>
   );
 };

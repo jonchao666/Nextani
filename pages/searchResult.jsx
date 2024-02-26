@@ -1,12 +1,13 @@
 import Layout from "@/components/layout/Layout";
-import ImageCard from "@/components/ImageCard";
+import ImageCard from "@/components/layout/ImageCard";
 import axios from "axios";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useResponsive } from "../hooks/useResponsive";
-
+import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
+import { useSelector, useDispatch } from "react-redux";
 export default function SearchResult() {
   const router = useRouter();
   const { debouncedQuery } = router.query;
@@ -16,6 +17,8 @@ export default function SearchResult() {
   const [hasMoreData, setHasMoreData] = useState(true);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [colToShow, setColToShow] = useState(1);
+  const [placeholdersNeeded, setPlaceholdersNeeded] = useState(0);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   const fetchData = async () => {
     if (loading || !hasMoreData || !debouncedQuery) return;
@@ -91,12 +94,39 @@ export default function SearchResult() {
     setColToShow(newColToshow);
   }, [isXl, isLg, isMd, isSm, isXs]);
 
+  //get last Pseudo-element need when use flex-evenly
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      let containerWidth = window.innerWidth;
+      let itemWidth = 154;
+      let itemsCount = data ? data.length : 0;
+      setPlaceholdersNeeded(
+        calculatePlaceholdersForLastRow(containerWidth, itemWidth, itemsCount)
+      );
+    }
+  }, [data, placeholdersNeeded]);
+
   return (
-    <Layout>
-      <div className={`w-full grid ${colToShow} gap-y-6 my-6 `}>
-        {data &&
-          data.map((item, index) => <ImageCard key={index} data={item} />)}
-      </div>
+    <Layout smallSize>
+      {isMobileDevice || !isXs ? (
+        <div className="  flex  justify-evenly flex-wrap gap-y-6 ">
+          {data &&
+            data.map((item, index) => (
+              <ImageCard key={index} data={item} smallSize={true} />
+            ))}
+          {Array.from({ length: placeholdersNeeded }, (_, index) => (
+            <div
+              key={`placeholder-${index}`}
+              className="w-[154px] h-0 invisible"
+            ></div>
+          ))}
+        </div>
+      ) : (
+        <div className={`w-full grid ${colToShow} gap-y-6 mb-6 mt-3`}>
+          {data &&
+            data.map((item, index) => <ImageCard key={index} data={item} />)}
+        </div>
+      )}
       {loading && (
         <CircularProgress
           className="mx-auto"

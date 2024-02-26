@@ -1,16 +1,18 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
-import sidebarReducer from "./sidebarSlice";
-import sidebarVisibilityReducer from "./sidebarVisibilitySlice";
 import userReducer from "./userSlice";
 import authReducer from "./authSlice";
+import isMobileReducer from "./isMobileSlice";
+import isSensitiveFilterDisabledReducer from "./sensitiveFilterSlice";
+import pageNameReducer from "./pageNameSlice";
 
 const rootReducer = combineReducers({
-  sidebar: sidebarReducer,
+  isMobile: isMobileReducer,
 
-  sidebarVisibility: sidebarVisibilityReducer,
   user: userReducer,
   auth: authReducer,
+  isSensitiveFilterDisabled: isSensitiveFilterDisabledReducer,
+  pageName: pageNameReducer,
 });
 
 export default rootReducer;

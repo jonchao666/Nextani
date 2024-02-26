@@ -3,8 +3,9 @@ import MainAreaDefault from "@/components/animeDetails/mainArea/MainAreaDefault"
 import MainAreaCharaters from "@/components/animeDetails/mainArea/MainAreaCharaters";
 import MainAreaStaff from "@/components/animeDetails/mainArea/MainAreaStaff";
 import useAnimeDataJikanApi from "@/hooks/useAnimeDataJikanApi";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-
+import Layout from "@/components/layout/Layout";
 export default function AnimeDetails() {
   const router = useRouter();
   const { section, mal_id } = router.query;
@@ -14,18 +15,13 @@ export default function AnimeDetails() {
   switch (section) {
     case "characters":
       return (
-        <AnimeDetailsLayout
-          data={data}
-          characters={characters}
-          videos={videos}
-          mal_id={mal_id}
-        >
+        <Layout>
           <MainAreaCharaters
             data={data}
             characters={characters}
             staff={staff}
           />
-        </AnimeDetailsLayout>
+        </Layout>
       );
     case "default":
       return (
@@ -46,14 +42,9 @@ export default function AnimeDetails() {
 
     case "staff":
       return (
-        <AnimeDetailsLayout
-          data={data}
-          characters={characters}
-          videos={videos}
-          mal_id={mal_id}
-        >
+        <Layout>
           <MainAreaStaff data={data} characters={characters} staff={staff} />
-        </AnimeDetailsLayout>
+        </Layout>
       );
   }
 }

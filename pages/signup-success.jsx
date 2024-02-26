@@ -24,12 +24,6 @@ const SignupSuccess = () => {
   if (isSuccess === null) return <div>Please wait...</div>;
   return (
     <div className="h-screen">
-      <Navbar maxWidth="full" className="sticky h-16 ">
-        <NavbarBrand href="/" as={Link}>
-          <p className="font-bold text-2xl text-foreground">NextAni</p>
-        </NavbarBrand>
-      </Navbar>
-
       <div className="max-w-screen h-5/6 flex flex-col justify-center items-center">
         {isSuccess ? (
           <>
@@ -42,7 +36,7 @@ const SignupSuccess = () => {
               as={Link}
               href="/login"
               startContent={<SignInIcon size={24} />}
-              className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-customGray "
+              className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-[rgba(255,255,255,0.2)] "
               size="sm"
               variant={resolvedTheme === "light" ? "light" : "ghost"}
               radius="full"

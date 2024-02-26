@@ -2,6 +2,7 @@ import { Button, Checkbox, CheckboxGroup, Input } from "@nextui-org/react";
 import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useUserActivity from "@/hooks/useUserActivity";
+import { useResponsive } from "@/hooks/useResponsive";
 export default function AddToListComponent({
   setAddToListOpen,
   watchlists,
@@ -17,9 +18,11 @@ export default function AddToListComponent({
     addWatchlistItem,
     removeWatchlistItem,
   } = useUserActivity();
+  const { isXs } = useResponsive();
   const [listNameInputOpen, setListNameInputOpen] = useState(false);
   const [listName, setListName] = useState("");
   const [createListIsLoading, setCreateListIsLoading] = useState(false);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const handleCreateList = async (name) => {
     try {
       setCreateListIsLoading(true);
@@ -55,7 +58,7 @@ export default function AddToListComponent({
   };
 
   return (
-    <div className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl max-w-[650px]   bg-white dark:bg-[rgb(40,40,40)]">
+    <div className="fixed z-50 min-w-[250px] bottom-1/4 left-1/2 -translate-x-1/2  rounded-xl sm:max-w-[640px] max-w-full   bg-white dark:bg-[rgb(40,40,40)]">
       <div className="py-4 px-6 flex justify-between">
         <p>Save anime to...</p>
         <span
@@ -99,10 +102,15 @@ export default function AddToListComponent({
         <div>
           <Input
             onChange={(e) => setListName(e.target.value)}
-            classNames={{ inputWrapper: "after:h-[1px]" }}
-            className="py-4 px-6 "
+            classNames={
+              isMobileDevice || !isXs
+                ? { inputWrapper: "", input: "text-md" }
+                : { inputWrapper: "after:h-[1px]", input: "text-md" }
+            }
+            className="my-4 px-6 "
             variant="underlined"
             label="Name"
+            size="sm"
             placeholder="Enter list title"
           ></Input>
           <div className="flex justify-end pb-3 px-2">

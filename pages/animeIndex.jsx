@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import { useState, useEffect } from "react";
-import { Genres, Types } from "@/constans/categoryData";
+import { Genres, Types, CategoryTitles } from "@/constans/categoryData";
 import ShowIndex from "@/components/animeIndexPage/ShowIndex";
 import { useRouter } from "next/router";
 import {
@@ -8,9 +8,11 @@ import {
   getNextSeasonAndYear,
 } from "@/helpers/getSeasonAndYear";
 import Selector from "@/components/animeIndexPage/Selector";
-
+import { setPageName } from "@/reducers/pageNameSlice";
+import { useSelector, useDispatch } from "react-redux";
 export default function AnimeIndex() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { category } = router.query;
   const [isMounted, setIsMounted] = useState(false);
   const [selectedButtonSortby, setSelectedButtonSortby] =
@@ -24,7 +26,8 @@ export default function AnimeIndex() {
   const [selectedButtonSeason, setSelectedButtonSeason] =
     useState("All Season");
   const [selectedButtonRated, setSelectedButtonRated] = useState("All Rated");
-
+  const [showSelector, setShowSelector] = useState(false);
+  const [groupYearAndSeaon, setGroupYearAndSeaon] = useState(false);
   useEffect(() => {
     if (category !== undefined) {
       setSelectedButtonSortby("Popularity");
@@ -34,6 +37,7 @@ export default function AnimeIndex() {
       setSelectedButtonYear("All Year");
       setSelectedButtonSeason("All Season");
       setSelectedButtonRated("All Rated");
+      setGroupYearAndSeaon(false);
       if (Genres.includes(category)) {
         setSelectedButtonGenres(category);
         setSelectedButtonSortby("Popularity");
@@ -62,12 +66,29 @@ export default function AnimeIndex() {
         setSelectedButtonSortby("Score");
       } else if (category === "Popularity") {
         setSelectedButtonSortby("Popularity");
+      } else if (category === "allTimePopular") {
+        setSelectedButtonSortby("Popularity");
+      } else if (category === "allTimeTop") {
+        setSelectedButtonSortby("Score");
+      } else if (category === "Explore") {
+        setSelectedButtonSortby("Overall");
+        setShowSelector(true);
+      } else if (category === "RecentlyCompleted") {
+        setGroupYearAndSeaon(true);
+        setSelectedButtonSortby("Overall");
       } else if (category === "Top") {
         setSelectedButtonSortby("Score");
+      }
+      if (category !== "Explore") {
+        setShowSelector(false);
       }
       setIsMounted(true);
     }
   }, [category]);
+
+  useEffect(() => {
+    dispatch(setPageName(CategoryTitles[category]));
+  }, [dispatch, category]);
 
   if (!isMounted) {
     return null;
@@ -75,22 +96,24 @@ export default function AnimeIndex() {
 
   return (
     <Layout>
-      <Selector
-        selectedButtonSortby={selectedButtonSortby}
-        selectedButtonGenres={selectedButtonGenres}
-        selectedButtonTypes={selectedButtonTypes}
-        selectedButtonStatus={selectedButtonStatus}
-        selectedButtonYear={selectedButtonYear}
-        selectedButtonSeason={selectedButtonSeason}
-        selectedButtonRated={selectedButtonRated}
-        setSelectedButtonSortby={setSelectedButtonSortby}
-        setSelectedButtonGenres={setSelectedButtonGenres}
-        setSelectedButtonTypes={setSelectedButtonTypes}
-        setSelectedButtonStatus={setSelectedButtonStatus}
-        setSelectedButtonYear={setSelectedButtonYear}
-        setSelectedButtonSeason={setSelectedButtonSeason}
-        setSelectedButtonRated={setSelectedButtonRated}
-      />
+      {showSelector && (
+        <Selector
+          selectedButtonSortby={selectedButtonSortby}
+          selectedButtonGenres={selectedButtonGenres}
+          selectedButtonTypes={selectedButtonTypes}
+          selectedButtonStatus={selectedButtonStatus}
+          selectedButtonYear={selectedButtonYear}
+          selectedButtonSeason={selectedButtonSeason}
+          selectedButtonRated={selectedButtonRated}
+          setSelectedButtonSortby={setSelectedButtonSortby}
+          setSelectedButtonGenres={setSelectedButtonGenres}
+          setSelectedButtonTypes={setSelectedButtonTypes}
+          setSelectedButtonStatus={setSelectedButtonStatus}
+          setSelectedButtonYear={setSelectedButtonYear}
+          setSelectedButtonSeason={setSelectedButtonSeason}
+          setSelectedButtonRated={setSelectedButtonRated}
+        />
+      )}
 
       <ShowIndex
         selectedButtonSortby={selectedButtonSortby}
@@ -100,6 +123,7 @@ export default function AnimeIndex() {
         selectedButtonYear={selectedButtonYear}
         selectedButtonSeason={selectedButtonSeason}
         selectedButtonRated={selectedButtonRated}
+        groupYearAndSeaon={groupYearAndSeaon}
       />
     </Layout>
   );

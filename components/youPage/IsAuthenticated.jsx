@@ -4,8 +4,14 @@ import WatchLists from "./WatchLists";
 import History from "./History";
 import FavoriteAnime from "./FavoriteAnime";
 import FavoritePerson from "./FavoritePerson";
-
+import { useSelector, useDispatch } from "react-redux";
+import { setPageName } from "@/reducers/pageNameSlice";
 export default function IsAuthenticated() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setPageName("You"));
+  }, [dispatch]);
   //get column to show
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [colToShow, setColToShow] = useState("grid-cols-1");
@@ -19,13 +25,13 @@ export default function IsAuthenticated() {
       : isSm
       ? "grid-cols-4"
       : isXs
-      ? "grid-cols-2"
-      : "grid-cols-1";
+      ? "grid-cols-3"
+      : "grid-cols-2";
     setColToShow(newColToshow);
   }, [isXl, isLg, isMd, isSm, isXs]);
 
   return (
-    <div className="mb-6">
+    <div>
       <History colToShow={colToShow} />
 
       <WatchLists colToShow={colToShow} />

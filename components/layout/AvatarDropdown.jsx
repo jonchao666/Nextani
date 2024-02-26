@@ -16,10 +16,10 @@ import {
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { ThemeSwitcherSelector } from "./ThemeSwitcherSelector";
 
-export default function AvatarDropdown() {
-  const dispatch = useDispatch();
-  const { userData, displayName, email, displayImageUrl } = useSelector(
+export default function AvatarDropdown({ isMobileDevice, isXs }) {
+  const { displayName, email, displayImageUrl } = useSelector(
     (state) => state.user
   );
 
@@ -30,26 +30,13 @@ export default function AvatarDropdown() {
     router.push("/logout-callback");
   };
 
-  useEffect(() => {
-    if (userData) {
-      dispatch(setEmail(userData.email));
-      dispatch(setDisplayName(userData.displayName));
-
-      dispatch(
-        setDisplayImageUrl(
-          userData.profilePicture
-            ? `${process.env.API_URL}${userData.profilePicture}`
-            : `${process.env.API_URL}/profilePicture/defaultImage.svg`
-        )
-      );
-    }
-  }, [userData, dispatch]);
-
   return (
     <Dropdown radius="sm">
       <DropdownTrigger>
         <Avatar
-          className="cursor-pointer"
+          className={`cursor-pointer ${
+            isMobileDevice || !isXs ? "h-6 w-6" : ""
+          }`}
           size="sm"
           src={displayImageUrl}
         ></Avatar>
@@ -68,7 +55,7 @@ export default function AvatarDropdown() {
           ],
         }}
       >
-        <DropdownSection aria-label="Profile & Actions">
+        <DropdownSection showDivider>
           <DropdownItem
             isReadOnly
             textValue="Profile"
@@ -88,9 +75,30 @@ export default function AvatarDropdown() {
             />
           </DropdownItem>
 
-          <DropdownItem as={Link} href="/settings" className="text-foreground">
-            Settings
+          <DropdownItem as={Link} href="/settings" className="text-foreground ">
+            <div className="flex items-center justify-between">
+              <p>Settings</p>
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  fontVariationSettings: `"FILL" 0, "wght" 250, "GRAD" 0, "opsz" 24`,
+                }}
+              >
+                settings
+              </span>
+            </div>
           </DropdownItem>
+          <DropdownItem
+            isReadOnly
+            key="theme"
+            className="cursor-default"
+            endContent={<ThemeSwitcherSelector />}
+          >
+            Theme
+          </DropdownItem>
+        </DropdownSection>
+        <DropdownSection>
+          <DropdownItem href="/legalPages/ContactUs">Contact us</DropdownItem>
           <DropdownItem onClick={() => handleLogOut()}>Log Out</DropdownItem>
         </DropdownSection>
       </DropdownMenu>

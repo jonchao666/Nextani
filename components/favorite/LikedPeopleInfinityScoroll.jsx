@@ -4,11 +4,13 @@ import useUserActivity from "@/hooks/useUserActivity";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image, Link, Button } from "@nextui-org/react";
-
+import { useResponsive } from "../../hooks/useResponsive";
 export default function LikedAnimeInfinityScoroll({
   likedPerson,
   setLikedPerson,
 }) {
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+  const { isXs } = useResponsive();
   const { fetchLikedPerson, removeLikedPerson } = useUserActivity();
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -39,18 +41,20 @@ export default function LikedAnimeInfinityScoroll({
 
   return (
     <div>
-      <div className="mt-4 mb-6">
+      <div className={isMobileDevice || !isXs ? "" : "mt-4 mb-6"}>
         {likedPerson &&
           likedPerson.map((data, index) => (
             <div
               key={data.mal_id}
-              className="flex py-2 justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)]"
+              className={`flex justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)] ${
+                isMobileDevice || !isXs ? "py-1.5" : "py-2"
+              }`}
             >
               <Link
                 href={`/person?mal_id=${data.mal_id}`}
-                className="hover:opacity-100 grow"
+                className="hover:opacity-100"
               >
-                <div className="flex text-foreground">
+                <div className="flex  text-foreground">
                   <div className=" shrink-0 mr-4">
                     <Image
                       radius="sm"
@@ -65,16 +69,45 @@ export default function LikedAnimeInfinityScoroll({
                     ></Image>
                   </div>
                   <div className="shrink">
-                    <p className="text-lg line-clamp-2">{data.apiData.name}</p>
-                    <div className="text-gray-600 dark:text-[rgb(170,170,170)] text-sm">
+                    <p
+                      className={
+                        isMobileDevice || !isXs
+                          ? "text-sm line-clamp-1 break-words"
+                          : "text-lg line-clamp-1 break-words"
+                      }
+                    >
+                      {data.apiData.name}
+                    </p>
+                    <p
+                      className={
+                        isMobileDevice || !isXs
+                          ? "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-xs line-clamp-1 break-words "
+                          : "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-sm line-clamp-1 break-words"
+                      }
+                    >
                       {data.apiData.family_name}
                       {data.apiData.given_name}
-                      {data.apiData.given_name && data.apiData.family_name && (
-                        <span className="text-2xl align-[-4px]"> &middot;</span>
-                      )}{" "}
-                      <span>{data.apiData.favorites} favorites</span>
-                    </div>
-                    <p className="text-gray-600 dark:text-[rgb(170,170,170)] text-sm line-clamp-2">
+                      {data.apiData.given_name &&
+                        data.apiData.family_name &&
+                        (isMobileDevice || !isXs ? <span> · </span> : null)}
+
+                      <span
+                        className={
+                          isMobileDevice || !isXs
+                            ? ""
+                            : "before:content-['•'] before:mx-1"
+                        }
+                      >
+                        {data.apiData.favorites} favorites
+                      </span>
+                    </p>
+                    <p
+                      className={
+                        isMobileDevice || !isXs
+                          ? "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-xs line-clamp-2 break-all "
+                          : "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-sm line-clamp-2 break-all"
+                      }
+                    >
                       {data.apiData.about}
                     </p>
                   </div>

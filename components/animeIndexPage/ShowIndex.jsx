@@ -1,10 +1,13 @@
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
-import ImageCard from "../ImageCard";
+import ImageCard from "../layout/ImageCard";
 import { useState, useEffect } from "react";
 import { useResponsive } from "../../hooks/useResponsive";
 import axios from "axios";
 import { parseYears } from "@/helpers/parseCategoryYears";
+import { useSelector, useDispatch } from "react-redux";
+import { getLastTwoSeasonAndYears } from "@/helpers/getSeasonAndYear";
+import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
 
 export default function ShowIndex({
   selectedButtonSortby,
@@ -14,6 +17,7 @@ export default function ShowIndex({
   selectedButtonYear,
   selectedButtonSeason,
   selectedButtonRated,
+  groupYearAndSeaon,
 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,20 +25,26 @@ export default function ShowIndex({
   const [hasMoreData, setHasMoreData] = useState(true);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [colToShow, setColToShow] = useState(1);
-
+  const [placeholdersNeeded, setPlaceholdersNeeded] = useState(0);
+  const isSensitiveFilterDisabled = useSelector(
+    (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
+  );
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const year = {};
   const indexData = async () => {
     if (loading || !hasMoreData) return;
     setLoading(true);
 
     let params = {};
-
+    params.isSensitiveFilterDisabled = isSensitiveFilterDisabled;
     params.page = page;
     params.sortBy =
       selectedButtonSortby === "Popularity"
-        ? "members"
+        ? "popularity"
         : selectedButtonSortby === "Score"
         ? "score"
+        : selectedButtonSortby === "Overall"
+        ? "overall"
         : null;
     params.genre =
       selectedButtonGenres !== "All Genres" ? selectedButtonGenres : null;
@@ -49,6 +59,15 @@ export default function ShowIndex({
     params.rating =
       selectedButtonRated !== "All Rated" ? selectedButtonRated : null;
 
+    if (groupYearAndSeaon) {
+      const seasonYear = getLastTwoSeasonAndYears();
+      params.yearAndSeason = [
+        [seasonYear[0].year, seasonYear[0].season],
+        [seasonYear[1].year, seasonYear[1].season],
+      ];
+
+      params.status = "Finished Airing";
+    }
     const url = `${process.env.API_URL}/anime`;
 
     try {
@@ -115,14 +134,41 @@ export default function ShowIndex({
     setColToShow(newColToshow);
   }, [isXl, isLg, isMd, isSm, isXs]);
 
+  //get last Pseudo-element need when use flex-evenly
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      let containerWidth = window.innerWidth;
+      let itemWidth = 154;
+      let itemsCount = data ? data.length : 0;
+      setPlaceholdersNeeded(
+        calculatePlaceholdersForLastRow(containerWidth, itemWidth, itemsCount)
+      );
+    }
+  }, [data, placeholdersNeeded]);
+
   const lastElementRef = useInfiniteScroll(indexData);
 
   return (
-    <div>
-      <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 `}>
-        {data &&
-          data.map((item, index) => <ImageCard key={index} data={item} />)}
-      </div>
+    <div className={isMobileDevice || !isXs ? "mt-0 mb-6" : "mt-3 mb-6"}>
+      {isMobileDevice || !isXs ? (
+        <div className="  flex  justify-evenly flex-wrap gap-y-6 ">
+          {data &&
+            data.map((item, index) => (
+              <ImageCard key={index} data={item} smallSize={true} />
+            ))}
+          {Array.from({ length: placeholdersNeeded }, (_, index) => (
+            <div
+              key={`placeholder-${index}`}
+              className="w-[154px] h-0 invisible"
+            ></div>
+          ))}
+        </div>
+      ) : (
+        <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 `}>
+          {data &&
+            data.map((item, index) => <ImageCard key={index} data={item} />)}
+        </div>
+      )}
       {loading && (
         <CircularProgress
           className="mx-auto"

@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import Header from "@/components/layout/Header";
 import { useState, useEffect } from "react";
 import {
   Card,
@@ -28,7 +29,7 @@ import {
   setVerifyingDeleteAccount,
 } from "@/reducers/userSlice";
 
-export default function Settings() {
+export default function AccountSettings() {
   const dispatch = useDispatch();
   const {
     email,
@@ -45,7 +46,7 @@ export default function Settings() {
   const router = useRouter();
   const { userData } = useSelector((state) => state.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   useEffect(() => {
     if (userData) {
       setEmailChange(userData.google ? userData.google.email : userData.email);
@@ -73,11 +74,8 @@ export default function Settings() {
     setEmailChange(e.target.value);
   };
 
-  if (!isAuthenticated) {
-    return <LoginRequest />;
-  }
   return (
-    <Layout>
+    <div>
       {showDeleteAccountPage && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center">
           <div className="max-w-[480px] h-1/4 bg-white dark:bg-black dark:text-white p-6 flex flex-col justify-between rounded-xl">
@@ -115,15 +113,15 @@ export default function Settings() {
         </div>
       )}
 
-      <div>
+      <div className={isMobileDevice ? "" : " mt-6"}>
         <input
           type="file"
           id="fileInput"
           style={{ display: "none" }}
           onChange={(e) => handleFileUpload(e, dispatch)}
         />
-        <Card radius="sm" className="max-w-[888px] mb-8" shadow="sm">
-          <CardBody className="h-[150px] p-6 flex flex-row justify-between">
+        <Card radius="sm" className=" mb-8 " shadow="sm">
+          <CardBody className="min-h-[150px] p-6 flex flex-row justify-between">
             <div className="flex flex-col  justify-between ">
               <h4 className="text-xl font-medium">Avatar</h4>
               <p className="my-3 text-sm">
@@ -134,7 +132,7 @@ export default function Settings() {
             </div>
             <Avatar
               onClick={() => document.getElementById("fileInput").click()}
-              className="cursor-pointer h-20 w-20 avatar-image"
+              className="cursor-pointer h-20 w-20 avatar-image shrink-0"
               src={displayImageUrl}
             ></Avatar>
           </CardBody>
@@ -146,8 +144,8 @@ export default function Settings() {
           </CardFooter>
         </Card>
 
-        <Card radius="sm" className="max-w-[888px] mb-8" shadow="sm">
-          <CardBody className="h-[150px] p-6 flex flex-col  justify-between">
+        <Card radius="sm" className=" mb-8 mx-auto" shadow="sm">
+          <CardBody className="min-h-[150px] p-6 flex flex-col  justify-between">
             <h4 className="text-xl font-medium">Display Name</h4>
             <p className="my-3 text-sm">
               Please enter your full name, or a display name you are comfortable
@@ -183,11 +181,11 @@ export default function Settings() {
 
         <Card
           radius="sm"
-          className="max-w-[888px] mb-8"
+          className=" mb-8 mx-auto"
           shadow="sm"
           isDisabled={verifyingEmail ? true : false}
         >
-          <CardBody className="h-[150px] p-6 flex flex-col  justify-between ">
+          <CardBody className="min-h-[150px] p-6 flex flex-col  justify-between ">
             <h4 className="text-xl font-medium">Email</h4>
             <p className="my-3 text-sm">
               Please enter the email address you want to use to log in with
@@ -202,7 +200,7 @@ export default function Settings() {
             />
           </CardBody>
           <Divider />
-          <CardFooter className="h-14 py-3 px-6 justify-between">
+          <CardFooter className="h-14 py-3 px-6 justify-between ">
             <p className=" text-sm text-[#909090]">
               We will email you to verify the change.
             </p>
@@ -223,11 +221,11 @@ export default function Settings() {
 
         <Card
           radius="sm"
-          className="max-w-[888px] mb-8"
+          className=" mb-8 mx-auto"
           shadow="sm"
           isDisabled={verifyingDeleteAccount ? true : false}
         >
-          <CardBody className="h-[150px] p-6 ">
+          <CardBody className="min-h-[150px] p-6 ">
             <div className="flex flex-col  justify-between ">
               <h4 className="text-xl font-medium">Delete Account</h4>
               {!verifyingDeleteAccount ? (
@@ -257,6 +255,6 @@ export default function Settings() {
           </CardFooter>
         </Card>
       </div>
-    </Layout>
+    </div>
   );
 }

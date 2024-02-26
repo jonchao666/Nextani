@@ -2,13 +2,15 @@ import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useState, useEffect } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
 import { Image, Link, Button } from "@nextui-org/react";
-
+import { useResponsive } from "../../hooks/useResponsive";
 export default function LikedAnimeInfinityScoroll({
   likedAnime,
   setLikedAnime,
 }) {
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+  const { isXs } = useResponsive();
   const { fetchLikedAnime, removeLikedAnime } = useUserActivity();
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -39,12 +41,14 @@ export default function LikedAnimeInfinityScoroll({
 
   return (
     <div>
-      <div className="mt-4 mb-6">
+      <div className={isMobileDevice || !isXs ? "" : "mt-4 mb-6"}>
         {likedAnime &&
           likedAnime.map((data, index) => (
             <div
               key={data.mal_id}
-              className="flex py-2 justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)]"
+              className={`flex justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)] ${
+                isMobileDevice || !isXs ? "py-1.5" : "py-2"
+              }`}
             >
               <Link
                 href={`/animeDetails/default?mal_id=${data.mal_id}`}
@@ -65,20 +69,47 @@ export default function LikedAnimeInfinityScoroll({
                     ></Image>
                   </div>
                   <div className="shrink">
-                    <p className="text-lg line-clamp-2">{data.apiData.title}</p>
-                    <p className="text-sm  text-gray-600 dark:text-[rgb(170,170,170)]">
+                    <p
+                      className={
+                        isMobileDevice || !isXs
+                          ? "text-sm line-clamp-2 break-words"
+                          : "text-lg line-clamp-2 break-words"
+                      }
+                    >
+                      {data.apiData.title}
+                    </p>
+                    <p
+                      className={
+                        isMobileDevice || !isXs
+                          ? "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-xs line-clamp-1 break-words"
+                          : "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-sm line-clamp-1 break-words"
+                      }
+                    >
                       {data.apiData.genres && data.apiData.genres.length > 0
                         ? data.apiData.genres
                             .slice(0, 2)
                             .map((genre) => genre.name)
                             .join("&")
                         : data.apiData.type}{" "}
-                      {data.apiData.aired.prop.from.year && (
-                        <span className="text-2xl align-[-4px]"> &middot;</span>
-                      )}{" "}
-                      {data.apiData.aired.prop.from.year}
+                      {data.apiData.aired.prop.from.year &&
+                        (isMobileDevice || !isXs ? <span> · </span> : null)}
+                      <span
+                        className={
+                          isMobileDevice || !isXs
+                            ? ""
+                            : "before:content-['•'] before:mx-1"
+                        }
+                      >
+                        {data.apiData.aired.prop.from.year}
+                      </span>
                     </p>
-                    <p className="text-gray-600 dark:text-[rgb(170,170,170)] text-sm line-clamp-2">
+                    <p
+                      className={
+                        isMobileDevice || !isXs
+                          ? "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-xs line-clamp-2 break-words"
+                          : "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-sm line-clamp-2 break-words"
+                      }
+                    >
                       {data.apiData.synopsis}
                     </p>
                   </div>

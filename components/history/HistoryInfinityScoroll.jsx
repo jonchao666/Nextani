@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Image, Link, Button } from "@nextui-org/react";
 
 import { groupHistoryByDate } from "@/helpers/groupHistoryByDate";
-
+import { useResponsive } from "../../hooks/useResponsive";
 export default function HistoryInfinityScoroll({ history, setHistory }) {
   const { fetchHistory, removeHistory } = useUserActivity();
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [isMoreHistoryAvailable, setIsMoreHistoryAvailable] = useState(true);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+  const { isXs } = useResponsive();
 
   async function fetchData() {
     if (loading || !isMoreHistoryAvailable) return;
@@ -39,14 +41,24 @@ export default function HistoryInfinityScoroll({ history, setHistory }) {
 
   return (
     <div>
-      <div className="pt-2 mb-6">
+      <div className="pt-2 ">
         {Object.entries(groupedHistory).map(([date, items]) => (
           <div key={date}>
-            <h3 className="text-xl font-bold pt-6 pb-2">{date}</h3>{" "}
+            <h3
+              className={
+                isMobileDevice || !isXs
+                  ? "text-lg font-bold pt-1 pb-2.5"
+                  : "text-xl font-bold pt-6 pb-4 "
+              }
+            >
+              {date}
+            </h3>{" "}
             {items.map((data, index) => (
               <div
                 key={index}
-                className="flex py-2 justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)]"
+                className={`flex justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)] ${
+                  isMobileDevice || !isXs ? "py-1.5" : "py-2"
+                } `}
               >
                 <Link
                   href={`/animeDetails/default?mal_id=${data.animeDetail.mal_id}`}
@@ -69,26 +81,48 @@ export default function HistoryInfinityScoroll({ history, setHistory }) {
                       ></Image>
                     </div>
                     <div className="shrink">
-                      <p className="text-lg line-clamp-2">
+                      <p
+                        className={
+                          isMobileDevice || !isXs
+                            ? "text-sm line-clamp-2 break-words"
+                            : "text-lg line-clamp-2 break-words"
+                        }
+                      >
                         {data.animeDetail.apiData.title}
                       </p>
-                      <p className="text-sm  text-gray-600 dark:text-[rgb(170,170,170)]">
+                      <p
+                        className={
+                          isMobileDevice || !isXs
+                            ? "text-xs  text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]"
+                            : "text-sm  text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]"
+                        }
+                      >
                         {data.animeDetail.apiData.genres &&
                         data.animeDetail.apiData.genres.length > 0
                           ? data.animeDetail.apiData.genres
                               .slice(0, 2)
                               .map((genre) => genre.name)
                               .join("&")
-                          : data.animeDetail.apiData.type}{" "}
-                        {data.animeDetail.apiData.aired.prop.from.year && (
-                          <span className="text-2xl align-[-4px]">
-                            {" "}
-                            &middot;
-                          </span>
-                        )}{" "}
-                        {data.animeDetail.apiData.aired.prop.from.year}
+                          : data.animeDetail.apiData.type}
+                        {data.animeDetail.apiData.aired.prop.from.year &&
+                          (isMobileDevice || !isXs ? <span> · </span> : null)}
+                        <span
+                          className={
+                            isMobileDevice || !isXs
+                              ? ""
+                              : "before:content-['•'] before:mx-1"
+                          }
+                        >
+                          {data.animeDetail.apiData.aired.prop.from.year}
+                        </span>
                       </p>
-                      <p className="text-gray-600 dark:text-[rgb(170,170,170)] text-sm line-clamp-2">
+                      <p
+                        className={
+                          isMobileDevice || !isXs
+                            ? "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-xs line-clamp-2 break-words"
+                            : "text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] text-sm line-clamp-2 break-words"
+                        }
+                      >
                         {data.animeDetail.apiData.synopsis}
                       </p>
                     </div>

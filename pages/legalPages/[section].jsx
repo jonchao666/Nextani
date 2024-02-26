@@ -1,9 +1,8 @@
-import Header from "@/components/layout/Header";
 import { useRouter } from "next/router";
-import { Button, Link, Avatar } from "@nextui-org/react";
+
+import { Navbar, NavbarBrand, Link } from "@nextui-org/react";
 const AboutPage = () => (
   <div>
-    <Header noMenu={true} />
     <div className="h-16"></div>
     <div className="px-6 h-screen">
       <div className="mx-auto max-w-[1024px] ">
@@ -34,10 +33,9 @@ const AboutPage = () => (
 
 const ContactPage = () => (
   <div>
-    <Header noMenu={true} />
     <div className="h-16"></div>
     <div className="px-6 h-screen">
-      <div className="flex    h-1/2 mx-auto max-w-[1024px] ">
+      <div className="flex  items-center text-center  h-1/2 mx-auto max-w-[888px] ">
         <div className="container mx-auto p-6">
           <h2 className="text-3xl font-bold mb-4">Contact Us</h2>
 
@@ -66,7 +64,6 @@ const ContactPage = () => (
 
 const TermsOfServicePage = () => (
   <div>
-    <Header noMenu={true} />
     <div className="h-16"></div>
     <div className="px-6 h-screen">
       <div className=" mx-auto max-w-[1024px] pb-6">
@@ -180,7 +177,6 @@ const TermsOfServicePage = () => (
 
 const PrivacyPolicyPage = () => (
   <div>
-    <Header noMenu={true} />
     <div className="h-16"></div>
     <div className="px-6 h-screen">
       <div className=" pb-6  mx-auto max-w-[1024px] ">
