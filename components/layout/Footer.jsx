@@ -1,9 +1,8 @@
 import { SignInIcon } from "@/icons";
-
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Button, Link, Avatar } from "@nextui-org/react";
 import { ThemeSwitcherIconOnly } from "@/components/layout/ThemeSwitcherIconOnly";
+
 export default function Footer({ mainWidth, isMobileDevice, isXs }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { displayImageUrl } = useSelector((state) => state.user);

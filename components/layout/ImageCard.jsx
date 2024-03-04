@@ -1,9 +1,9 @@
 import { Card, CardFooter, CardBody, Image, Link } from "@nextui-org/react";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
 
-export default function ImageCard({ data, ep, smallSize, rank }) {
+export default function ImageCard({ data, ep, smallSize }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const { isXs } = useResponsive();
@@ -34,7 +34,6 @@ export default function ImageCard({ data, ep, smallSize, rank }) {
           <Image
             isZoomed={!isMobileDevice}
             className={`${height} ${width} object-cover`}
-            loading="lazy"
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
             radius="none"

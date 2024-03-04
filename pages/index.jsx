@@ -1,8 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import ShowSlider from "@/components/homepage/ShowSlider";
-
 import Calendar from "@/components/homepage/Calendar";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   getLastTwoSeasonAndYears,
   getLastSeasonAndYear,
@@ -15,9 +14,9 @@ import {
   Genres,
   Directors,
 } from "@/constans/categoryData";
-import { useEffect, useState } from "react";
-import { useResponsive } from "@/hooks/useResponsive";
+import { useEffect } from "react";
 import { setPageName } from "@/reducers/pageNameSlice";
+
 export default function HomePage({ slidersData, calendarData }) {
   const dispatch = useDispatch();
 

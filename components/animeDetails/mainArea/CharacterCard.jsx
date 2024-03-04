@@ -1,6 +1,6 @@
-import { Card, CardBody, Image } from "@nextui-org/react";
+import { Card, Image } from "@nextui-org/react";
 import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 export default function CharacterCard({ character }) {
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 

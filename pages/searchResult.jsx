@@ -8,9 +8,11 @@ import { useEffect, useState } from "react";
 import { useResponsive } from "../hooks/useResponsive";
 import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
 import { useSelector, useDispatch } from "react-redux";
+import { setPageName } from "@/reducers/pageNameSlice";
 export default function SearchResult() {
   const router = useRouter();
   const { debouncedQuery } = router.query;
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -19,6 +21,14 @@ export default function SearchResult() {
   const [colToShow, setColToShow] = useState(1);
   const [placeholdersNeeded, setPlaceholdersNeeded] = useState(0);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      dispatch(setPageName("Search: " + debouncedQuery));
+    } else {
+      setPageName("home");
+    }
+  }, [dispatch, debouncedQuery]);
 
   const fetchData = async () => {
     if (loading || !hasMoreData || !debouncedQuery) return;
@@ -129,8 +139,9 @@ export default function SearchResult() {
       )}
       {loading && (
         <CircularProgress
+          size="sm"
           className="mx-auto"
-          color="default"
+          color="primary"
           aria-label="Loading..."
         />
       )}

@@ -2,14 +2,13 @@ import { Image } from "@nextui-org/react";
 import DetailsPanelTop from "./DetailsPanelTop";
 import DetailsPanelBottomOpened from "./DetailsPanelBottomOpened";
 import DetailsPanelBottomClosed from "./DetailsPanelBottomClosed";
-import { Button } from "@nextui-org/react";
-import { HeartIcon } from "@/icons";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setPageName } from "@/reducers/pageNameSlice";
+import { Skeleton } from "@nextui-org/react";
 import { useResponsive } from "@/hooks/useResponsive";
 export default function DetailsPanelContents({
   data,
+
   mainCharacters,
   synopsisWithoutLastParagraph,
   videos,
@@ -17,31 +16,33 @@ export default function DetailsPanelContents({
   mal_id,
   PV,
 }) {
-  const dispatch = useDispatch();
-
   const { isXs } = useResponsive();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const [synopsisOpened, setSynopsisOpened] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const url =
-    hasError ||
-    data.images.webp.large_image_url.startsWith(
-      "https://cdn.myanimelist.net/images/questionmark_23.gif"
-    )
-      ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
-      : data.images.webp.large_image_url;
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
-    dispatch(setPageName(data.title));
-  }, [dispatch, data]);
+    if (data) {
+      setUrl(
+        hasError ||
+          data.images.webp.large_image_url.startsWith(
+            "https://cdn.myanimelist.net/images/questionmark_23.gif"
+          )
+          ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
+          : data.images.webp.large_image_url
+      );
+    }
+  }, [data, setUrl, hasError]);
+  if (!data) return null;
   return (
     <div
       className={` flex w-full ${
         isMobileDevice || !isXs ? "px-3 pt-2.5" : "pt-5"
       }`}
     >
-      <div className="w-[142px] shrink-0 mr-4 hidden sm:block">
-        <div>
+      {url && data && (
+        <div className="w-[142px] shrink-0 mr-4 hidden sm:block">
           <Image
             onError={() => setHasError(true)}
             className="object-cover w-[142px] h-[204px]"
@@ -49,7 +50,7 @@ export default function DetailsPanelContents({
             src={url}
           ></Image>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-col w-full">
         <DetailsPanelTop

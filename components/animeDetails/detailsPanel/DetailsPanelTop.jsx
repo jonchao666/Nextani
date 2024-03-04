@@ -1,16 +1,13 @@
 import { Button, Link } from "@nextui-org/react";
-import { SearchIcon, SignInIcon, GuideButtonIcon, Logo } from "@/icons";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
 import AddToListComponent from "./AddToListComponent";
-import { useSelector, useDispatch } from "react-redux";
-import { useTheme } from "next-themes";
-import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function DetailsPanelTop({
   data,
   mainCharacters,
-  videos,
   setVideoUrl,
   mal_id,
   PV,
@@ -33,7 +30,6 @@ export default function DetailsPanelTop({
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const tooltipRefList = useRef(null);
   const tooltipRefLike = useRef(null);
-  const { resolvedTheme } = useTheme();
   const [watchlists, setWatchlists] = useState(null);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
@@ -134,13 +130,15 @@ export default function DetailsPanelTop({
       )}
       <div className="flex justify-between">
         <div className="flex">
-          <p
-            className={`mb-2.5 line-clamp-2 break-words ${
-              isMobileDevice || !isXs ? "text-lg" : "text-xl"
-            } font-bold mr-4`}
-          >
-            {data.title}
-          </p>
+          {data && (
+            <p
+              className={`mb-2.5 line-clamp-2 break-words ${
+                isMobileDevice || !isXs ? "text-lg" : "text-xl"
+              } font-bold mr-4`}
+            >
+              {data.title}
+            </p>
+          )}
         </div>
         <div className="shrink-0 flex">
           <div ref={tooltipRefList}>
@@ -150,7 +148,7 @@ export default function DetailsPanelTop({
               }
               size="sm"
               color="primary"
-              variant="ghost"
+              variant={isMobileDevice ? "bordered" : "ghost"}
               className="mr-2 border-1"
             >
               <span
@@ -203,7 +201,13 @@ export default function DetailsPanelTop({
               isIconOnly
               size="sm"
               color="danger"
-              variant={isAnimeLiked && isAuthenticated ? "solid" : "ghost"}
+              variant={
+                isAnimeLiked && isAuthenticated
+                  ? "solid"
+                  : isMobileDevice
+                  ? "bordered"
+                  : "ghost"
+              }
               className={`${isAnimeLiked && isAuthenticated ? "" : "border-1"}`}
             >
               <span
@@ -247,29 +251,39 @@ export default function DetailsPanelTop({
           </div>
         </div>
       </div>
-      {PV &&
-        PV.map((video, index) => (
-          <Button
-            size="sm"
-            variant={selectedButtonIndex === index ? "solid" : "ghost"}
-            color="primary"
-            radius="sm"
-            className={`mr-2  mb-2 ${
-              selectedButtonIndex !== index && "border-1"
-            }`}
-            key={index}
-            onClick={() => handleButtonClick(video, index)}
-          >
-            {video.title}
-          </Button>
-        ))}
+
+      {PV && (
+        <div className="flex flex-wrap">
+          {PV.map((video, index) => (
+            <Button
+              size="sm"
+              variant={
+                selectedButtonIndex === index
+                  ? "solid"
+                  : isMobileDevice
+                  ? "bordered"
+                  : "ghost"
+              }
+              color="primary"
+              radius="sm"
+              className={`mr-2  mb-2 shrink-0  ${
+                selectedButtonIndex !== index && "border-1"
+              }`}
+              key={index}
+              onClick={() => handleButtonClick(video, index)}
+            >
+              {video.title}
+            </Button>
+          ))}
+        </div>
+      )}
       <p className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]  mb-1.5 line-clamp-1">
-        {data.genres && data.genres.length > 0
+        {data && data.genres && data.genres.length > 0
           ? data.genres.map((genre) => genre.name).join("/")
           : "Anime"}{" "}
-        {data.aired.prop.from.year && <span> &middot;</span>}{" "}
-        {data.aired.prop.from.year}
-        <span> &middot;</span> {data.status}
+        {data && data.aired.prop.from.year && <span> &middot;</span>}{" "}
+        {data && data.aired.prop.from.year}
+        <span> &middot;</span> {data && data.status}
       </p>
       <p className="text-sm mb-1.5 text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] line-clamp-2">
         <span>Voice actors: </span>

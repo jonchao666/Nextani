@@ -6,6 +6,8 @@ import FavoriteAnime from "./FavoriteAnime";
 import FavoritePerson from "./FavoritePerson";
 import { useSelector, useDispatch } from "react-redux";
 import { setPageName } from "@/reducers/pageNameSlice";
+import UserInfo from "./UserInfo";
+
 export default function IsAuthenticated() {
   const dispatch = useDispatch();
 
@@ -15,6 +17,7 @@ export default function IsAuthenticated() {
   //get column to show
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [colToShow, setColToShow] = useState("grid-cols-1");
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   useEffect(() => {
     const newColToshow = isXl
       ? " grid-cols-8"
@@ -32,6 +35,7 @@ export default function IsAuthenticated() {
 
   return (
     <div>
+      {isMobileDevice || !isXs ? <UserInfo /> : null}
       <History colToShow={colToShow} />
 
       <WatchLists colToShow={colToShow} />

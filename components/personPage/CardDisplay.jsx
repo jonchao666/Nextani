@@ -2,8 +2,8 @@ import CharaterCard from "./CharaterCard";
 import StaffCard from "./StaffCard";
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useSelector } from "react-redux";
 
-import { useSelector, useDispatch } from "react-redux";
 export default function CardDisplay({ data }) {
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [colToShow, setColToShow] = useState(1);

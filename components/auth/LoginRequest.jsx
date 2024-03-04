@@ -1,15 +1,17 @@
-import { SearchIcon, SignInIcon, GuideButtonIcon } from "@/icons";
-import { Button, Link, Avatar } from "@nextui-org/react";
-import Layout from "../layout/Layout";
+import { SignInIcon } from "@/icons";
+import { Button, Link } from "@nextui-org/react";
+import Layout from "@/components/layout/Layout";
 import { useTheme } from "next-themes";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { setPageName } from "@/reducers/pageNameSlice";
+import { useSelector } from "react-redux";
+
 export default function LoginRequest() {
   const dispatch = useDispatch();
   const { resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
-
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -33,7 +35,13 @@ export default function LoginRequest() {
           startContent={<SignInIcon size={24} />}
           className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-[rgba(255,255,255,0.2)] "
           size="sm"
-          variant={resolvedTheme === "light" ? "light" : "ghost"}
+          variant={
+            resolvedTheme === "light"
+              ? "light"
+              : isMobileDevice
+              ? "bordered"
+              : "ghost"
+          }
           radius="full"
           color="primary"
         >

@@ -12,6 +12,7 @@ export default function WatchlistItemInfinityScoroll({
 }) {
   const { fetchSelectedWatchlist, removeWatchlistItem } = useUserActivity();
   const [loading, setLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const [page, setPage] = useState(1);
   const [isMoreWatchlistItemsAvailable, setIsMoreWatchlistItemsAvailable] =
     useState(true);
@@ -19,8 +20,12 @@ export default function WatchlistItemInfinityScoroll({
   const { isXs } = useResponsive();
   async function fetchData() {
     if (!name || loading || !isMoreWatchlistItemsAvailable) return;
+
     setLoading(true);
+
     let data = await fetchSelectedWatchlist(name, page);
+
+    setLoading(false);
 
     setIsMoreWatchlistItemsAvailable(data.items.length >= 14);
 
@@ -36,8 +41,6 @@ export default function WatchlistItemInfinityScoroll({
     }));
 
     setPage((prev) => prev + 1);
-
-    setLoading(false);
   }
 
   const handleDeleteWatchlistItem = (mal_id) => {
@@ -149,8 +152,9 @@ export default function WatchlistItemInfinityScoroll({
 
       {loading && (
         <CircularProgress
+          size="sm"
           className="mx-auto"
-          color="default"
+          color="primary"
           aria-label="Loading..."
         />
       )}

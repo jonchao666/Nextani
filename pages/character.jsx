@@ -2,21 +2,18 @@ import Layout from "@/components/layout/Layout";
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Card, CardFooter, CardBody, Image, Button } from "@nextui-org/react";
+import { Image } from "@nextui-org/react";
 import Link from "next/link";
-import { HeartIcon } from "@/icons";
-import ImageCard from "@/components/layout/ImageCard";
-import CardDisplay from "@/components/personPage/CardDisplay";
 import { useSelector, useDispatch } from "react-redux";
-import useUserActivity from "@/hooks/useUserActivity";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
+import { CircularProgress } from "@nextui-org/react";
 import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
+
 export default function Character() {
   const router = useRouter();
   const { mal_id } = router.query;
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const [colToShow, setColToShow] = useState(1);
   const [placeholdersNeededAnime, setPlaceholdersNeededAnime] = useState(0);
@@ -24,21 +21,66 @@ export default function Character() {
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [data, setData] = useState();
   const [aboutOpen, setAboutOpen] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.jikan.moe/v4/characters/${mal_id}/full`
-        );
+  const [showToggleButton, setShowToggleButton] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const textRef = useRef(null);
 
-        setData(response.data.data);
-        console.log(response.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  useEffect(() => {
+    if (textRef.current) {
+      const lineCount = calculateLineCount();
+
+      setShowToggleButton(lineCount >= 3);
+    }
+  }, [data]);
+
+  const calculateLineCount = () => {
+    const lineHeight = 20;
+    const divHeight = textRef.current.clientHeight;
+    return divHeight / lineHeight;
+  };
+
+  useEffect(() => {
+    let isLoadingData = true;
+
+    //show loading after 1s
+    const delaySetLoading = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (isLoadingData) {
+        setLoading(true);
       }
     };
+
+    delaySetLoading();
+
+    const fetchWithRetry = async (url, config, retries = 5) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await axios.get(url, config);
+          return response; // Success, return the response
+        } catch (error) {
+          if (i === retries - 1) throw error; // Last attempt failed, throw error
+          await new Promise((resolve) => setTimeout(resolve, 1000 * 2 ** i)); // Wait before retrying
+        }
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        const response = await fetchWithRetry(
+          `https://api.jikan.moe/v4/characters/${mal_id}/full`,
+          {}
+        );
+        setData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        isLoadingData = false;
+        setLoading(false);
+      }
+    };
+
     if (mal_id) {
-      fetchData(mal_id);
+      fetchData();
     }
   }, [mal_id]);
 
@@ -92,6 +134,17 @@ export default function Character() {
   }, [dispatch, data]);
   return (
     <Layout youPage={true}>
+      {loading && (
+        <div className="fixed z-20 top-0 left-0 bg-background h-screen w-screen  ">
+          <div className="h-5/6 flex justify-center items-center">
+            <CircularProgress
+              size="sm"
+              color="primary"
+              aria-label="Loading..."
+            />
+          </div>
+        </div>
+      )}
       {data && (
         <div>
           <div
@@ -132,53 +185,61 @@ export default function Character() {
               {!isMobileDevice && isXs ? (
                 <div>
                   <div
+                    ref={textRef}
                     className={aboutOpen ? "text-sm" : "text-sm line-clamp-3"}
                   >
                     {data.about}
                   </div>
-                  <div className="flex justify-end">
-                    {!aboutOpen ? (
-                      <span
-                        onClick={() => setAboutOpen(true)}
-                        className="font-medium text-sm cursor-pointer mt-2"
-                      >
-                        Show more
-                      </span>
-                    ) : (
-                      <span
-                        onClick={() => setAboutOpen(false)}
-                        className="font-medium text-sm cursor-pointer mt-2"
-                      >
-                        Show less
-                      </span>
-                    )}
-                  </div>
+                  {showToggleButton && (
+                    <div className="flex justify-end">
+                      {!aboutOpen ? (
+                        <span
+                          onClick={() => setAboutOpen(true)}
+                          className="font-medium text-sm cursor-pointer mt-2"
+                        >
+                          Show more
+                        </span>
+                      ) : (
+                        <span
+                          onClick={() => setAboutOpen(false)}
+                          className="font-medium text-sm cursor-pointer mt-2"
+                        >
+                          Show less
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : null}
             </div>
           </div>
           {isMobileDevice || !isXs ? (
             <div className="px-3 mt-2">
-              <div className={aboutOpen ? "text-sm" : "text-sm line-clamp-3"}>
+              <div
+                ref={textRef}
+                className={aboutOpen ? "text-sm" : "text-sm line-clamp-3"}
+              >
                 {data.about}
               </div>
-              <div className="flex justify-end">
-                {!aboutOpen ? (
-                  <span
-                    onClick={() => setAboutOpen(true)}
-                    className="font-medium text-sm cursor-pointer mt-2"
-                  >
-                    Show more
-                  </span>
-                ) : (
-                  <span
-                    onClick={() => setAboutOpen(false)}
-                    className="font-medium text-sm cursor-pointer mt-2"
-                  >
-                    Show less
-                  </span>
-                )}
-              </div>
+              {showToggleButton && (
+                <div className="flex justify-end">
+                  {!aboutOpen ? (
+                    <span
+                      onClick={() => setAboutOpen(true)}
+                      className="font-medium text-sm cursor-pointer mt-2"
+                    >
+                      Show more
+                    </span>
+                  ) : (
+                    <span
+                      onClick={() => setAboutOpen(false)}
+                      className="font-medium text-sm cursor-pointer mt-2"
+                    >
+                      Show less
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           ) : null}
           <div>

@@ -8,20 +8,27 @@ import {
   DropdownTrigger,
   DropdownSection,
 } from "@nextui-org/react";
-import {
-  setDisplayName,
-  setEmail,
-  setDisplayImageUrl,
-} from "@/reducers/userSlice";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { ThemeSwitcherSelector } from "./ThemeSwitcherSelector";
+import { useEffect, useState } from "react";
 
 export default function AvatarDropdown({ isMobileDevice, isXs }) {
   const { displayName, email, displayImageUrl } = useSelector(
     (state) => state.user
   );
+
+  const [tempDisplayName, setTempDisplayName] = useState("");
+
+  useEffect(() => {
+    const getTempDisplayName = () => {
+      let idx = email.indexOf("@");
+      setTempDisplayName("user" + email.substring(0, idx));
+    };
+    if (!displayName) {
+      getTempDisplayName();
+    }
+  }, [displayName, email]);
 
   const router = useRouter();
 
@@ -62,7 +69,9 @@ export default function AvatarDropdown({ isMobileDevice, isXs }) {
             className="h-14 gap-2 opacity-100 "
           >
             <User
-              name={displayName}
+              as={Link}
+              href="/settings/Account"
+              name={displayName || tempDisplayName}
               description={email}
               classNames={{
                 name: "text-foreground",

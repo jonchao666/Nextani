@@ -1,7 +1,23 @@
 import { useRouter } from "next/router";
+import { Link } from "@nextui-org/react";
+import { useSelector } from "react-redux";
+export default function LegalPages() {
+  const router = useRouter();
+  const { section } = router.query;
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  switch (section) {
+    case "About":
+      return <AboutPage />;
+    case "ContactUs":
+      return <ContactPage />;
+    case "TermsOfService":
+      return <TermsOfServicePage />;
+    case "PrivacyPolicy":
+      return <PrivacyPolicyPage />;
+  }
+}
 
-import { Navbar, NavbarBrand, Link } from "@nextui-org/react";
-const AboutPage = () => (
+const AboutPage = (isAuthenticated) => (
   <div>
     <div className="h-16"></div>
     <div className="px-6 h-screen">
@@ -18,12 +34,14 @@ const AboutPage = () => (
               adventures in anime.
             </p>
 
-            <Link
-              href="/login"
-              className="bg-indigo-700 hover:bg-indigo-800 hover:opacity-100 text-white font-medium py-3 px-6 rounded-md"
-            >
-              Join us and discover more!
-            </Link>
+            {!isAuthenticated && (
+              <Link
+                href="/login"
+                className="bg-indigo-700 hover:bg-indigo-800 hover:opacity-100 text-white font-medium py-3 px-6 rounded-md"
+              >
+                Join us and discover more!
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -245,19 +263,3 @@ const PrivacyPolicyPage = () => (
     </div>
   </div>
 );
-
-export default function LegalPages() {
-  const router = useRouter();
-  const { section } = router.query;
-
-  switch (section) {
-    case "About":
-      return <AboutPage />;
-    case "ContactUs":
-      return <ContactPage />;
-    case "TermsOfService":
-      return <TermsOfServicePage />;
-    case "PrivacyPolicy":
-      return <PrivacyPolicyPage />;
-  }
-}

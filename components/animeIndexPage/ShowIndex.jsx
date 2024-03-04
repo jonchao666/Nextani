@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useResponsive } from "../../hooks/useResponsive";
 import axios from "axios";
 import { parseYears } from "@/helpers/parseCategoryYears";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getLastTwoSeasonAndYears } from "@/helpers/getSeasonAndYear";
 import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
 
@@ -21,6 +21,7 @@ export default function ShowIndex({
 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [delayLoading, setDelayLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
@@ -30,7 +31,7 @@ export default function ShowIndex({
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
-  const year = {};
+
   const indexData = async () => {
     if (loading || !hasMoreData) return;
     setLoading(true);
@@ -171,8 +172,9 @@ export default function ShowIndex({
       )}
       {loading && (
         <CircularProgress
+          size="sm"
           className="mx-auto"
-          color="default"
+          color="primary"
           aria-label="Loading..."
         />
       )}

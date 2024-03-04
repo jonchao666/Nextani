@@ -2,22 +2,19 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { Tabs, Tab } from "@nextui-org/react";
 import moment from "moment-timezone";
 import CalendarTabContent from "@/components/homepage/CalendarTabContent";
-import { useTheme } from "next-themes";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useResponsive } from "../../hooks/useResponsive";
+
 export default function Calendar({ calendarData }) {
   const timezoneOffset = useMemo(() => {
     const localTime = moment();
     const tokyoTime = moment.tz("Asia/Tokyo");
     return tokyoTime.utcOffset() - localTime.utcOffset();
   }, []);
-
   const [selected, setSelected] = useState(moment().format("dddd"));
   const [data, setData] = useState({});
-  const { resolvedTheme } = useTheme();
   const { isXs } = useResponsive();
   const [isMounted, setIsMounted] = useState(false);
-
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const convertToLocaleDayAndTime = useCallback(
     (day, time) => {
@@ -85,7 +82,7 @@ export default function Calendar({ calendarData }) {
       }
     >
       <Tabs
-        fullWidth={isMobileDevice||!isXs}
+        fullWidth={isMobileDevice || !isXs}
         selectedKey={selected}
         onSelectionChange={setSelected}
         color="default"

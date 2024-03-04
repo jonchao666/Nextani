@@ -9,7 +9,7 @@ import {
 } from "@/helpers/getSeasonAndYear";
 import Selector from "@/components/animeIndexPage/Selector";
 import { setPageName } from "@/reducers/pageNameSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 export default function AnimeIndex() {
   const router = useRouter();
   const dispatch = useDispatch();

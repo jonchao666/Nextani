@@ -1,14 +1,10 @@
 import Header from "./Header";
-
 import { useSelector, useDispatch } from "react-redux";
-
 import { useEffect, useState } from "react";
 import { useResponsive } from "@/hooks/useResponsive";
-
 import Footer from "./Footer";
 
 const Layout = ({ children, youPage }) => {
-  const dispatch = useDispatch();
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [mainWidth, setMainWidth] = useState();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);

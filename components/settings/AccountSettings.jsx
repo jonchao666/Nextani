@@ -8,23 +8,16 @@ import {
   Divider,
   Avatar,
   Button,
-  Input,
 } from "@nextui-org/react";
 import handleUpdateDisplayName from "@/helpers/handleUpdateDisplayName";
 import handleFileUpload from "@/helpers/handleFileUpload";
 import handleVerifyEmail from "@/helpers/handleVerifyEmail";
 import handleVerifyDeleteAccount from "@/helpers/handleVerifyDeleteAccount";
-
-import LoginRequest from "@/components/auth/LoginRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import {
-  setDisplayName,
-  setEmail,
   setDisplayImageUrl,
   setVerifyingEmail,
-  setChangingDisplayName,
-  setDeletingAccount,
   setShowDeleteAccountPage,
   setVerifyingDeleteAccount,
 } from "@/reducers/userSlice";
@@ -36,7 +29,6 @@ export default function AccountSettings() {
     displayImageUrl,
     verifyingEmail,
     changingDisplayName,
-    deletingAccount,
     showDeleteAccountPage,
     verifyingDeleteAccount,
   } = useSelector((state) => state.user);
@@ -45,14 +37,17 @@ export default function AccountSettings() {
   const [emailChange, setEmailChange] = useState("");
   const router = useRouter();
   const { userData } = useSelector((state) => state.user);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   useEffect(() => {
     if (userData) {
       setEmailChange(userData.google ? userData.google.email : userData.email);
 
       setDisplayNameChange(
-        userData.google ? userData.google.displayName : userData.displayName
+        userData.google
+          ? userData.google.displayName
+          : userData.displayName
+          ? userData.displayName
+          : ""
       );
 
       dispatch(
@@ -60,7 +55,7 @@ export default function AccountSettings() {
           userData.google
             ? userData.google.profilePicture
             : userData.profilePicture
-            ? `${process.env.API_URL}${userData.profilePicture}`
+            ? userData.profilePicture
             : `${process.env.API_URL}/profilePicture/defaultImage.svg`
         )
       );
@@ -77,37 +72,36 @@ export default function AccountSettings() {
   return (
     <div>
       {showDeleteAccountPage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center">
-          <div className="max-w-[480px] h-1/4 bg-white dark:bg-black dark:text-white p-6 flex flex-col justify-between rounded-xl">
-            <div>
-              <p className="text-2xl font-medium mb-6">
-                Delete Personal Account
-              </p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 h-screen w-screen">
+          <div className="flex items-center justify-center h-full w-full">
+            <div className="max-w-[480px] bg-white p-6 flex gap-6 flex-col justify-between rounded-xl">
+              <p className="text-2xl font-medium ">Delete Personal Account</p>
               <p className="">
                 Are you sure you want to delete your account? This action cannot
                 be undone and you will permanently lose your profile, settings,
                 and data.
               </p>
-            </div>
-            <div className="flex justify-between">
-              <Button
-                onClick={() => dispatch(setShowDeleteAccountPage(false))}
-                radius="sm"
-                className="bg-white border-2 border-default hover:bg-default-200 text-black dark:bg-black dark:text-white "
-              >
-                Cancel
-              </Button>
-              <Button
-                isLoading={verifyingDeleteAccount ? true : false}
-                onClick={() => {
-                  handleVerifyDeleteAccount(dispatch, router),
-                    dispatch(setVerifyingDeleteAccount(true));
-                }}
-                radius="sm"
-                className="bg-black  text-white dark:bg-white dark:text-black "
-              >
-                Delete
-              </Button>
+
+              <div className="flex justify-between">
+                <Button
+                  onClick={() => dispatch(setShowDeleteAccountPage(false))}
+                  radius="sm"
+                  className="bg-white border-2 border-default hover:bg-default-200 text-black dark:bg-black dark:text-white "
+                >
+                  Cancel
+                </Button>
+                <Button
+                  isLoading={verifyingDeleteAccount ? true : false}
+                  onClick={() => {
+                    handleVerifyDeleteAccount(dispatch, router),
+                      dispatch(setVerifyingDeleteAccount(true));
+                  }}
+                  radius="sm"
+                  className="bg-black  text-white dark:bg-white dark:text-black "
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -154,7 +148,7 @@ export default function AccountSettings() {
             <input
               className="pl-2.5 py-1 border border-[#eaeaea] focus:border-[#666] focus:outline-none dark:border-[#333] dark:focus:border-[#888]  rounded-md max-w-[300px] h-9 dark:bg-[#18181b]"
               type="text"
-              maxLength="32"
+              maxLength="20"
               title={displayNameChange}
               value={displayNameChange}
               onChange={handleInputDisplayNameChange}
@@ -163,12 +157,13 @@ export default function AccountSettings() {
           <Divider />
           <CardFooter className="h-14 py-3 px-6  justify-between">
             <p className=" text-sm text-[#909090]">
-              Please use 32 characters at maximum.
+              Please use 20 characters at maximum.
             </p>
 
             <Button
               isLoading={changingDisplayName ? true : false}
               size="sm"
+              isDisabled={displayNameChange.length === 0}
               className="bg-black bg-black text-white dark:bg-white dark:text-black text-sm"
               onClick={() =>
                 handleUpdateDisplayName(displayNameChange, dispatch)

@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useResponsive } from "../../hooks/useResponsive";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function CalendarTabContent({ data }) {
   const [currentSlide, setCurrentSlide] = useState(0);

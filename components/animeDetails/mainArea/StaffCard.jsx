@@ -1,5 +1,5 @@
 import { Card, Image, Link } from "@nextui-org/react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 export default function StaffCard({ person }) {
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   if (!person) return null;

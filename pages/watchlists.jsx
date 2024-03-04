@@ -32,10 +32,10 @@ export default function Watchlists() {
     if (loading || !isMoreWatchlistsAvailable) return;
     setLoading(true);
     let data = await fetchWatchlists(page, 14);
+    setLoading(false);
     setIsMoreWatchlistsAvailable(data.length >= 14);
     setWatchlists((prev) => [...(prev ? prev : []), ...data]);
     setPage((prev) => prev + 1);
-    setLoading(false);
   }
 
   //get column to show
@@ -124,8 +124,9 @@ export default function Watchlists() {
       )}
       {loading && (
         <CircularProgress
+          size="sm"
           className="mx-auto"
-          color="default"
+          color="primary"
           aria-label="Loading..."
         />
       )}

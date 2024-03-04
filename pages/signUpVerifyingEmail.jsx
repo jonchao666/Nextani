@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import { Navbar, NavbarBrand, Link, Button } from "@nextui-org/react";
-import { useState, useMemo, useEffect } from "react";
+import { useState } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
+import { useSelector } from "react-redux";
+import { useResponsive } from "@/hooks/useResponsive";
 const SignUpVerifyingEmail = () => {
   const router = useRouter();
   const { email } = router.query;
@@ -9,6 +11,8 @@ const SignUpVerifyingEmail = () => {
   const [signUpError, setSignUpError] = useState(null);
   const [verifyingEmail, setVerifyingEmail] = useState(false);
   const [countdown, setCountdown] = useState(60);
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+  const { isXs } = useResponsive();
   const handleSignUp = async (email) => {
     setVerifyingEmail(true);
     let res = await localVerifyEmail(email);
@@ -38,8 +42,14 @@ const SignUpVerifyingEmail = () => {
         </NavbarBrand>
       </Navbar>
 
-      <div className="max-w-screen h-5/6 flex flex-col justify-center items-center">
-        <p className="text-5xl font-bold">Verify your email</p>
+      <div className="max-w-screen h-5/6 flex flex-col justify-center items-center px-6">
+        <p
+          className={
+            isMobileDevice || isXs ? "text-3xl font-bold" : "text-5xl font-bold"
+          }
+        >
+          Verify your email
+        </p>
         <p className="my-4">
           We sent an email to {email}. Click the link inside to get started.
         </p>

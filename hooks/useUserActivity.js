@@ -172,7 +172,7 @@ function useUserActivity() {
           `${process.env.API_URL}/userActivity/history`,
           {
             headers: { Authorization: `Bearer ${jwt}` },
-            params: { page, limit, isSensitiveFilterDisabled },
+            params: { page, limit },
           }
         );
         const data = response.data;
@@ -472,7 +472,7 @@ function useUserActivity() {
       console.log("Registration Successful");
       return true;
     } catch (error) {
-      console.error("Error login:", error);
+      console.error("Error Sign Up:", error);
       return false;
     }
   }, []);
@@ -485,8 +485,9 @@ function useUserActivity() {
         password,
       });
     } catch (error) {
-      console.error("Error login:", error);
-      return error.response.data;
+      console.error("Error Sign Up:", error);
+
+      return error.message;
     }
   }
 

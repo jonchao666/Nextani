@@ -1,7 +1,8 @@
-import { Link, Button } from "@nextui-org/react";
+import { Skeleton } from "@nextui-org/react";
 
 export default function DetailsPanelBottomOpened({
   data,
+
   synopsisWithoutLastParagraph,
   setSynopsisOpened,
 }) {
@@ -29,11 +30,11 @@ export default function DetailsPanelBottomOpened({
       <div className="flex justify-between items-center">
         <div className="flex flex-col">
           <p className="text-[#ffa058] text-xl font-bold">
-            {data.score ? data.score.toFixed(2) : "N/A"}
+            {data && data.score ? data.score.toFixed(2) : "N/A"}
           </p>
 
           <p className="text-xs text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-0.5">
-            {data.scored_by ? data.scored_by : "- "}users
+            {data && data.scored_by ? data.scored_by : "- "}users
           </p>
         </div>
 

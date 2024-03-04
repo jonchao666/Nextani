@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 export default function useSearch(initialQuery = "", delay = 500) {
@@ -9,6 +9,10 @@ export default function useSearch(initialQuery = "", delay = 500) {
   const isSensitiveFilterDisabled = useSelector(
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
+  const [showResults, setShowResults] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchRef = useRef(null);
+  const blurTimeoutRef = useRef();
   // 防抖逻辑
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -17,6 +21,31 @@ export default function useSearch(initialQuery = "", delay = 500) {
 
     return () => clearTimeout(timerId);
   }, [query, delay]);
+
+  const handleFocus = () => {
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+    }
+    setIsSearchFocused(true);
+  };
+
+  const handleBlur = () => {
+    blurTimeoutRef.current = setTimeout(() => {
+      setIsSearchFocused(false);
+    }, 150); // 150ms delay
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      router.push(`/searchResult?debouncedQuery=${query}`);
+    }
+  };
+
+  const handleSearchClick = () => {
+    if (query) {
+      router.push(`/searchResult?debouncedQuery=${query}`);
+      setShowInput(false);
+    }
+  };
 
   // 执行搜索
   useEffect(() => {
@@ -47,5 +76,18 @@ export default function useSearch(initialQuery = "", delay = 500) {
     fetchData();
   }, [debouncedQuery, isSensitiveFilterDisabled]);
 
-  return { query, setQuery, results, isLoading };
+  return {
+    query,
+    setQuery,
+    results,
+    isLoading,
+    showResults,
+    setShowResults,
+    isSearchFocused,
+    handleSearchClick,
+    handleFocus,
+    handleBlur,
+    handleKeyDown,
+    searchRef,
+  };
 }

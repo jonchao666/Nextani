@@ -1,6 +1,6 @@
-import { Button, Checkbox, CheckboxGroup, Input } from "@nextui-org/react";
-import { useState, useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Button, Checkbox, Input } from "@nextui-org/react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useResponsive } from "@/hooks/useResponsive";
 export default function AddToListComponent({
@@ -58,7 +58,7 @@ export default function AddToListComponent({
   };
 
   return (
-    <div className="fixed z-50 min-w-[250px] bottom-1/4 left-1/2 -translate-x-1/2  rounded-xl sm:max-w-[640px] max-w-full   bg-white dark:bg-[rgb(40,40,40)]">
+    <div className="fixed z-50  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl sm:max-w-[640px] max-w-full   bg-white dark:bg-[rgb(40,40,40)]">
       <div className="py-4 px-6 flex justify-between">
         <p>Save anime to...</p>
         <span

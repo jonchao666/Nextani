@@ -1,6 +1,6 @@
-import { Button, Select, SelectItem } from "@nextui-org/react";
-import { Genres, Types, Years, CategoryTitles } from "@/constans/categoryData";
-import { useSelector, useDispatch } from "react-redux";
+import { Select, SelectItem } from "@nextui-org/react";
+import { Genres, Types, Years } from "@/constans/categoryData";
+import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
 export default function Selector({
   selectedButtonSortby,
@@ -10,7 +10,6 @@ export default function Selector({
   selectedButtonYear,
   selectedButtonSeason,
   selectedButtonRated,
-
   setSelectedButtonSortby,
   setSelectedButtonGenres,
   setSelectedButtonTypes,

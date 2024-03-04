@@ -153,7 +153,7 @@ export default function WatchlistCardInfo({
                     setShowDelete(true), setEditingWatchlist(false);
                   }}
                   radius="none"
-                  variant="ghost"
+                  variant={isMobileDevice ? "bordered" : "ghost"}
                   className="border-none w-full"
                 >
                   <span
@@ -170,7 +170,7 @@ export default function WatchlistCardInfo({
                 <Button
                   onClick={() => setEditingName(true)}
                   radius="none"
-                  variant="ghost"
+                  variant={isMobileDevice ? "bordered" : "ghost"}
                   className="border-none"
                 >
                   <span

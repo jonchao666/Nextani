@@ -1,9 +1,7 @@
-import { Image, Link, Button } from "@nextui-org/react";
-import { CircularProgress } from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import useUserActivity from "@/hooks/useUserActivity";
-import { useSelector, useDispatch } from "react-redux";
+import { Image, Link } from "@nextui-org/react";
+import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function FavoritePersonCard({ data }) {
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 

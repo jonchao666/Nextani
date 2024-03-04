@@ -1,8 +1,8 @@
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Image, Link, Button } from "@nextui-org/react";
 import { useResponsive } from "../../hooks/useResponsive";
 export default function LikedAnimeInfinityScoroll({
@@ -13,22 +13,24 @@ export default function LikedAnimeInfinityScoroll({
   const { isXs } = useResponsive();
   const { fetchLikedAnime, removeLikedAnime } = useUserActivity();
   const [loading, setLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const [page, setPage] = useState(1);
   const [isMoreLikedAnimeAvailable, setIsMoreLikedAnimeAvailable] =
     useState(true);
 
   async function fetchData() {
     if (loading || !isMoreLikedAnimeAvailable) return;
+
     setLoading(true);
+
     let data = await fetchLikedAnime(page, 14);
 
+    setLoading(false);
     setIsMoreLikedAnimeAvailable(data.length >= 14);
 
     setLikedAnime((prev) => [...(prev ? prev : []), ...data]);
 
     setPage((prev) => prev + 1);
-
-    setLoading(false);
   }
 
   const handleDeleteLikedAnime = (mal_id) => {
@@ -137,8 +139,9 @@ export default function LikedAnimeInfinityScoroll({
 
       {loading && (
         <CircularProgress
+          size="sm"
           className="mx-auto"
-          color="default"
+          color="primary"
           aria-label="Loading..."
         />
       )}

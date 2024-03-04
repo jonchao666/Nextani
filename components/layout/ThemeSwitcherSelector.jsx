@@ -1,13 +1,10 @@
-import { Button, Select } from "@nextui-org/react";
 import { MoonIcon, SunIcon, SystemIcon } from "@/icons";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export function ThemeSwitcherSelector() {
   const { theme, setTheme } = useTheme();
-
   const [isMounted, setIsMounted] = useState(false);
-
   const handleThemeChange = (event) => {
     const selectedTheme = event.target.value;
     setTheme(selectedTheme);
@@ -20,14 +17,6 @@ export function ThemeSwitcherSelector() {
   if (!isMounted) {
     return null;
   }
-  const startContent =
-    theme === "light" ? (
-      <SunIcon />
-    ) : theme === "dark" ? (
-      <MoonIcon />
-    ) : theme === "system" ? (
-      <SystemIcon />
-    ) : null;
 
   return (
     <div>

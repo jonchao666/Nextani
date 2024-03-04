@@ -8,16 +8,12 @@ import useUserActivity from "@/hooks/useUserActivity";
 export default function Login() {
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
-  const { redirect } = router.query;
 
   //email validate
   const [email, setEmail] = useState("");
-
   const validateEmail = (email) => email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
-
   const isInvalid = useMemo(() => {
     if (email === "") return false;
-
     return validateEmail(email) ? false : true;
   }, [email]);
 
@@ -49,7 +45,7 @@ export default function Login() {
   return (
     <div className="h-screen w-screen">
       <div className="flex items-center justify-center h-2/3">
-        <div className="flex flex-col mx-auto">
+        <div className="flex flex-col w-full max-w-[400px] px-10">
           <div className="text-3xl font-bold mx-auto mb-8">
             {isLocalLogin ? "Enter your password" : "Log in to NextAni"}
           </div>
@@ -90,6 +86,7 @@ export default function Login() {
               type={isVisible ? "text" : "password"}
             />
           )}
+          <Link className="mt-4 text-sm">Forget password?</Link>
           <Button
             isLoading={isLoading}
             variant="solid"
@@ -107,12 +104,12 @@ export default function Login() {
           >
             Continue
           </Button>
-          <div className="mt-4 text-center">
+          <div className="mt-4 text-center cursor-pointer">
             <p>Don&apos;t have an account?</p>{" "}
             <Link
               href="/signup"
               isDisabled={isLoading}
-              className="cursor-pointer"
+              className="cursor-pointer text-sm"
             >
               Sign up
             </Link>
@@ -125,7 +122,7 @@ export default function Login() {
                 <div className="border-t  flex-grow"></div>
               </div>
 
-              <Oauth2 redirect={redirect} />
+              <Oauth2 />
             </div>
           )}
         </div>

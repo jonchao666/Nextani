@@ -1,11 +1,11 @@
 import Layout from "@/components/layout/Layout";
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LikedPeopleInfinityScoroll from "@/components/favorite/LikedPeopleInfinityScoroll";
 import { setPageName } from "@/reducers/pageNameSlice";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function LikedPeople() {
   const [likedPerson, setLikedPerson] = useState(null);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

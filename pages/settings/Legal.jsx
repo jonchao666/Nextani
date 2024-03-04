@@ -1,69 +1,75 @@
+// Importing necessary React, Next.js components, hooks, and functions
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 import Layout from "@/components/layout/Layout";
-import { useResponsive } from "@/hooks/useResponsive";
-import { useDispatch, useSelector } from "react-redux";
-import AccountSettings from "@/components/settings/AccountSettings";
 import { Link, Button, Divider } from "@nextui-org/react";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { setPageName } from "@/reducers/pageNameSlice";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useTheme } from "next-themes";
+import { useResponsive } from "@/hooks/useResponsive";
+
+// Settings component definition
 export default function Settings() {
+  // State selectors
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
-  const { theme, setTheme } = useTheme();
 
+  // Hook calls
   const dispatch = useDispatch();
+  const router = useRouter();
+
+  // Effect hook to set the page name on component mount
   useEffect(() => {
     dispatch(setPageName("Legal"));
   }, [dispatch]);
-  const router = useRouter();
 
+  // Logout handler
   const handleLogOut = () => {
     localStorage.removeItem("jwt");
     router.push("/logout-callback");
   };
 
+  // Conditional rendering for unauthenticated non-mobile users with extra small screens
   if (!isAuthenticated && !isMobileDevice && isXs) {
     return <LoginRequest />;
   }
 
+  // Main component render function
   return (
     <Layout>
+      {/* Conditionally rendered settings title for non-mobile or extra small screens */}
       {isMobileDevice || !isXs ? null : (
-        <p className="text-3xl px-6 pb-10 pt-6  border-b-1 dark:border-[rgba(255,255,255,0.2)]">
+        <p className="text-3xl px-6 pb-10 pt-6 border-b-1 dark:border-[rgba(255,255,255,0.2)]">
           Settings
         </p>
       )}
       <div
         className={
           isMobileDevice || !isXs
-            ? "flex  flex-col md:hidden"
+            ? "flex flex-col md:hidden"
             : "flex px-6 flex-col md:hidden"
         }
       >
         <Divider />
-
-        {isMobileDevice ? (
+        {/* Mobile device specific links */}
+        {isMobileDevice && (
           <div className="flex flex-col px-3">
             <Link
               href="/legalPages/PrivacyPolicy"
               className="px-4 my-3 text-foreground "
             >
-              <span>Privacy policy</span>
+              Privacy policy
             </Link>
-
             <Link
               href="/legalPages/TermsOfService"
-              className="px-4 my-3 text-foreground n"
+              className="px-4 my-3 text-foreground"
             >
-              <span>Terms of service</span>
+              Terms of service
             </Link>
           </div>
-        ) : null}
+        )}
       </div>
-
       <div
         className={
           isMobileDevice
@@ -78,8 +84,11 @@ export default function Settings() {
               : "mr-6 hidden md:block mt-6"
           }
         >
+          {/* Authenticated user buttons */}
           {isAuthenticated && (
             <Button
+              as={Link}
+              href="/settings/Account"
               fullWidth
               variant="light"
               radius="sm"
@@ -98,7 +107,8 @@ export default function Settings() {
           >
             Privacy and safety
           </Button>
-          {isMobileDevice ? (
+          {/* Additional mobile device specific buttons */}
+          {isMobileDevice && (
             <div className="flex flex-col">
               <Button
                 as={Link}
@@ -110,7 +120,6 @@ export default function Settings() {
               >
                 Theme
               </Button>
-
               <Button
                 as={Link}
                 href="/settings/Legal"
@@ -121,7 +130,6 @@ export default function Settings() {
               >
                 Legal
               </Button>
-
               <Button
                 as={Link}
                 href="/legalPages/ContactUs"
@@ -132,7 +140,6 @@ export default function Settings() {
               >
                 Contact us
               </Button>
-
               <Button
                 as={Link}
                 href="/legalPages/About"
@@ -143,10 +150,9 @@ export default function Settings() {
               >
                 About
               </Button>
-
               {isAuthenticated && (
                 <Button
-                  onClick={() => handleLogOut()}
+                  onClick={handleLogOut}
                   fullWidth
                   variant="light"
                   radius="sm"
@@ -156,21 +162,21 @@ export default function Settings() {
                 </Button>
               )}
             </div>
-          ) : null}
+          )}
         </div>
+        {/* Desktop specific links */}
         <div className="flex flex-col">
           <Link
             href="/legalPages/PrivacyPolicy"
-            className="px-4 my-3 text-foreground "
+            className="px-4 my-3 text-foreground"
           >
-            <span>Privacy policy</span>
+            Privacy policy
           </Link>
-
           <Link
             href="/legalPages/TermsOfService"
-            className="px-4 my-3 text-foreground n"
+            className="px-4 my-3 text-foreground"
           >
-            <span>Terms of service</span>
+            Terms of service
           </Link>
         </div>
       </div>

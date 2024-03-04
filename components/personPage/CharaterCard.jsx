@@ -1,6 +1,6 @@
-import { Card, CardFooter, CardBody, Image } from "@nextui-org/react";
+import { Card, Image } from "@nextui-org/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 export default function CharaterCard({ data }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false); // 新增状态用于追踪图片加载是否失败

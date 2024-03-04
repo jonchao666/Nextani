@@ -1,15 +1,13 @@
 import { Button, Link } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
-
 import ImageCard from "../layout/ImageCard";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTheme } from "next-themes";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { SampleNextArrow, SamplePrevArrow } from "@/helpers/sliderArrow";
+
 function ShowSlider({ data, title, category }) {
   const [isMounted, setIsMounted] = useState(false);
-
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [slidesToShow, setSlidesToShow] = useState(1);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);

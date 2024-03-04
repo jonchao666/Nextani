@@ -3,14 +3,22 @@ import MainAreaDefault from "@/components/animeDetails/mainArea/MainAreaDefault"
 import MainAreaCharaters from "@/components/animeDetails/mainArea/MainAreaCharaters";
 import MainAreaStaff from "@/components/animeDetails/mainArea/MainAreaStaff";
 import useAnimeDataJikanApi from "@/hooks/useAnimeDataJikanApi";
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout/Layout";
+
 export default function AnimeDetails() {
   const router = useRouter();
   const { section, mal_id } = router.query;
-  const { data, characters, staff, recommendations, videos } =
-    useAnimeDataJikanApi(mal_id);
+  const {
+    data,
+    characters,
+    staff,
+    recommendations,
+    videos,
+    videoLoading,
+    setVideoLoading,
+    loading,
+  } = useAnimeDataJikanApi(mal_id);
 
   switch (section) {
     case "characters":
@@ -30,6 +38,9 @@ export default function AnimeDetails() {
           characters={characters}
           videos={videos}
           mal_id={mal_id}
+          videoLoading={videoLoading}
+          setVideoLoading={setVideoLoading}
+          loading={loading}
         >
           <MainAreaDefault
             data={data}

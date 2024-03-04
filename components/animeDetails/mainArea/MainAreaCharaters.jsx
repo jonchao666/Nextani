@@ -1,5 +1,4 @@
 import CharacterCard from "./CharacterCard";
-import { Textarea, Button, Image, Link } from "@nextui-org/react";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";

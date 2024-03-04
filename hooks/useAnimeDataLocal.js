@@ -3,13 +3,12 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 export default function useAnimeDataLocal() {
   const [data, setData] = useState(null);
-  const [retryCount, setRetryCount] = useState(0);
-  const maxRetries = 3;
+
   const isSensitiveFilterDisabled = useSelector(
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
   const fetchData = useCallback(
-    async (mal_id) => {
+    async (mal_id, retryCount = 0) => {
       let params = {};
 
       params.mal_id = mal_id;
@@ -25,16 +24,18 @@ export default function useAnimeDataLocal() {
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        const maxRetries = 5; // Maximum number of retries
         if (retryCount < maxRetries) {
-          setTimeout(() => {
-            setRetryCount((prevCount) => prevCount + 1);
-          }, 1000);
+          setTimeout(
+            () => fetchData(mal_id, retryCount + 1),
+            1000 * 2 ** retryCount
+          ); // Exponential backoff
         } else {
-          router.push("/errorPage");
+          console.error("Max retries reached for fetching characters data");
         }
       }
     },
-    [isSensitiveFilterDisabled, retryCount]
+    [isSensitiveFilterDisabled]
   );
   return {
     fetchData,

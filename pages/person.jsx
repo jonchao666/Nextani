@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
-
 import axios from "axios";
 import {
   Card,
@@ -17,6 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
+import { CircularProgress } from "@nextui-org/react";
+
 export default function Person() {
   const router = useRouter();
   const { mal_id } = router.query;
@@ -26,12 +27,10 @@ export default function Person() {
   const { isXs } = useResponsive();
   const [data, setData] = useState();
   const [visible, setVisible] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
   const [loginReLike, setLoginReLike] = useState(false);
   const [isPersonLiked, setIsPersonLiked] = useState(false);
-  const maxRetries = 3;
   const tooltipRef = useRef(null);
-
+  const [loading, setLoading] = useState(false);
   const { addLikedPerson, removeLikedPerson, checkIsPersonLiked } =
     useUserActivity();
 
@@ -70,28 +69,51 @@ export default function Person() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   useEffect(() => {
+    let isLoadingData = true;
+
+    //show loading after 1s
+    const delaySetLoading = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (isLoadingData) {
+        setLoading(true);
+      }
+    };
+
+    delaySetLoading();
+
+    const fetchWithRetry = async (url, config, retries = 5) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await axios.get(url, config);
+          return response; // Success, return the response
+        } catch (error) {
+          if (i === retries - 1) throw error; // Last attempt failed, throw error
+          await new Promise((resolve) => setTimeout(resolve, 1000 * 2 ** i)); // Wait before retrying
+        }
+      }
+    };
+
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://api.jikan.moe/v4/people/${mal_id}/full`
+        const response = await fetchWithRetry(
+          `https://api.jikan.moe/v4/people/${mal_id}/full`,
+          {}
         );
         setData(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
-
-        if (retryCount < maxRetries) {
-          setTimeout(
-            setRetryCount((prevCount) => prevCount + 1),
-            1200
-          );
-        }
+      } finally {
+        isLoadingData = false;
+        setLoading(false);
       }
     };
+
     if (mal_id) {
       fetchData();
     }
-  }, [mal_id, retryCount]);
+  }, [mal_id]);
 
   //add personal website url to about
   if (data && data.about && data.about.includes("Profile")) {
@@ -122,6 +144,17 @@ export default function Person() {
   }, [dispatch, data]);
   return (
     <Layout>
+      {loading && (
+        <div className="fixed z-20 top-0 left-0 bg-background h-screen w-screen  ">
+          <div className="h-5/6 flex justify-center items-center">
+            <CircularProgress
+              size="sm"
+              color="primary"
+              aria-label="Loading..."
+            />
+          </div>
+        </div>
+      )}
       {data && (
         <div>
           {visible && (
@@ -243,7 +276,11 @@ export default function Person() {
                       size="sm"
                       color="danger"
                       variant={
-                        isPersonLiked && isAuthenticated ? "solid" : "ghost"
+                        isPersonLiked && isAuthenticated
+                          ? "solid"
+                          : isMobileDevice
+                          ? "bordered"
+                          : "ghost"
                       }
                       className={` ${
                         isPersonLiked && isAuthenticated ? "" : "border-1"
@@ -269,16 +306,26 @@ export default function Person() {
                       <p className="mb-8 px-6">
                         Sign in to save this person to your favorite.
                       </p>
-                      <Button
-                        as={Link}
-                        href="/login"
-                        radius="full"
-                        color="primary"
-                        variant="light"
-                        className="my-2 ml-1.5 "
-                      >
-                        Sign in
-                      </Button>
+                      <div className="flex justify-end">
+                        <Button
+                          onClick={() => setLoginReLike(false)}
+                          radius="full"
+                          variant="light"
+                          className="my-2 ml-1.5 "
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          as={Link}
+                          href="/login"
+                          radius="full"
+                          color="primary"
+                          variant="light"
+                          className="my-2 ml-1.5 "
+                        >
+                          Sign in
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </div>

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 export function ThemeSwitcherIconOnly() {
   const { theme, setTheme } = useTheme();
-
   const [isMounted, setIsMounted] = useState(false);
 
   return (

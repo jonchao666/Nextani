@@ -1,23 +1,28 @@
 import { Image } from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useResponsive } from "@/hooks/useResponsive";
 
 export default function WatchlistCardImage({ data, dominantColor }) {
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+  const { isXs } = useResponsive();
+
   return (
     <div>
-      <div className="absolute flex justify-center items-center z-30 left-0 top-0 opacity-0 hover:opacity-100 rounded-lg  h-[210px] w-[148px] bg-[rgba(0,0,0,0.8)]">
-        <div className="text-white flex items-center">
-          <span
-            className="material-symbols-outlined "
-            style={{
-              fontVariationSettings: `"FILL" 1, "wght" 250, "GRAD" 0, "opsz" 24`,
-            }}
-          >
-            play_arrow
-          </span>
-          <p className="text-xs font-medium">VIEW ALL</p>
+      {isMobileDevice || !isXs ? null : (
+        <div className="absolute flex justify-center items-center z-30 left-0 top-0 opacity-0 hover:opacity-100 rounded-lg  h-[210px] w-[148px] bg-[rgba(0,0,0,0.8)]">
+          <div className="text-white flex items-center">
+            <span
+              className="material-symbols-outlined "
+              style={{
+                fontVariationSettings: `"FILL" 1, "wght" 250, "GRAD" 0, "opsz" 24`,
+              }}
+            >
+              play_arrow
+            </span>
+            <p className="text-xs font-medium">VIEW ALL</p>
+          </div>
         </div>
-      </div>
+      )}
       <Image
         radius="sm"
         alt={data.animeDetails[0] && data.animeDetails[0].apiData.title}

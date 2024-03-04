@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Navbar, NavbarBrand, Link } from "@nextui-org/react";
-import { Logo } from "@/icons";
 import handleDeleteAccount from "@/helpers/handleDeleteAccount";
 
 const AccountDeleted = () => {
   const router = useRouter();
-  const [isDeleted, setIsDeleted] = useState(null); // 新增状态变量
+  const [isDeleted, setIsDeleted] = useState(null);
 
   useEffect(() => {
     const deleteAccount = async () => {
@@ -14,7 +13,7 @@ const AccountDeleted = () => {
 
       if (token) {
         const result = await handleDeleteAccount(token);
-        setIsDeleted(result); // 根据结果更新状态
+        setIsDeleted(result);
       }
     };
 
@@ -24,12 +23,6 @@ const AccountDeleted = () => {
   if (isDeleted === null) return <div>Please wait...</div>;
   return (
     <div className="h-screen">
-      <Navbar maxWidth="full" className="sticky h-16 ">
-        <NavbarBrand href="/" as={Link}>
-          <p className="font-bold text-2xl text-foreground">NextAni</p>
-        </NavbarBrand>
-      </Navbar>
-
       <div className="max-w-screen h-5/6 flex flex-col justify-center items-center">
         {isDeleted ? (
           <>

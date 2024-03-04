@@ -1,23 +1,26 @@
 import DetailsPanel from "@/components/animeDetails/detailsPanel/DetailsPanel";
-
 import AnimeInformation from "@/components/animeDetails/AnimeInformation";
 import Layout from "@/components/layout/Layout";
 import { useSelector, useDispatch } from "react-redux";
-
-import Sidebar from "@/components/layout/Sidebar";
 import { useEffect, useState } from "react";
 import { fetchUserData } from "@/reducers/userSlice";
 import { useResponsive } from "@/hooks/useResponsive";
+import { setPageName } from "@/reducers/pageNameSlice";
+import { Skeleton } from "@nextui-org/react";
+import { CircularProgress } from "@nextui-org/react";
+
 export default function AnimeDetailsLayout({
   children,
   data,
   characters,
   videos,
   mal_id,
+  videoLoading,
+  setVideoLoading,
+  loading,
 }) {
   const dispatch = useDispatch();
   const { isXs } = useResponsive();
-
   const [videoUrl, setVideoUrl] = useState("");
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
@@ -31,9 +34,33 @@ export default function AnimeDetailsLayout({
     }
   }, [jwt, dispatch]);
 
+  useEffect(() => {
+    if (data) {
+      dispatch(setPageName(data.title));
+    } else {
+      setPageName("home");
+    }
+  }, [dispatch, data]);
+
+  useEffect(() => {
+    const iframe = document.getElementById("videoIframe");
+    const handleLoad = () => {
+      setVideoLoading(false);
+    };
+    if (iframe) {
+      iframe.addEventListener("load", handleLoad);
+    }
+    return () => {
+      if (iframe) {
+        iframe.removeEventListener("load", handleLoad);
+      }
+    };
+  }, [videos, setVideoLoading]);
+
   const [PV, setPV] = useState(null);
   useEffect(() => {
     let tempPV = [];
+
     if (videos && videos.length > 0) {
       for (let i = videos.length - 1; i >= 0; i--) {
         if (videos[i].title.startsWith("Character")) continue;
@@ -73,22 +100,41 @@ export default function AnimeDetailsLayout({
     synopsisWithoutLastParagraph = paragraphs.join("\n");
   }
 
-  if (!data) return null;
   return (
     <Layout youPage={true}>
+      {loading && (
+        <div className="fixed z-20 top-0 left-0 bg-background h-screen w-screen  ">
+          <div className="h-5/6 flex justify-center items-center">
+            <CircularProgress
+              size="sm"
+              color="primary"
+              aria-label="Loading..."
+            />
+          </div>
+        </div>
+      )}
       <div className="flex justify-center">
         <main className="  w-full h-full max-w-[1280px] ">
-          {data.trailer && data.trailer.embed_url ? (
-            <iframe
+          {videos && videos.length > 0 && (
+            <Skeleton
               className={`aspect-video w-full h-full ${
                 isMobileDevice || !isXs ? "" : "rounded-xl mt-6"
               } `}
-              src={videoUrl}
-              title={data.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          ) : null}
+              isLoaded={!videoLoading}
+            >
+              <iframe
+                onClick={(e) => videoLoading && e.preventDefault()}
+                id="videoIframe"
+                className={`aspect-video w-full h-full ${
+                  isMobileDevice || !isXs ? "" : "rounded-xl"
+                } `}
+                src={videoUrl}
+                title={videos.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </Skeleton>
+          )}
 
           <DetailsPanel
             data={data}

@@ -1,12 +1,11 @@
 import Layout from "@/components/layout/Layout";
-import useUserActivity from "@/hooks/useUserActivity";
-import { Image, Link, Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LikedAnimeInfinityScoroll from "@/components/favorite/LikedAnimeInfinityScoroll";
 import { setPageName } from "@/reducers/pageNameSlice";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function LikedAnime() {
   const [likedAnime, setLikedAnime] = useState(null);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

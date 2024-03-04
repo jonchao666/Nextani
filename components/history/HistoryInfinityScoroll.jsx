@@ -1,15 +1,16 @@
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Image, Link, Button } from "@nextui-org/react";
-
 import { groupHistoryByDate } from "@/helpers/groupHistoryByDate";
 import { useResponsive } from "../../hooks/useResponsive";
+
 export default function HistoryInfinityScoroll({ history, setHistory }) {
   const { fetchHistory, removeHistory } = useUserActivity();
   const [loading, setLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const [page, setPage] = useState(1);
   const [isMoreHistoryAvailable, setIsMoreHistoryAvailable] = useState(true);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
@@ -17,16 +18,17 @@ export default function HistoryInfinityScoroll({ history, setHistory }) {
 
   async function fetchData() {
     if (loading || !isMoreHistoryAvailable) return;
+
     setLoading(true);
+
     let data = await fetchHistory(page, 14);
 
+    setLoading(false);
     setIsMoreHistoryAvailable(data.length >= 14);
 
     setHistory((prev) => [...(prev ? prev : []), ...data]);
 
     setPage((prev) => prev + 1);
-
-    setLoading(false);
   }
 
   const handleDeleteHistory = (mal_id) => {
@@ -151,8 +153,9 @@ export default function HistoryInfinityScoroll({ history, setHistory }) {
       </div>
       {loading && (
         <CircularProgress
+          size="sm"
           className="mx-auto"
-          color="default"
+          color="primary"
           aria-label="Loading..."
         />
       )}

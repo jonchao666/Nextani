@@ -4,11 +4,12 @@ import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setPageName } from "@/reducers/pageNameSlice";
+
 export default function IsNotAuthenticated() {
   const { resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const dispatch = useDispatch();
-
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   useEffect(() => {
     dispatch(setPageName("You"));
   }, [dispatch]);
@@ -43,7 +44,13 @@ export default function IsNotAuthenticated() {
         startContent={<SignInIcon size={24} />}
         className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-[rgba(255,255,255,0.2)] "
         size="sm"
-        variant={resolvedTheme === "light" ? "light" : "ghost"}
+        variant={
+          resolvedTheme === "light"
+            ? "light"
+            : isMobileDevice
+            ? "bordered"
+            : "ghost"
+        }
         radius="full"
         color="primary"
       >

@@ -52,8 +52,8 @@ export default function SignUp() {
   return (
     <div className="h-screen w-screen">
       <div className="w-full h-2/3 flex justify-center items-center">
-        <div className="flex flex-col">
-          <div className="text-3xl font-bold mx-auto mb-8">
+        <div className="flex flex-col w-full max-w-[400px] px-10">
+          <div className="text-3xl font-bold mx-auto mb-8 ">
             Create your account
           </div>
 
@@ -74,13 +74,12 @@ export default function SignUp() {
               classNames={{ input: "text-md" }}
               isDisabled={verifyingEmail}
               isInvalid={isPasswordInvalid}
-              className="sm:w-[320px] "
               label="Password"
               variant="bordered"
               placeholder="Enter your password"
               onValueChange={setPassword}
               errorMessage={
-                !!signUpError
+                signUpError
                   ? signUpError
                   : isPasswordInvalid
                   ? "Password must be at least 8 characters long, include numbers, uppercase and lowercase letters."

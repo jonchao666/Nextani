@@ -1,15 +1,10 @@
 import { useTheme } from "next-themes";
-import { useState, useEffect, useRef } from "react";
-import { SearchIcon, SignInIcon, GuideButtonIcon, Logo } from "@/icons";
-
+import { useState, useEffect } from "react";
+import { SearchIcon, SignInIcon } from "@/icons";
 import useSearch from "@/hooks/useSearch";
-import { fetchUserData } from "@/reducers/userSlice";
-import { fetchIsSensitiveFilterDisabled } from "@/reducers/sensitiveFilterSlice";
-
 import { useRouter } from "next/router";
 import AvatarDropdown from "./AvatarDropdown";
-import { useSelector, useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
 import {
   Input,
@@ -18,48 +13,30 @@ import {
   Navbar,
   NavbarContent,
   NavbarItem,
-  NavbarBrand,
 } from "@nextui-org/react";
 
 export default function Header({ width }) {
+  const {
+    setQuery,
+    results,
+    isLoading,
+    showResults,
+    setShowResults,
+    isSearchFocused,
+    handleSearchClick,
+    handleFocus,
+    handleBlur,
+    handleKeyDown,
+    searchRef,
+  } = useSearch();
   const { isXs } = useResponsive();
   const { resolvedTheme } = useTheme();
   const router = useRouter();
-
   const [isMounted, setIsMounted] = useState(false);
-  const { query, setQuery, results, isLoading } = useSearch();
-  const [showResults, setShowResults] = useState(false);
-  const searchRef = useRef(null);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const blurTimeoutRef = useRef();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const pageName = useSelector((state) => state.pageName.pageName);
   const [showInput, setShowInput] = useState(false);
-
-  const handleFocus = () => {
-    if (blurTimeoutRef.current) {
-      clearTimeout(blurTimeoutRef.current);
-    }
-    setIsSearchFocused(true);
-  };
-
-  const handleBlur = () => {
-    blurTimeoutRef.current = setTimeout(() => {
-      setIsSearchFocused(false);
-    }, 150); // 150ms delay
-  };
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      router.push(`/searchResult?debouncedQuery=${query}`);
-    }
-  };
-
-  const handleSearchClick = () => {
-    if (query) {
-      router.push(`/searchResult?debouncedQuery=${query}`);
-    }
-  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -67,10 +44,10 @@ export default function Header({ width }) {
         setShowResults(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [searchRef]);
+  }, [searchRef, setShowResults]);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -79,7 +56,6 @@ export default function Header({ width }) {
     return null;
   }
 
-  localStorage.setItem("redirect", router.asPath);
   return (
     <Navbar
       style={{ width: width }}
@@ -164,7 +140,7 @@ export default function Header({ width }) {
             onKeyDown={handleKeyDown}
             startContent={
               showResults &&
-              isSearchFocused &&
+              (isMobileDevice || isSearchFocused) &&
               !isLoading &&
               results.length > 0 && (
                 <div
@@ -177,6 +153,7 @@ export default function Header({ width }) {
                   {results.map((result, index) => (
                     <Link
                       href={`/animeDetails/default?mal_id=${result.mal_id}`}
+                      onClick={() => setShowInput(false)}
                       key={index}
                       className="pl-4 pr-6 leading-8 hover:bg-gray-100 text-foreground font-medium"
                     >
@@ -189,8 +166,8 @@ export default function Header({ width }) {
                       >
                         search
                       </span>
-                      <p className={`line-clamp-1 ${showInput && "py-2.5"}`}>
-                        {result.matchedTitles[0].title}{" "}
+                      <p className={`line-clamp-1 ${showInput && "py-2"}`}>
+                        {result.matchedTitles[0].title}
                       </p>
                     </Link>
                   ))}
@@ -263,7 +240,13 @@ export default function Header({ width }) {
                 startContent={<SignInIcon size={24} />}
                 className=" text-sm font-medium pl-2 pr-3  border-1 dark:border-[rgba(255,255,255,0.2)] "
                 size="sm"
-                variant={resolvedTheme === "light" ? "light" : "ghost"}
+                variant={
+                  resolvedTheme === "light"
+                    ? "light"
+                    : isMobileDevice
+                    ? "bordered"
+                    : "ghost"
+                }
                 radius="full"
                 color="primary"
               >

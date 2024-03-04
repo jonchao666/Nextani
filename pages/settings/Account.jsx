@@ -5,44 +5,53 @@ import AccountSettings from "@/components/settings/AccountSettings";
 import { Link, Button } from "@nextui-org/react";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { setPageName } from "@/reducers/pageNameSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+
+// Settings page component
 export default function Settings() {
+  // Accessing Redux store state
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
-
+  const router = useRouter();
   const dispatch = useDispatch();
+
+  // Setting page name on component mount
   useEffect(() => {
     dispatch(setPageName("Account"));
   }, [dispatch]);
 
+  // Logout handler
+  const handleLogOut = () => {
+    localStorage.removeItem("jwt");
+    router.push("/logout-callback");
+  };
+
+  // Redirect to login page if not authenticated
   if (!isAuthenticated) {
     return <LoginRequest />;
   }
+
+  // Render Settings page
   return (
     <Layout>
       <div>
-        {isMobileDevice || !isXs ? null : (
-          <p className="text-3xl px-6 pb-10 pt-6  border-b-1 dark:border-[rgba(255,255,255,0.2)]">
+        {/* Only show the Settings title if not on a small screen or mobile device */}
+        {!isMobileDevice && isXs && (
+          <p className="text-3xl px-6 pb-10 pt-6 border-b-1 dark:border-[rgba(255,255,255,0.2)]">
             Settings
           </p>
         )}
       </div>
 
       <div
-        className={
-          isMobileDevice || !isXs
-            ? "justify-between px-3 flex"
-            : "justify-between px-6 flex"
-        }
+        className={`justify-between px-${
+          isMobileDevice || !isXs ? "3" : "6"
+        } flex`}
       >
-        <div
-          className={
-            isMobileDevice
-              ? "mr-6 hidden md:block"
-              : "mr-6 hidden md:block mt-6"
-          }
-        >
+        <div className={`${isMobileDevice ? "hidden" : "mt-6"} mr-6 md:block`}>
+          {/* Navigation buttons */}
           <Button
             fullWidth
             variant="flat"
@@ -61,7 +70,9 @@ export default function Settings() {
           >
             Privacy and safety
           </Button>
-          {isMobileDevice ? (
+
+          {/* Conditionally render mobile-specific options */}
+          {isMobileDevice && (
             <div className="flex flex-col">
               <Button
                 as={Link}
@@ -73,7 +84,6 @@ export default function Settings() {
               >
                 Theme
               </Button>
-
               <Button
                 as={Link}
                 href="/settings/Legal"
@@ -84,7 +94,6 @@ export default function Settings() {
               >
                 Legal
               </Button>
-
               <Button
                 as={Link}
                 href="/legalPages/ContactUs"
@@ -95,7 +104,6 @@ export default function Settings() {
               >
                 Contact us
               </Button>
-
               <Button
                 as={Link}
                 href="/legalPages/About"
@@ -106,9 +114,8 @@ export default function Settings() {
               >
                 About
               </Button>
-
               <Button
-                onClick={() => handleLogOut()}
+                onClick={handleLogOut}
                 fullWidth
                 variant="light"
                 radius="sm"
@@ -117,7 +124,7 @@ export default function Settings() {
                 Logout
               </Button>
             </div>
-          ) : null}
+          )}
         </div>
 
         <AccountSettings />

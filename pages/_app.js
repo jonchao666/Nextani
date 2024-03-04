@@ -7,6 +7,7 @@ import store from "@/store/store";
 import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import AuthInitializer from "@/components/AuthInitializer";
+
 export default function App({ Component, pageProps }) {
   const [domLoaded, setDomLoaded] = useState(false);
 
