@@ -1,6 +1,7 @@
-import { Image, Link } from "@nextui-org/react";
+import { Image } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+import Link from "next/link";
 
 export default function FavoritePersonCard({ data }) {
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);

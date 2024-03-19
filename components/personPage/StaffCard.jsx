@@ -1,7 +1,7 @@
-import { Card, CardFooter, CardBody, Image } from "@nextui-org/react";
+import { Card, Image } from "@nextui-org/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
 export default function StaffCard({ data }) {
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
@@ -20,17 +20,22 @@ export default function StaffCard({ data }) {
   return (
     <div className=" min-w-[305px]">
       <Card
-        className={`isPressable hover:opacity-100 hover:scale-105 rounded-lg shadow-lg flex flex-row justify-between bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)] ${
-          isLoaded ? "visible" : "invisible"
-        }`}
+        className={`isPressable hover:opacity-100 ${
+          isMobileDevice || !isXs
+            ? "bg-background shadow-none"
+            : "hover:scale-105 bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]  shadow-md"
+        } rounded-lg  flex flex-row     ${isLoaded ? "visible" : "invisible"}`}
       >
         <Link
           href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}
           className="p-0 overflow-hidden shrink-0"
         >
           <Image
-            isZoomed={!isMobileDevice}
-            className="h-[81px] w-[60px]  object-cover "
+            className={
+              isMobileDevice
+                ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
+                : "w-[60px] h-[81px] object-cover shrink-0"
+            }
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
@@ -39,16 +44,20 @@ export default function StaffCard({ data }) {
             src={url}
           />
         </Link>
-        <div className="flex flex-col justify-between text-xs  text-right p-2.5">
+        <div className="flex flex-col justify-between text-xs  text-left p-2.5">
           <div>
             <Link href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}>
-              <span className="text-sm">{data.anime.title}</span>
+              <span className="line-clamp-2 break-words">
+                {data.anime.title}
+              </span>
             </Link>
           </div>
 
           <div>
             <div className="line-clamp-2 break-words text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]  text-xs">
-              {data.position}
+              {data.position.startsWith("add")
+                ? data.position.split(" ").slice(1).join(" ")
+                : data.position}
             </div>
           </div>
         </div>

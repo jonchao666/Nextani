@@ -2,16 +2,19 @@ import Layout from "@/components/layout/Layout";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useDispatch, useSelector } from "react-redux";
 import AccountSettings from "@/components/settings/AccountSettings";
-import { Link, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import { handleLogOut } from "@/utils/firebaseAuth";
 
 // Settings page component
 export default function Settings() {
   // Accessing Redux store state
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
   const router = useRouter();
@@ -22,18 +25,23 @@ export default function Settings() {
     dispatch(setPageName("Account"));
   }, [dispatch]);
 
-  // Logout handler
-  const handleLogOut = () => {
-    localStorage.removeItem("jwt");
-    router.push("/logout-callback");
-  };
-
   // Redirect to login page if not authenticated
-  if (!isAuthenticated) {
+  if (!user && !loading) {
     return <LoginRequest />;
   }
 
-  // Render Settings page
+  //log out
+  const logOut = async () => {
+    try {
+      await handleLogOut();
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (loading) return <div className="p-3">Please wait...</div>;
   return (
     <Layout>
       <div>
@@ -50,7 +58,13 @@ export default function Settings() {
           isMobileDevice || !isXs ? "3" : "6"
         } flex`}
       >
-        <div className={`${isMobileDevice ? "hidden" : "mt-6"} mr-6 md:block`}>
+        <div
+          className={
+            isMobileDevice
+              ? "mr-6 hidden md:block"
+              : "mr-6 hidden md:block mt-6"
+          }
+        >
           {/* Navigation buttons */}
           <Button
             fullWidth
@@ -115,7 +129,7 @@ export default function Settings() {
                 About
               </Button>
               <Button
-                onClick={handleLogOut}
+                onClick={logOut}
                 fullWidth
                 variant="light"
                 radius="sm"

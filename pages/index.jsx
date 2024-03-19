@@ -6,7 +6,7 @@ import {
   getLastTwoSeasonAndYears,
   getLastSeasonAndYear,
   getNextSeasonAndYear,
-} from "@/helpers/getSeasonAndYear";
+} from "@/utils/getSeasonAndYear";
 import axios from "axios";
 import {
   CategoryTitles,
@@ -123,18 +123,17 @@ export async function getStaticProps() {
     });
   } catch (error) {
     console.error("Error fetching calendarData", error);
-    // 在发生错误时为每天初始化空数组
+
     days.forEach((day) => {
       calendarData[day] = [];
     });
   }
 
-  // 在 try-catch 块外返回 props
   return {
     props: {
       slidersData,
       calendarData,
     },
-    revalidate: 86400, // 重新验证间隔（秒）
+    revalidate: 86400,
   };
 }

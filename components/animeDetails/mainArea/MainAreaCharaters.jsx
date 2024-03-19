@@ -11,7 +11,6 @@ export default function MainAreaCharaters({ characters, data }) {
   const [colToShow, setColToShow] = useState(1);
 
   useEffect(() => {
-    // 根据屏幕尺寸更新 slidesToShow 的值
     const newColToshow = isXl
       ? " grid-cols-3"
       : isLg

@@ -17,14 +17,7 @@ module.exports = {
         "bottom-gradient":
           "linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5))",
       },
-      screens: {
-        "3xl": "1680px",
-        custom458: "458px",
-      },
-      margin: {
-        // for responsive when width less then 458px
-        custom458: "calc(((100vw - 242px) / -2))",
-      },
+
       boxShadow: {
         sliderArrow: "0 4px 4px rgba(0, 0, 0, 0.3), 0 0 4px rgba(0, 0, 0, 0.2)",
       },
@@ -32,7 +25,7 @@ module.exports = {
         sans: ["Roboto", "Arial", "sans-serif"],
       },
       spacing: {
-        "safe-bottom": "env(safe-area-inset-bottom)",
+        "safe-bottom": "env(safe-area-inset-bottom,20px)",
       },
     },
   },

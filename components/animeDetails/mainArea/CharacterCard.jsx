@@ -10,8 +10,8 @@ export default function CharacterCard({ character }) {
       <Card
         className={
           isMobileDevice
-            ? " flex-row justify-between rounded-lg  shadow-md  bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]  shadow-sm"
-            : " flex-row justify-between rounded-lg hover:scale-105 shadow-md  bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]  shadow-sm"
+            ? " flex-row justify-between rounded-md   bg-background   shadow-none"
+            : " flex-row justify-between rounded-md hover:scale-105   bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]  shadow-sm"
         }
       >
         <Link
@@ -20,7 +20,11 @@ export default function CharacterCard({ character }) {
         >
           <Image
             radius="none"
-            className="w-[60px] h-[81px] object-cover shrink-0"
+            className={
+              isMobileDevice
+                ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
+                : "w-[60px] h-[81px] object-cover shrink-0"
+            }
             alt={character.character.name}
             src={
               character.character.images.webp.image_url.startsWith(
@@ -67,7 +71,11 @@ export default function CharacterCard({ character }) {
           >
             <Image
               radius="none"
-              className="w-[60px] h-[81px] object-cover"
+              className={
+                isMobileDevice
+                  ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
+                  : "w-[60px] h-[81px] object-cover shrink-0"
+              }
               alt={character.voice_actors[0].person.name}
               src={
                 character.voice_actors[0].person.images.jpg.image_url.startsWith(

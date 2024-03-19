@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import { useRouter } from "next/router";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import axios from "axios";
 import { Image } from "@nextui-org/react";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { CircularProgress } from "@nextui-org/react";
-import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
+import { calculatePlaceholdersForLastRow } from "@/utils/getLastRowRequestForFlex";
 
 export default function Character() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function Character() {
   const [placeholdersNeededManga, setPlaceholdersNeededManga] = useState(0);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [data, setData] = useState();
-  const [aboutOpen, setAboutOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(null);
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [loading, setLoading] = useState(false);
   const textRef = useRef(null);
@@ -28,8 +28,12 @@ export default function Character() {
   useEffect(() => {
     if (textRef.current) {
       const lineCount = calculateLineCount();
-
-      setShowToggleButton(lineCount >= 3);
+      setShowToggleButton(lineCount > 3);
+      if (lineCount > 3) {
+        setAboutOpen(false);
+      } else {
+        setAboutOpen(true);
+      }
     }
   }, [data]);
 
@@ -40,18 +44,6 @@ export default function Character() {
   };
 
   useEffect(() => {
-    let isLoadingData = true;
-
-    //show loading after 1s
-    const delaySetLoading = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (isLoadingData) {
-        setLoading(true);
-      }
-    };
-
-    delaySetLoading();
-
     const fetchWithRetry = async (url, config, retries = 5) => {
       for (let i = 0; i < retries; i++) {
         try {
@@ -65,6 +57,17 @@ export default function Character() {
     };
 
     const fetchData = async () => {
+      let isLoadingData = true;
+
+      //show loading after 1s
+      const delaySetLoading = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (isLoadingData) {
+          setLoading(true);
+        }
+      };
+
+      delaySetLoading();
       try {
         const response = await fetchWithRetry(
           `https://api.jikan.moe/v4/characters/${mal_id}/full`,
@@ -132,14 +135,15 @@ export default function Character() {
       setPageName("home");
     }
   }, [dispatch, data]);
+
   return (
     <Layout youPage={true}>
       {loading && (
-        <div className="fixed z-20 top-0 left-0 bg-background h-screen w-screen  ">
+        <div className="fixed z-20 top-0 left-0 bg-background h-dvh w-dvw  ">
           <div className="h-5/6 flex justify-center items-center">
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
             />
           </div>
@@ -186,25 +190,31 @@ export default function Character() {
                 <div>
                   <div
                     ref={textRef}
-                    className={aboutOpen ? "text-sm" : "text-sm line-clamp-3"}
+                    className={
+                      aboutOpen === null
+                        ? "invisible"
+                        : aboutOpen === true
+                        ? "text-sm"
+                        : "text-sm line-clamp-3"
+                    }
                   >
                     {data.about}
                   </div>
                   {showToggleButton && (
                     <div className="flex justify-end">
-                      {!aboutOpen ? (
-                        <span
-                          onClick={() => setAboutOpen(true)}
-                          className="font-medium text-sm cursor-pointer mt-2"
-                        >
-                          Show more
-                        </span>
-                      ) : (
+                      {aboutOpen ? (
                         <span
                           onClick={() => setAboutOpen(false)}
                           className="font-medium text-sm cursor-pointer mt-2"
                         >
                           Show less
+                        </span>
+                      ) : (
+                        <span
+                          onClick={() => setAboutOpen(true)}
+                          className="font-medium text-sm cursor-pointer mt-2"
+                        >
+                          Show more
                         </span>
                       )}
                     </div>
@@ -217,7 +227,13 @@ export default function Character() {
             <div className="px-3 mt-2">
               <div
                 ref={textRef}
-                className={aboutOpen ? "text-sm" : "text-sm line-clamp-3"}
+                className={
+                  aboutOpen === null
+                    ? "invisible"
+                    : aboutOpen === true
+                    ? "text-sm"
+                    : "text-sm line-clamp-3"
+                }
               >
                 {data.about}
               </div>
@@ -245,7 +261,15 @@ export default function Character() {
           <div>
             {data.anime.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-3 px-3">Animeography</h3>
+                <h3
+                  className={
+                    isMobileDevice || !isXs
+                      ? "text-lg font-medium mb-3 px-3"
+                      : "text-lg font-medium mb-3"
+                  }
+                >
+                  Animeography
+                </h3>
                 {isMobileDevice || !isXs ? (
                   <div className="  flex  justify-evenly flex-wrap gap-y-6 ">
                     {data &&
@@ -321,7 +345,15 @@ export default function Character() {
 
             {data.manga.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-3 px-3">Mangaography</h3>
+                <h3
+                  className={
+                    isMobileDevice || !isXs
+                      ? "text-lg font-medium mb-3 px-3"
+                      : "text-lg font-medium mb-3"
+                  }
+                >
+                  Mangaography
+                </h3>
                 {isMobileDevice || !isXs ? (
                   <div className="  flex  justify-evenly flex-wrap gap-y-6 ">
                     {data &&

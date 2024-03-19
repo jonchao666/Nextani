@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { getIdToken } from "@/utils/firebaseAuth";
 export const fetchIsSensitiveFilterDisabled = createAsyncThunk(
   "settings/fetchIsSensitiveFilterDisabled",
-  async (jwt, thunkAPI) => {
+  async (thunkAPI) => {
+    const idToken = await getIdToken();
     try {
       const response = await axios.get(
         `${process.env.API_URL}/user/isSensitiveFilterDisabled`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
@@ -32,6 +33,9 @@ const isSensitiveFilterDisabledSlice = createSlice({
     setIsSensitiveFilterDisabled(state, action) {
       state.isSensitiveFilterDisabled = action.payload;
     },
+    resetSensitiveFilterSettings: (state) => {
+      state.isDisabled = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -48,6 +52,6 @@ const isSensitiveFilterDisabledSlice = createSlice({
       });
   },
 });
-export const { setIsSensitiveFilterDisabled } =
+export const { setIsSensitiveFilterDisabled, resetSensitiveFilterSettings } =
   isSensitiveFilterDisabledSlice.actions;
 export default isSensitiveFilterDisabledSlice.reducer;

@@ -1,7 +1,8 @@
-import { Card, CardFooter, CardBody, Image, Link } from "@nextui-org/react";
+import { Card, CardFooter, CardBody, Image } from "@nextui-org/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+import Link from "next/link";
 
 export default function ImageCard({ data, ep, smallSize }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -32,6 +33,7 @@ export default function ImageCard({ data, ep, smallSize }) {
       >
         <CardBody className="p-0 overflow-hidden ">
           <Image
+            loading="lazy"
             isZoomed={!isMobileDevice}
             className={`${height} ${width} object-cover`}
             onLoad={() => setIsLoaded(true)}

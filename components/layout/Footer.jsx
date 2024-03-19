@@ -1,15 +1,17 @@
 import { SignInIcon } from "@/icons";
 import { useSelector } from "react-redux";
-import { Button, Link, Avatar } from "@nextui-org/react";
+import { Button, Avatar } from "@nextui-org/react";
 import { ThemeSwitcherIconOnly } from "@/components/layout/ThemeSwitcherIconOnly";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import Link from "next/link";
 
 export default function Footer({ mainWidth, isMobileDevice, isXs }) {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const { displayImageUrl } = useSelector((state) => state.user);
 
   return isMobileDevice || !isXs ? (
     <div className="fixed pb-safe-bottom bg-background w-full z-30  bottom-0  border-t-1 dark:border-[rgba(255,255,255,0.2)]">
-      <div className="max-w-[500px] mx-auto">
+      <div className="max-w-[600px] mx-auto">
         <div className="flex justify-around items-center  h-12">
           <Button
             as={Link}
@@ -54,7 +56,7 @@ export default function Footer({ mainWidth, isMobileDevice, isXs }) {
             }
           ></Button>
 
-          {isAuthenticated ? (
+          {user ? (
             <Link
               href="/you"
               className="flex flex-col items-center justify-center w-10 h-10 text-foreground"
@@ -64,6 +66,7 @@ export default function Footer({ mainWidth, isMobileDevice, isXs }) {
                   isMobileDevice || !isXs ? "h-6 w-6" : ""
                 }`}
                 size="sm"
+                fallback={<div className="bg-currentColor"></div>}
                 src={displayImageUrl}
               ></Avatar>
               <span className="text-[11px] leading-3">You</span>
@@ -87,7 +90,7 @@ export default function Footer({ mainWidth, isMobileDevice, isXs }) {
           © 2024 NextAni
         </p>
 
-        <div className="flex flex-wrap gap-x-6 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <Link
             href="/legalPages/About"
             className=" text-sm font-medium text-[rgb(102,102,102)] dark:text-[rgb(136,136,136)]"

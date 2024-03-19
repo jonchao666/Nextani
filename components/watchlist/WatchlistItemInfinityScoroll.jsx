@@ -1,10 +1,12 @@
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Image, Link, Button } from "@nextui-org/react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { Image, Button } from "@nextui-org/react";
+import Link from "next/link";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function WatchlistItemInfinityScoroll({
   selectedWatchlist,
   setSelectedWatchlist,
@@ -12,7 +14,6 @@ export default function WatchlistItemInfinityScoroll({
 }) {
   const { fetchSelectedWatchlist, removeWatchlistItem } = useUserActivity();
   const [loading, setLoading] = useState(false);
-  const [isLoadingData, setIsLoadingData] = useState(false);
   const [page, setPage] = useState(1);
   const [isMoreWatchlistItemsAvailable, setIsMoreWatchlistItemsAvailable] =
     useState(true);
@@ -61,8 +62,8 @@ export default function WatchlistItemInfinityScoroll({
           selectedWatchlist.items.map((data, index) => (
             <div
               key={data.mal_id}
-              className={`flex justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)] ${
-                isMobileDevice || !isXs ? "py-1.5" : "2"
+              className={`flex justify-between rounded-lg  ${
+                isMobileDevice || !isXs ? "py-1.5" : "py-2"
               }`}
             >
               <Link
@@ -153,8 +154,8 @@ export default function WatchlistItemInfinityScoroll({
       {loading && (
         <CircularProgress
           size="sm"
-          className="mx-auto"
-          color="primary"
+          className="mx-auto mt-6"
+          color="default"
           aria-label="Loading..."
         />
       )}

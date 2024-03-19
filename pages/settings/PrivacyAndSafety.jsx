@@ -10,12 +10,15 @@ import {
   Checkbox,
   Divider,
   CardFooter,
-  Link,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { setIsSensitiveFilterDisabled } from "@/reducers/sensitiveFilterSlice";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
 import axios from "axios";
+import { getIdToken } from "@/utils/firebaseAuth";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import { handleLogOut } from "@/utils/firebaseAuth";
 
 // PrivacyAndSafety component handles the privacy and safety settings of the user
 export default function PrivacyAndSafety() {
@@ -23,7 +26,7 @@ export default function PrivacyAndSafety() {
   const dispatch = useDispatch();
 
   // Retrieving state from the Redux store
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isSensitiveFilterDisabled = useSelector(
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
@@ -35,32 +38,33 @@ export default function PrivacyAndSafety() {
     dispatch(setPageName("Privacy and safety"));
   }, [dispatch]);
 
-  // Retrieving JWT from localStorage securely
-  const jwt =
-    typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
+  //log out
+  const logOut = async () => {
+    try {
+      await handleLogOut();
 
-  // Handles user logout
-  const handleLogOut = () => {
-    localStorage.removeItem("jwt");
-    router.push("/logout-callback");
+      window.location.href = "/";
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Handles the enabling/disabling of sensitive content filter
   const handleSensitiveFilter = async (e) => {
     const checked = e.target.checked;
     dispatch(setIsSensitiveFilterDisabled(checked));
+    const idToken = await getIdToken();
     try {
       await axios.post(
         `${process.env.API_URL}/user/isSensitiveFilterDisabled`,
         { isSensitiveFilterDisabled: checked },
-        { headers: { Authorization: `Bearer ${jwt}` } }
+        { headers: { Authorization: `Bearer ${idToken}` } }
       );
-      console.log("IsSensitiveFilterDisabled updated successfully");
     } catch (error) {
-      console.error("Error updating IsSensitiveFilterDisabled:", error);
+      console.error(error);
     }
   };
-
+  if (loading) return <div className="p-3">Please wait...</div>;
   // Render Privacy and Safety settings page
   return (
     <Layout>
@@ -87,7 +91,7 @@ export default function PrivacyAndSafety() {
           }
         >
           {/* Links to other settings pages for authenticated users */}
-          {isAuthenticated && (
+          {user && (
             <Button
               as={Link}
               href="/settings/Account"
@@ -108,7 +112,7 @@ export default function PrivacyAndSafety() {
             Privacy and Safety
           </Button>
           {/* Additional settings options for mobile devices */}
-          {isMobileDevice && renderMobileLinks(isAuthenticated, handleLogOut)}
+          {isMobileDevice && renderMobileLinks(user, logOut)}
         </div>
 
         {/* Card component for sensitive content settings */}
@@ -140,7 +144,7 @@ export default function PrivacyAndSafety() {
 }
 
 // Helper function to render mobile-specific links
-function renderMobileLinks(isAuthenticated, handleLogOut) {
+function renderMobileLinks(user, logOut) {
   return (
     <div className="flex flex-col">
       <Button
@@ -183,9 +187,9 @@ function renderMobileLinks(isAuthenticated, handleLogOut) {
       >
         About
       </Button>
-      {isAuthenticated && (
+      {user && (
         <Button
-          onClick={handleLogOut}
+          onClick={logOut}
           fullWidth
           variant="light"
           radius="sm"

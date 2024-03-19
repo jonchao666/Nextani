@@ -1,6 +1,5 @@
 import {
   User,
-  Link,
   Avatar,
   Dropdown,
   DropdownMenu,
@@ -8,33 +7,26 @@ import {
   DropdownTrigger,
   DropdownSection,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { ThemeSwitcherSelector } from "./ThemeSwitcherSelector";
-import { useEffect, useState } from "react";
+import { handleLogOut } from "@/utils/firebaseAuth";
 
 export default function AvatarDropdown({ isMobileDevice, isXs }) {
   const { displayName, email, displayImageUrl } = useSelector(
     (state) => state.user
   );
-
-  const [tempDisplayName, setTempDisplayName] = useState("");
-
-  useEffect(() => {
-    const getTempDisplayName = () => {
-      let idx = email.indexOf("@");
-      setTempDisplayName("user" + email.substring(0, idx));
-    };
-    if (!displayName) {
-      getTempDisplayName();
-    }
-  }, [displayName, email]);
-
   const router = useRouter();
 
-  const handleLogOut = () => {
-    localStorage.removeItem("jwt");
-    router.push("/logout-callback");
+  //log out
+  const logOut = async () => {
+    try {
+      await handleLogOut();
+      window.location.href = "/";
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -45,6 +37,7 @@ export default function AvatarDropdown({ isMobileDevice, isXs }) {
             isMobileDevice || !isXs ? "h-6 w-6" : ""
           }`}
           size="sm"
+          fallback={<div className="bg-currentColor"></div>}
           src={displayImageUrl}
         ></Avatar>
       </DropdownTrigger>
@@ -71,7 +64,7 @@ export default function AvatarDropdown({ isMobileDevice, isXs }) {
             <User
               as={Link}
               href="/settings/Account"
-              name={displayName || tempDisplayName}
+              name={displayName}
               description={email}
               classNames={{
                 name: "text-foreground",
@@ -108,7 +101,7 @@ export default function AvatarDropdown({ isMobileDevice, isXs }) {
         </DropdownSection>
         <DropdownSection>
           <DropdownItem href="/legalPages/ContactUs">Contact us</DropdownItem>
-          <DropdownItem onClick={() => handleLogOut()}>Log Out</DropdownItem>
+          <DropdownItem onClick={logOut}>Log Out</DropdownItem>
         </DropdownSection>
       </DropdownMenu>
     </Dropdown>

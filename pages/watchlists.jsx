@@ -8,7 +8,9 @@ import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
 import { setPageName } from "@/reducers/pageNameSlice";
-import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
+import { calculatePlaceholdersForLastRow } from "@/utils/getLastRowRequestForFlex";
+import useAuthStatus from "@/hooks/useAuthStatus";
+
 export default function Watchlists() {
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
@@ -21,7 +23,7 @@ export default function Watchlists() {
   const [placeholdersNeeded, setPlaceholdersNeeded] = useState(0);
   const [isMoreWatchlistsAvailable, setIsMoreWatchlistsAvailable] =
     useState(true);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user } = useAuthStatus();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setPageName("Watchlists"));
@@ -70,7 +72,7 @@ export default function Watchlists() {
   }, [watchlists, placeholdersNeeded]);
 
   //show Login Request when is not Authenticated
-  if (!isAuthenticated) {
+  if (!user) {
     return <LoginRequest />;
   }
 
@@ -88,11 +90,11 @@ export default function Watchlists() {
         </h2>
       )}
       {watchlists && watchlists.length === 0 ? (
-        <div className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-2">
+        <div className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] mt-2 px-3">
           Watchlist you create or save will show up here.
         </div>
       ) : isMobileDevice || !isXs ? (
-        <div className="  flex flex-wrap justify-evenly mb-6 gap-y-6 after:content-[''] after:w-[154px]">
+        <div className="  flex flex-wrap justify-evenly pb-6 mb-6 gap-y-6 after:content-[''] after:w-[154px]">
           {watchlists &&
             watchlists.map((data, index) => (
               <WatchlistCard
@@ -125,8 +127,8 @@ export default function Watchlists() {
       {loading && (
         <CircularProgress
           size="sm"
-          className="mx-auto"
-          color="primary"
+          className="mx-auto mt-6"
+          color="default"
           aria-label="Loading..."
         />
       )}

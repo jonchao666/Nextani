@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import store from "@/store/store";
 import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
-import AuthInitializer from "@/components/AuthInitializer";
+import AuthInitializer from "@/utils/AuthInitializer";
 
 export default function App({ Component, pageProps }) {
   const [domLoaded, setDomLoaded] = useState(false);

@@ -1,5 +1,4 @@
-import AnimeDetailsLayout from "@/components/animeDetails/AnimeDetailsLayout";
-import MainAreaDefault from "@/components/animeDetails/mainArea/MainAreaDefault";
+import AnimeDetailsDefault from "@/components/animeDetails/AnimeDetailsDefault";
 import MainAreaCharaters from "@/components/animeDetails/mainArea/MainAreaCharaters";
 import MainAreaStaff from "@/components/animeDetails/mainArea/MainAreaStaff";
 import useAnimeDataJikanApi from "@/hooks/useAnimeDataJikanApi";
@@ -9,6 +8,7 @@ import Layout from "@/components/layout/Layout";
 export default function AnimeDetails() {
   const router = useRouter();
   const { section, mal_id } = router.query;
+
   const {
     data,
     characters,
@@ -33,22 +33,19 @@ export default function AnimeDetails() {
       );
     case "default":
       return (
-        <AnimeDetailsLayout
-          data={data}
-          characters={characters}
-          videos={videos}
-          mal_id={mal_id}
-          videoLoading={videoLoading}
-          setVideoLoading={setVideoLoading}
-          loading={loading}
-        >
-          <MainAreaDefault
+        <Layout youPage={true}>
+          <AnimeDetailsDefault
             data={data}
             characters={characters}
-            staff={staff}
+            videos={videos}
+            mal_id={mal_id}
+            videoLoading={videoLoading}
+            setVideoLoading={setVideoLoading}
+            loading={loading}
             recommendations={recommendations}
-          />
-        </AnimeDetailsLayout>
+            staff={staff}
+          ></AnimeDetailsDefault>
+        </Layout>
       );
 
     case "staff":

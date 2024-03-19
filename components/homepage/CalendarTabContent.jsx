@@ -65,7 +65,6 @@ export default function CalendarTabContent({ data }) {
   }
 
   useEffect(() => {
-    // 根据屏幕尺寸更新 slidesToShow 的值
     const newSlidesToShow = isXl
       ? 6
       : isLg
@@ -97,7 +96,7 @@ export default function CalendarTabContent({ data }) {
 
   return isMobileDevice || !isXs ? (
     <div
-      className={`flex  overflow-x-auto touch-pan gap-3 overflow-hidden ${
+      className={`flex px-3  overflow-x-auto touch-pan gap-3 overflow-hidden ${
         isMobileDevice ? "scrollbar-hide" : ""
       }`}
     >

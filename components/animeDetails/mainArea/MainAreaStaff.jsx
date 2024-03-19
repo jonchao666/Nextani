@@ -1,5 +1,4 @@
 import StaffCard from "./StaffCard";
-import { Textarea, Button, Image } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";

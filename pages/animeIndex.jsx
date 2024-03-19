@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import {
   getLastSeasonAndYear,
   getNextSeasonAndYear,
-} from "@/helpers/getSeasonAndYear";
+} from "@/utils/getSeasonAndYear";
 import Selector from "@/components/animeIndexPage/Selector";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { useDispatch } from "react-redux";

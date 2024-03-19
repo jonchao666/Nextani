@@ -30,7 +30,6 @@ export default function AddToListComponent({
       let data = await fetchWatchlistsWithoutAnimeDetails();
       setWatchlists(data);
       let res = await fetchWatchlistsContainingAnime(mal_id);
-
       setWatchlistsHasAnime(res);
       setCreateListIsLoading(false);
       setAddToListOpen(false);
@@ -41,7 +40,6 @@ export default function AddToListComponent({
 
   const handleAddDeleteAnime = async (e, name, mal_id) => {
     let checked = e.target.checked;
-
     try {
       if (checked) {
         await addWatchlistItem(name, mal_id);
@@ -58,8 +56,8 @@ export default function AddToListComponent({
   };
 
   return (
-    <div className="fixed z-50  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl sm:max-w-[640px] max-w-full   bg-white dark:bg-[rgb(40,40,40)]">
-      <div className="py-4 px-6 flex justify-between">
+    <div className="fixed z-50  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl sm:min-w-[400px] sm:max-w-[640px]  bg-white dark:bg-[rgb(40,40,40)]">
+      <div className="py-3 mt-2 px-6 flex justify-between border-b-1 min-w-[250px]">
         <p>Save anime to...</p>
         <span
           onClick={() => setAddToListOpen(false)}
@@ -71,7 +69,7 @@ export default function AddToListComponent({
           close
         </span>
       </div>
-      <div className="py-4 px-6 overflow-y-auto max-h-[300px]">
+      <div className="py-3 px-6 overflow-y-auto max-h-[300px]">
         {watchlists.length !== 0 ? (
           watchlists.map((list, index) => (
             <Checkbox
@@ -83,9 +81,8 @@ export default function AddToListComponent({
               key={index}
               value={"default"}
               classNames={{
-                label:
-                  "pl-3 text-ellipsis overflow-hidden  whitespace-nowrap text-sm",
-                base: "overflow-hidden flex",
+                label: "pl-3 line-clamp-1 break-all text-sm",
+                base: "flex",
               }}
             >
               {list.name}
@@ -99,7 +96,7 @@ export default function AddToListComponent({
         )}
       </div>
       {listNameInputOpen ? (
-        <div>
+        <div className="border-t-1">
           <Input
             onChange={(e) => setListName(e.target.value)}
             classNames={
@@ -107,7 +104,7 @@ export default function AddToListComponent({
                 ? { inputWrapper: "", input: "text-md" }
                 : { inputWrapper: "after:h-[1px]", input: "text-md" }
             }
-            className="my-4 px-6 "
+            className="mt-2 px-6 "
             variant="underlined"
             label="Name"
             size="sm"
@@ -121,7 +118,7 @@ export default function AddToListComponent({
               variant="light"
               radius="full"
               color="primary"
-              className="text-sm font-medium"
+              className="text-sm font-medium mt-1"
               size="sm"
             >
               Create
@@ -130,7 +127,7 @@ export default function AddToListComponent({
         </div>
       ) : (
         <div
-          className="flex py-4 px-6 cursor-pointer "
+          className="flex py-3 mb-2 px-6 cursor-pointer border-t-1"
           onClick={() => setListNameInputOpen(true)}
         >
           <span

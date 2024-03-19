@@ -1,12 +1,13 @@
-import { Button, Image, Input, Link } from "@nextui-org/react";
-import { useState, useEffect, useMemo } from "react";
+import { Button, Input } from "@nextui-org/react";
+import Link from "next/link";
+import { useState, useMemo } from "react";
 import Oauth2 from "@/components/auth/oauth2";
 import { useRouter } from "next/router";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons";
-import useUserActivity from "@/hooks/useUserActivity";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import { login } from "@/utils/firebaseAuth";
 
 export default function Login() {
-  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
 
   //email validate
@@ -18,32 +19,29 @@ export default function Login() {
   }, [email]);
 
   // local login
-  const { localLogin } = useUserActivity();
+
   const [isLocalLogin, setIsLocalLogin] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const handleLogin = async (email, password) => {
+
+  const handleLogin = async () => {
     setIsLoading(true);
-    let token = await localLogin(email, password);
-    console.log(token);
-    setIsLoading(false);
-    if (token) {
-      router.push(`/auth-callback?token=${token}`);
-    } else {
+    try {
+      await login(email, password);
+      router.replace("/")
+    } catch (error) {
+      console.error("Error logging in:", error);
       setLoginError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  if (!isMounted) return null;
-
   return (
-    <div className="h-screen w-screen">
+    <div className="h-dvh w-dvw">
       <div className="flex items-center justify-center h-2/3">
         <div className="flex flex-col w-full max-w-[400px] px-10">
           <div className="text-3xl font-bold mx-auto mb-8">
@@ -86,7 +84,11 @@ export default function Login() {
               type={isVisible ? "text" : "password"}
             />
           )}
-          <Link className="mt-4 text-sm">Forget password?</Link>
+          {isLocalLogin && (
+            <Link href="/reset-password" className="mt-4 text-sm">
+              Forget password?
+            </Link>
+          )}
           <Button
             isLoading={isLoading}
             variant="solid"
@@ -108,14 +110,13 @@ export default function Login() {
             <p>Don&apos;t have an account?</p>{" "}
             <Link
               href="/signup"
-              isDisabled={isLoading}
-              className="cursor-pointer text-sm"
+              className="cursor-pointer text-sm text-primary"
             >
               Sign up
             </Link>
           </div>
           {!isLocalLogin && (
-            <div>
+            <div className="w-full">
               <div className="flex items-center justify-center pt-4">
                 <div className="border-t  flex-grow"></div>
                 <span className="mx-4 text-xs">or</span>

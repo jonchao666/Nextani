@@ -15,13 +15,13 @@ export default function UserInfo() {
 
       let cleanUsername = rawUsername.replace(/[.+]/g, "_");
 
-      let maxLength = 15;
+      let maxLength = 20;
       let trimmedUsername =
         cleanUsername.length > maxLength
           ? cleanUsername.substring(0, maxLength)
           : cleanUsername;
 
-      let finalUsername = "user" + trimmedUsername;
+      let finalUsername = trimmedUsername;
       setTempDisplayName(finalUsername);
     };
     if (!displayName) {

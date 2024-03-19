@@ -1,10 +1,12 @@
 import WatchlistCard from "./WatchlistCard";
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function WatchLists({ colToShow }) {
   let numToShow = 2 * parseInt(colToShow.split("-")[2]);
   numToShow = numToShow > 14 ? 14 : numToShow;
@@ -96,14 +98,14 @@ export default function WatchLists({ colToShow }) {
           ) : loading ? (
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
               className="mx-auto"
             />
           ) : watchlists ? (
             isMobileDevice || !isXs ? (
               <div
-                className={`mt-2.5 px-3 flex overflow-x-auto touch-pan gap-3 overflow-hidden ${
+                className={`mt-2.5 px-3 flex overflow-x-auto touch-pan gap-3 ${
                   isMobileDevice ? "scrollbar-hide" : ""
                 }`}
               >

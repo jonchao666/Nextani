@@ -1,29 +1,22 @@
 import { SignInIcon } from "@/icons";
 import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import Layout from "@/components/layout/Layout";
 import { useTheme } from "next-themes";
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { useSelector } from "react-redux";
-import Link from "next/link";
 
 export default function LoginRequest() {
   const dispatch = useDispatch();
   const { resolvedTheme } = useTheme();
-  const [isMounted, setIsMounted] = useState(false);
+
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   useEffect(() => {
     dispatch(setPageName("home"));
   }, [dispatch]);
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <Layout>

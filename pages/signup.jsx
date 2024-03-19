@@ -1,33 +1,31 @@
-import { Button, Input, Link } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
+import Link from "next/link";
 import { useState, useMemo } from "react";
 import Oauth2 from "@/components/auth/oauth2";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useRouter } from "next/router";
+import { register } from "@/utils/firebaseAuth";
 
 export default function SignUp() {
+  const [password, setPassword] = useState("");
   //email validate
   const [email, setEmail] = useState("");
-
   const validateEmail = (email) => email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
-
   const isEmailInvalid = useMemo(() => {
     if (email === "") return false;
-
     return validateEmail(email) ? false : true;
   }, [email]);
 
-  //password validate
-  const [password, setPassword] = useState("");
-  const validatePassword = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(password);
+  // displayName validate
+  const [displayName, setDisplayName] = useState("");
+  const validateDisplayName = (displayName) => {
+    return displayName.length <= 20;
   };
-
-  const isPasswordInvalid = useMemo(() => {
-    if (password === "") return false; // 如果密码为空，我们不显示错误信息
-
-    return validatePassword(password) ? false : true;
-  }, [password]);
+  const isDisplayNameInvalid = useMemo(() => {
+    if (displayName === "") return false;
+    return validateDisplayName(displayName) ? false : true;
+  }, [displayName]);
 
   // sign up
   const router = useRouter();
@@ -38,19 +36,27 @@ export default function SignUp() {
   const [signUpError, setSignUpError] = useState(null);
   const [verifyingEmail, setVerifyingEmail] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const handleSignUp = async (email, password) => {
-    setVerifyingEmail(true);
-    let res = await localVerifyEmail(email, password);
+  const handleSignUp = async (email, password, name) => {
+    if (!name) {
+      setSignUpError("Missing display name. please enter display name.");
+      return;
+    }
 
-    if (res) {
-      setSignUpError(res);
+    setVerifyingEmail(true);
+    try {
+      await register(email, password, name.slice(0, 20));
+
+      router.push(`/verify-email?email=${email}`);
+      setSignUpError(null);
+    } catch (error) {
+      console.error("Error signing up:", error);
+      setSignUpError(error.message);
       setVerifyingEmail(false);
-    } else {
-      router.push(`signUpVerifyingEmail/?email=${email}`);
     }
   };
+
   return (
-    <div className="h-screen w-screen">
+    <div className="h-dvh w-dvw">
       <div className="w-full h-2/3 flex justify-center items-center">
         <div className="flex flex-col w-full max-w-[400px] px-10">
           <div className="text-3xl font-bold mx-auto mb-8 ">
@@ -72,19 +78,12 @@ export default function SignUp() {
           {isLocalSignUp && (
             <Input
               classNames={{ input: "text-md" }}
+              className="mb-3"
               isDisabled={verifyingEmail}
-              isInvalid={isPasswordInvalid}
               label="Password"
               variant="bordered"
               placeholder="Enter your password"
               onValueChange={setPassword}
-              errorMessage={
-                signUpError
-                  ? signUpError
-                  : isPasswordInvalid
-                  ? "Password must be at least 8 characters long, include numbers, uppercase and lowercase letters."
-                  : null
-              }
               endContent={
                 <button
                   className="focus:outline-none"
@@ -101,6 +100,24 @@ export default function SignUp() {
               type={isVisible ? "text" : "password"}
             />
           )}
+          {isLocalSignUp && (
+            <Input
+              classNames={{ input: "text-md" }}
+              isDisabled={verifyingEmail}
+              isInvalid={isDisplayNameInvalid}
+              label="Display name"
+              variant="bordered"
+              placeholder="Enter your display name"
+              onValueChange={setDisplayName}
+              errorMessage={
+                signUpError
+                  ? signUpError
+                  : isDisplayNameInvalid
+                  ? "Display name must be at most 20 characters long."
+                  : null
+              }
+            />
+          )}
           <Button
             isLoading={verifyingEmail}
             isDisabled={verifyingEmail}
@@ -110,23 +127,18 @@ export default function SignUp() {
             size="lg"
             className="mt-6"
             onClick={() => {
-              !isLocalSignUp &&
+              !isLocalSignUp && !isEmailInvalid && setIsLocalSignUp(true),
                 !isEmailInvalid &&
-                !isPasswordInvalid &&
-                email !== "" &&
-                setIsLocalSignUp(true),
-                isLocalSignUp && handleSignUp(email, password);
+                  !isDisplayNameInvalid &&
+                  isLocalSignUp &&
+                  handleSignUp(email, password, displayName);
             }}
           >
             Continue
           </Button>
           <div className="mt-4 text-center">
-            <p>Already have an account?</p>{" "}
-            <Link
-              href="/login"
-              isDisabled={verifyingEmail}
-              className="cursor-pointer"
-            >
+            <p>Already have an account?</p>
+            <Link href="/login" className="cursor-pointer text-primary text-sm">
               Log in
             </Link>
           </div>

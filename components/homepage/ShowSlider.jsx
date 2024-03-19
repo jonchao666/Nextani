@@ -1,10 +1,11 @@
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import ImageCard from "../layout/ImageCard";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useSelector } from "react-redux";
-import { SampleNextArrow, SamplePrevArrow } from "@/helpers/sliderArrow";
+import { SampleNextArrow, SamplePrevArrow } from "@/utils/sliderArrow";
+import Link from "next/link";
 
 function ShowSlider({ data, title, category }) {
   const [isMounted, setIsMounted] = useState(false);

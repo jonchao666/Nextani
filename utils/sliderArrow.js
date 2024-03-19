@@ -1,4 +1,4 @@
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
 function SampleNextArrow(props) {
   const { onClick, slideCount, currentSlide, slidesToShow } = props;

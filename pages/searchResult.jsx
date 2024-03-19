@@ -6,7 +6,7 @@ import { CircularProgress } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useResponsive } from "../hooks/useResponsive";
-import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
+import { calculatePlaceholdersForLastRow } from "@/utils/getLastRowRequestForFlex";
 import { useSelector, useDispatch } from "react-redux";
 import { setPageName } from "@/reducers/pageNameSlice";
 export default function SearchResult() {
@@ -140,8 +140,8 @@ export default function SearchResult() {
       {loading && (
         <CircularProgress
           size="sm"
-          className="mx-auto"
-          color="primary"
+          className="mx-auto mt-6"
+          color="default"
           aria-label="Loading..."
         />
       )}

@@ -1,14 +1,17 @@
 // userSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getIdToken } from "@/utils/firebaseAuth";
 
 export const fetchUserData = createAsyncThunk(
   "user/fetchUserData",
 
-  async (jwt, thunkAPI) => {
+  async (thunkAPI) => {
+    const idToken = await getIdToken();
+
     const response = await axios.get(`${process.env.API_URL}/user`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${idToken}`,
       },
     });
 
@@ -24,10 +27,6 @@ const initialState = {
   email: "",
   displayImageUrl: "",
   verifyingEmail: false,
-  changingDisplayName: false,
-  deletingAccount: false,
-  showDeleteAccountPage: false,
-  verifyingDeleteAccount: false,
 };
 
 const userSlice = createSlice({
@@ -49,14 +48,14 @@ const userSlice = createSlice({
     setChangingDisplayName: (state, action) => {
       state.changingDisplayName = action.payload;
     },
-    setDeletingAccount: (state, action) => {
-      state.deletingAccount = action.payload;
-    },
-    setShowDeleteAccountPage: (state, action) => {
-      state.showDeleteAccountPage = action.payload;
-    },
-    setVerifyingDeleteAccount: (state, action) => {
-      state.verifyingDeleteAccount = action.payload;
+    clearUserData: (state) => {
+      state.userData = null;
+      state.loading = false;
+      state.error = null;
+      state.displayName = "";
+      state.email = "";
+      state.displayImageUrl = "";
+      state.verifyingEmail = false;
     },
   },
   extraReducers: (builder) => {
@@ -71,8 +70,7 @@ const userSlice = createSlice({
         state.email = action.payload.email;
         state.displayName = action.payload.displayName;
         state.displayImageUrl =
-          action.payload.profilePicture ||
-          `${process.env.API_URL}/profilePicture/defaultImage.svg`;
+          action.payload.profilePicture || `/DefaultProfilePicture.svg`;
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.loading = false;
@@ -90,9 +88,7 @@ export const {
   setDisplayImageUrl,
   setVerifyingEmail,
   setChangingDisplayName,
-  setDeletingAccount,
-  setShowDeleteAccountPage,
-  setVerifyingDeleteAccount,
+  clearUserData,
 } = userSlice.actions;
 
 export default userSlice.reducer;

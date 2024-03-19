@@ -1,19 +1,21 @@
 import Layout from "@/components/layout/Layout";
 import useUserActivity from "@/hooks/useUserActivity";
-import { Image, Link, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HistoryInfinityScoroll from "@/components/history/HistoryInfinityScoroll";
 import { useResponsive } from "@/hooks/useResponsive";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { setPageName } from "@/reducers/pageNameSlice";
+import useAuthStatus from "@/hooks/useAuthStatus";
+
 export default function History() {
   const dispatch = useDispatch();
   const { fetchHistory, removeAllHistory } = useUserActivity();
   const [history, setHistory] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [deleteAllLoading, setDeleteAllLoading] = useState(false);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
   const handleDeleteAllHistory = async () => {
@@ -24,9 +26,9 @@ export default function History() {
     setHistory([]);
   };
   useEffect(() => {
-    dispatch(setPageName("History"));
+    dispatch(setPageName("history"));
   }, [dispatch]);
-  if (!isAuthenticated) {
+  if (!user) {
     return <LoginRequest />;
   }
   return (
@@ -68,7 +70,7 @@ export default function History() {
           <h2
             className={
               isMobileDevice || !isXs
-                ? "text-3xl font-bold pt-2 pb-3 pl-1"
+                ? "text-3xl font-bold pt-2 pb-3"
                 : "text-4xl font-bold pt-6 pb-1"
             }
           >
@@ -88,7 +90,7 @@ export default function History() {
               }}
             >
               delete
-            </span>{" "}
+            </span>
             <p className="-ml-1">Clear all history</p>
           </Button>
         </div>

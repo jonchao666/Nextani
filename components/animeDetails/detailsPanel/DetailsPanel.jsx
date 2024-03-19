@@ -8,7 +8,6 @@ import { Skeleton } from "@nextui-org/react";
 import { useResponsive } from "@/hooks/useResponsive";
 export default function DetailsPanelContents({
   data,
-
   mainCharacters,
   synopsisWithoutLastParagraph,
   videos,

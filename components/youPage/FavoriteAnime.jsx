@@ -1,10 +1,11 @@
 import ImageCard from "@/components/layout/ImageCard";
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+import Link from "next/link";
 
 export default function FavoriteAnime({ colToShow }) {
   const { fetchLikedAnime } = useUserActivity();
@@ -90,13 +91,13 @@ export default function FavoriteAnime({ colToShow }) {
                 isMobileDevice || !isXs ? "px-3" : ""
               }`}
             >
-              Use the favorite icon to like animes. Your list shows up right
+              Use the favorite icon to save animes. Your list shows up right
               here.
             </div>
           ) : loading ? (
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
               className="mx-auto"
             />

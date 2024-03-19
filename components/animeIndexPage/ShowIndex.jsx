@@ -4,10 +4,10 @@ import ImageCard from "../layout/ImageCard";
 import { useState, useEffect } from "react";
 import { useResponsive } from "../../hooks/useResponsive";
 import axios from "axios";
-import { parseYears } from "@/helpers/parseCategoryYears";
+import { parseYears } from "@/utils/parseCategoryYears";
 import { useSelector } from "react-redux";
-import { getLastTwoSeasonAndYears } from "@/helpers/getSeasonAndYear";
-import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
+import { getLastTwoSeasonAndYears } from "@/utils/getSeasonAndYear";
+import { calculatePlaceholdersForLastRow } from "@/utils/getLastRowRequestForFlex";
 
 export default function ShowIndex({
   selectedButtonSortby,
@@ -21,7 +21,6 @@ export default function ShowIndex({
 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [delayLoading, setDelayLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
@@ -150,33 +149,43 @@ export default function ShowIndex({
   const lastElementRef = useInfiniteScroll(indexData);
 
   return (
-    <div className={isMobileDevice || !isXs ? "mt-0 mb-6" : "mt-3 mb-6"}>
-      {isMobileDevice || !isXs ? (
-        <div className="  flex  justify-evenly flex-wrap gap-y-6 ">
-          {data &&
-            data.map((item, index) => (
-              <ImageCard key={index} data={item} smallSize={true} />
-            ))}
-          {Array.from({ length: placeholdersNeeded }, (_, index) => (
-            <div
-              key={`placeholder-${index}`}
-              className="w-[154px] h-0 invisible"
-            ></div>
-          ))}
+    <div>
+      {!loading && data.length === 0 ? (
+        <div className="text-center mt-4 text-sm">
+          No results found matching your filters.
         </div>
       ) : (
-        <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 `}>
-          {data &&
-            data.map((item, index) => <ImageCard key={index} data={item} />)}
+        <div className={isMobileDevice || !isXs ? "mt-0 mb-6" : "mt-3 mb-6"}>
+          {isMobileDevice || !isXs ? (
+            <div className="  flex  justify-evenly flex-wrap gap-y-6 ">
+              {data &&
+                data.map((item, index) => (
+                  <ImageCard key={index} data={item} smallSize={true} />
+                ))}
+              {Array.from({ length: placeholdersNeeded }, (_, index) => (
+                <div
+                  key={`placeholder-${index}`}
+                  className="w-[154px] h-0 invisible"
+                ></div>
+              ))}
+            </div>
+          ) : (
+            <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 `}>
+              {data &&
+                data.map((item, index) => (
+                  <ImageCard key={index} data={item} />
+                ))}
+            </div>
+          )}
+          {loading && (
+            <CircularProgress
+              size="sm"
+              className="mx-auto mt-6"
+              color="default"
+              aria-label="Loading..."
+            />
+          )}
         </div>
-      )}
-      {loading && (
-        <CircularProgress
-          size="sm"
-          className="mx-auto"
-          color="primary"
-          aria-label="Loading..."
-        />
       )}
       <div ref={lastElementRef} className="h-1" />
     </div>

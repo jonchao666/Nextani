@@ -5,17 +5,17 @@ import LikedPeopleInfinityScoroll from "@/components/favorite/LikedPeopleInfinit
 import { setPageName } from "@/reducers/pageNameSlice";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { useResponsive } from "@/hooks/useResponsive";
-
+import useAuthStatus from "@/hooks/useAuthStatus";
 export default function LikedPeople() {
   const [likedPerson, setLikedPerson] = useState(null);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setPageName("Favorite people"));
   }, [dispatch]);
-  if (!isAuthenticated) {
+  if (!user) {
     return <LoginRequest />;
   }
   return (

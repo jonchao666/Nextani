@@ -3,15 +3,18 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout/Layout";
-import { Link, Button, Divider } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react";
+import Link from "next/link";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { useResponsive } from "@/hooks/useResponsive";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import { handleLogOut } from "@/utils/firebaseAuth";
 
 // Settings component definition
 export default function Settings() {
   // State selectors
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
 
@@ -24,17 +27,22 @@ export default function Settings() {
     dispatch(setPageName("Legal"));
   }, [dispatch]);
 
-  // Logout handler
-  const handleLogOut = () => {
-    localStorage.removeItem("jwt");
-    router.push("/logout-callback");
+  //log out
+  const logOut = async () => {
+    try {
+      await handleLogOut();
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Conditional rendering for unauthenticated non-mobile users with extra small screens
-  if (!isAuthenticated && !isMobileDevice && isXs) {
+  if (!user && !isMobileDevice && isXs) {
     return <LoginRequest />;
   }
-
+  if (loading) return <div className="p-3">Please wait...</div>;
   // Main component render function
   return (
     <Layout>
@@ -85,7 +93,7 @@ export default function Settings() {
           }
         >
           {/* Authenticated user buttons */}
-          {isAuthenticated && (
+          {user && (
             <Button
               as={Link}
               href="/settings/Account"
@@ -97,16 +105,18 @@ export default function Settings() {
               Account
             </Button>
           )}
-          <Button
-            as={Link}
-            href="/settings/PrivacyAndSafety"
-            fullWidth
-            variant="light"
-            radius="sm"
-            className="justify-start"
-          >
-            Privacy and safety
-          </Button>
+          {user && (
+            <Button
+              as={Link}
+              href="/settings/PrivacyAndSafety"
+              fullWidth
+              variant="light"
+              radius="sm"
+              className="justify-start"
+            >
+              Privacy and safety
+            </Button>
+          )}
           {/* Additional mobile device specific buttons */}
           {isMobileDevice && (
             <div className="flex flex-col">
@@ -150,9 +160,9 @@ export default function Settings() {
               >
                 About
               </Button>
-              {isAuthenticated && (
+              {user && (
                 <Button
-                  onClick={handleLogOut}
+                  onClick={logOut}
                   fullWidth
                   variant="light"
                   radius="sm"

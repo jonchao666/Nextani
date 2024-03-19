@@ -1,5 +1,7 @@
-import { Card, Image, Link } from "@nextui-org/react";
+import { Card, Image } from "@nextui-org/react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
+
 export default function StaffCard({ person }) {
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   if (!person) return null;
@@ -8,8 +10,8 @@ export default function StaffCard({ person }) {
       <Card
         className={
           isMobileDevice
-            ? " flex-row rounded-lg shadow-md  bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)] shadow-sm "
-            : " flex-row rounded-lg shadow-md hover:scale-105 bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)] shadow-sm "
+            ? " flex-row  rounded-md shadow-none bg-background   "
+            : " flex-row rounded-md shadow-sm hover:scale-105 bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]  "
         }
       >
         <Link
@@ -18,7 +20,11 @@ export default function StaffCard({ person }) {
         >
           <Image
             radius="none"
-            className="w-[60px] h-[81px] object-cover"
+            className={
+              isMobileDevice
+                ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
+                : "w-[60px] h-[81px] object-cover shrink-0"
+            }
             alt={person.person.name}
             src={
               person.person.images.jpg.image_url.startsWith(
@@ -30,7 +36,7 @@ export default function StaffCard({ person }) {
           ></Image>
         </Link>
 
-        <div className="flex flex-col justify-between text-xs  p-2.5 ">
+        <div className="flex flex-col justify-between text-xs text-left p-2.5 ">
           <Link
             className="text-xs text-foreground"
             href={`/person?mal_id=${person.person.mal_id}`}

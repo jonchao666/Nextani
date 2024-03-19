@@ -31,19 +31,16 @@ export default function Calendar({ calendarData }) {
 
   useEffect(() => {
     const convertedData = {};
-    // 初始化每天的数据数组
     Object.keys(calendarData).forEach((day) => {
       convertedData[day] = [];
     });
 
-    // 遍历原始数据，根据转换后的新日期重新分配
     for (const day in calendarData) {
       calendarData[day].forEach((item) => {
         const { newDay, newTime } = convertToLocaleDayAndTime(
           day,
           item.apiData.broadcast.time
         );
-        // 将项目添加到转换后的新日期数组中
         convertedData[newDay].push({
           ...item,
           apiData: {
@@ -77,7 +74,7 @@ export default function Calendar({ calendarData }) {
     <div
       className={
         isMobileDevice || !isXs
-          ? "flex  flex-col  pb-3 px-3 border-b-1 dark:border-[rgba(255,255,255,0.2)]"
+          ? "flex  flex-col  pb-3  border-b-1 dark:border-[rgba(255,255,255,0.2)]"
           : "flex  flex-col  pt-3 pb-6 border-b-1 dark:border-[rgba(255,255,255,0.2)]"
       }
     >
@@ -92,8 +89,8 @@ export default function Calendar({ calendarData }) {
         classNames={
           isMobileDevice || !isXs
             ? {
-                base: "-mx-3 w-screen",
-                tabList: "gap-1 px-0 justify-between",
+                base: " w-dvw",
+                tabList: "gap-1 p-0 justify-between",
                 panel: " pr-0 px-0",
               }
             : { base: "-ml-3", tabList: "px-0", panel: "px-0" }

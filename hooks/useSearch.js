@@ -1,11 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
+import { useRouter } from "next/router";
+
 export default function useSearch(initialQuery = "", delay = 500) {
   const [query, setQuery] = useState(initialQuery);
+  const router = useRouter();
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchStart, setSearchStart] = useState(false);
   const isSensitiveFilterDisabled = useSelector(
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
@@ -47,11 +51,19 @@ export default function useSearch(initialQuery = "", delay = 500) {
     }
   };
 
-  // 执行搜索
   useEffect(() => {
+    setSearchStart(true);
     const fetchData = async () => {
       if (debouncedQuery) {
-        setIsLoading(true);
+        let isLoadingData = true;
+        //show loading after 1s
+        const delaySetLoading = async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          if (isLoadingData) {
+            setIsLoading(true);
+          }
+        };
+        delaySetLoading();
         try {
           const response = await axios.get(
             `${process.env.API_URL}/anime/search?query=${debouncedQuery}&limit=10`,
@@ -68,8 +80,12 @@ export default function useSearch(initialQuery = "", delay = 500) {
         } catch (error) {
           console.error("Error fetching search results:", error);
         } finally {
+          isLoadingData = false;
           setIsLoading(false);
+          setSearchStart(false);
         }
+      } else {
+        setResults([]);
       }
     };
 
@@ -81,6 +97,7 @@ export default function useSearch(initialQuery = "", delay = 500) {
     setQuery,
     results,
     isLoading,
+    searchStart,
     showResults,
     setShowResults,
     isSearchFocused,

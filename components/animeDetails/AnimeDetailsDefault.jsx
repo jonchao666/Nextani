@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { fetchUserData } from "@/reducers/userSlice";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
-import { Skeleton } from "@nextui-org/react";
+import { Image } from "@nextui-org/react";
 import { CircularProgress } from "@nextui-org/react";
+import MainAreaDefault from "@/components/animeDetails/mainArea/MainAreaDefault";
 
 export default function AnimeDetailsLayout({
-  children,
+  staff,
   data,
   characters,
   videos,
@@ -18,21 +19,15 @@ export default function AnimeDetailsLayout({
   videoLoading,
   setVideoLoading,
   loading,
+  recommendations,
 }) {
   const dispatch = useDispatch();
   const { isXs } = useResponsive();
   const [videoUrl, setVideoUrl] = useState("");
+
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   const mainCharacters = [];
-  const jwt =
-    typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
-
-  useEffect(() => {
-    if (jwt) {
-      dispatch(fetchUserData(jwt));
-    }
-  }, [jwt, dispatch]);
 
   useEffect(() => {
     if (data) {
@@ -66,12 +61,12 @@ export default function AnimeDetailsLayout({
         if (videos[i].title.startsWith("Character")) continue;
         tempPV.push(videos[i]);
       }
-
-      setPV(tempPV);
       setVideoUrl(
-        tempPV[0].trailer.embed_url.replace("autoplay=1", "autoplay=0")
+        tempPV[0]?.trailer.embed_url.replace("autoplay=1", "autoplay=0")
       );
     }
+
+    setPV(tempPV);
   }, [videos]);
 
   if (characters && characters.data) {
@@ -101,39 +96,43 @@ export default function AnimeDetailsLayout({
   }
 
   return (
-    <Layout youPage={true}>
+    <div>
       {loading && (
-        <div className="fixed z-20 top-0 left-0 bg-background h-screen w-screen  ">
+        <div className="fixed z-20 top-0 left-0 bg-background h-dvh w-dvw  ">
           <div className="h-5/6 flex justify-center items-center">
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
             />
           </div>
         </div>
       )}
       <div className="flex justify-center">
-        <main className="  w-full h-full max-w-[1280px] ">
+        <main className="  w-full h-full  ">
           {videos && videos.length > 0 && (
-            <Skeleton
-              className={`aspect-video w-full h-full ${
-                isMobileDevice || !isXs ? "" : "rounded-xl mt-6"
-              } `}
-              isLoaded={!videoLoading}
-            >
+            <div className="relative">
+              {videoLoading && (
+                <div
+                  className={
+                    isMobileDevice || !isXs
+                      ? "absolute inset-0  bg-black dark:bg-[rgb(24,24,27)] "
+                      : "absolute inset-0 rounded-xl bg-black dark:bg-[rgb(24,24,27)] "
+                  }
+                ></div>
+              )}
               <iframe
                 onClick={(e) => videoLoading && e.preventDefault()}
                 id="videoIframe"
                 className={`aspect-video w-full h-full ${
                   isMobileDevice || !isXs ? "" : "rounded-xl"
-                } `}
+                }`}
                 src={videoUrl}
                 title={videos.title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
-            </Skeleton>
+            </div>
           )}
 
           <DetailsPanel
@@ -151,10 +150,15 @@ export default function AnimeDetailsLayout({
             }`}
           >
             <AnimeInformation data={data} />
-            {children}
+            <MainAreaDefault
+              data={data}
+              characters={characters}
+              staff={staff}
+              recommendations={recommendations}
+            />
           </div>
         </main>
       </div>
-    </Layout>
+    </div>
   );
 }

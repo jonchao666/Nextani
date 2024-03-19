@@ -43,33 +43,31 @@ export default function MainAreaDefault({
     }
   }
   return (
-    <div className="flex flex-col grow">
+    <div className="flex flex-col max-w-fit">
       <div className={` ${isMobileDevice || !isXs ? "px-3 mb-6" : " mb-6"}`}>
-        {data && validCharacters && validCharacters.length > 0 && (
-          <div className=" font-medium mb-1.5 flex justify-between items-center">
-            <h3>Characters</h3>
+        <div className=" font-medium mb-1.5 flex justify-between items-center">
+          {data && validCharacters && <h3>Characters</h3>}
 
-            {validCharacters.length > 6 && (
-              <Button
-                variant={isMobileDevice || !isXs ? "bordered" : "light"}
-                radius="full"
-                color={isMobileDevice || !isXs ? "default" : "primary"}
-                size={isMobileDevice || !isXs ? "sm" : "md"}
-                className={` hover:opacity-100  font-medium ${
-                  isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
-                }`}
-                as={Link}
-                href={`/animeDetails/characters?mal_id=${data.mal_id}`}
-              >
-                View all
-              </Button>
-            )}
-          </div>
-        )}
+          {data && validCharacters && validCharacters.length > 6 && (
+            <Button
+              variant={isMobileDevice || !isXs ? "bordered" : "light"}
+              radius="full"
+              color={isMobileDevice || !isXs ? "default" : "primary"}
+              size={isMobileDevice || !isXs ? "sm" : "md"}
+              className={` hover:opacity-100  font-medium ${
+                isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
+              }`}
+              as={Link}
+              href={`/animeDetails/characters?mal_id=${data.mal_id}`}
+            >
+              View all
+            </Button>
+          )}
+        </div>
 
         {validCharacters ? (
           validCharacters.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 gap-x-8 ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 ">
               {validCharacters.slice(0, 6).map((character, index) => (
                 <CharacterCard key={index} character={character} />
               ))}
@@ -81,31 +79,29 @@ export default function MainAreaDefault({
       </div>
 
       <div className={` ${isMobileDevice || !isXs ? "px-3 mb-6" : "mb-8"}`}>
-        {data && staff && staff.length > 0 && (
-          <div className=" font-medium mb-1.5 flex justify-between items-center">
-            <h3>Staff</h3>
+        <div className=" font-medium mb-1.5 flex justify-between items-center">
+          {data && staff && <h3>Staff</h3>}
 
-            {staff.length > 4 && (
-              <Button
-                variant={isMobileDevice || !isXs ? "bordered" : "light"}
-                radius="full"
-                color={isMobileDevice || !isXs ? "default" : "primary"}
-                size={isMobileDevice || !isXs ? "sm" : "md"}
-                className={` hover:opacity-100  font-medium ${
-                  isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
-                }`}
-                as={Link}
-                href={`/animeDetails/staff?mal_id=${data.mal_id}`}
-              >
-                View all
-              </Button>
-            )}
-          </div>
-        )}
+          {data && staff && staff.length > 4 && (
+            <Button
+              variant={isMobileDevice || !isXs ? "bordered" : "light"}
+              radius="full"
+              color={isMobileDevice || !isXs ? "default" : "primary"}
+              size={isMobileDevice || !isXs ? "sm" : "md"}
+              className={` hover:opacity-100  font-medium ${
+                isMobileDevice || !isXs ? "text-sm border-1" : "h-9"
+              }`}
+              as={Link}
+              href={`/animeDetails/staff?mal_id=${data.mal_id}`}
+            >
+              View all
+            </Button>
+          )}
+        </div>
 
         {staff ? (
           staff.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2  gap-y-4 gap-x-8 ">
+            <div className="grid grid-cols-1 sm:grid-cols-2  gap-y-4 gap-x-8 ">
               {staff.slice(0, 4).map((person, index) => (
                 <StaffCard key={index} person={person} />
               ))}

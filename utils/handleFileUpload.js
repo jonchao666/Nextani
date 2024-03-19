@@ -1,9 +1,8 @@
 import { setDisplayImageUrl } from "@/reducers/userSlice";
 import { ShowAvatarUploadToast } from "@/components/layout/Toasts";
+import { getIdToken } from "@/utils/firebaseAuth";
 
 export default async function handleFileUpload(event, dispatch) {
-  const jwt =
-    typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
   const file = event.target.files[0];
   const reader = new FileReader();
 
@@ -36,23 +35,25 @@ export default async function handleFileUpload(event, dispatch) {
       ctx.drawImage(img, 0, 0, width, height);
 
       const base64Image = canvas.toDataURL("image/jpeg", 0.8);
-
+      const idToken = await getIdToken();
       try {
-        const response = await fetch(`${process.env.API_URL}/upload`, {
-          method: "POST",
-          body: JSON.stringify({ profilePictureBase64: base64Image }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        });
+        const response = await fetch(
+          `${process.env.API_URL}/user/updateProfilePicture`,
+          {
+            method: "POST",
+            body: JSON.stringify({ profilePictureBase64: base64Image }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log("File successfully uploaded", data);
 
         dispatch(setDisplayImageUrl(data.profilePicture));
         ShowAvatarUploadToast("success");

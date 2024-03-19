@@ -6,7 +6,7 @@ import { useResponsive } from "@/hooks/useResponsive";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { calculatePlaceholdersForLastRow } from "@/helpers/getLastRowRequestForFlex";
+import { calculatePlaceholdersForLastRow } from "@/utils/getLastRowRequestForFlex";
 import Layout from "@/components/layout/Layout";
 import { setPageName } from "@/reducers/pageNameSlice";
 
@@ -53,7 +53,6 @@ export default function Recommendations() {
     setHasMoreData(true);
   }, []);
   useEffect(() => {
-    // 根据屏幕尺寸更新 slidesToShow 的值
     const newColToshow = isXl
       ? " grid-cols-6"
       : isLg
@@ -107,8 +106,8 @@ export default function Recommendations() {
         {loading && (
           <CircularProgress
             size="sm"
-            className="mx-auto"
-            color="primary"
+            className="mx-auto mt-6"
+            color="default"
             aria-label="Loading..."
           />
         )}

@@ -1,20 +1,24 @@
 // Import necessary React and Next.js components, hooks, and functions
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout/Layout";
 import AccountSettings from "@/components/settings/AccountSettings";
 import LoginRequest from "@/components/auth/LoginRequest";
-import { Link, Button, Divider } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react";
+import Link from "next/link";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { useResponsive } from "@/hooks/useResponsive";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import { handleLogOut } from "@/utils/firebaseAuth";
 
 // Define the Settings component
 export default function Settings() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
   const dispatch = useDispatch();
+  const [isLogOut, setIsLogOut] = useState(false);
   const router = useRouter();
 
   // Set the page name using useEffect hook on component mount
@@ -22,18 +26,25 @@ export default function Settings() {
     dispatch(setPageName("Settings"));
   }, [dispatch]);
 
-  // Handle user logout
-  const handleLogOut = () => {
-    localStorage.removeItem("jwt");
-    router.push("/logout-callback");
+  //log out
+  const logOut = async () => {
+    try {
+      setIsLogOut(true);
+      await handleLogOut();
+
+      window.location.href = "/";
+    } catch (error) {
+      setIsLogOut(false);
+      console.error(error);
+    }
   };
 
   // Conditionally render the LoginRequest component if the user is not authenticated
   // and is accessing from a non-mobile device with extra small screen size
-  if (!isAuthenticated && !isMobileDevice && isXs) {
+  if (!user && !loading && !isMobileDevice && isXs) {
     return <LoginRequest />;
   }
-
+  if (loading || isLogOut) return <div className="p-3">Please wait...</div>;
   // Main render return for the Settings component
   return (
     <Layout>
@@ -53,18 +64,20 @@ export default function Settings() {
       >
         <Divider />
         {/* Conditionally render Account link if the user is authenticated */}
-        {isAuthenticated && (
+        {user && (
           <Link href="/settings/Account" className="px-4 my-3 text-foreground">
             Account
           </Link>
         )}
         {/* Privacy and Safety link */}
-        <Link
-          href="/settings/PrivacyAndSafety"
-          className="px-4 my-3 text-foreground"
-        >
-          Privacy and Safety
-        </Link>
+        {user && (
+          <Link
+            href="/settings/PrivacyAndSafety"
+            className="px-4 my-3 text-foreground"
+          >
+            Privacy and Safety
+          </Link>
+        )}
         {/* Additional links rendered only for mobile devices */}
         {isMobileDevice && (
           <div className="flex flex-col">
@@ -86,14 +99,11 @@ export default function Settings() {
             >
               About
             </Link>
-            {/* Logout link for authenticated users */}
-            {isAuthenticated && (
-              <Link
-                onClick={() => handleLogOut()}
-                className="px-4 my-3 text-foreground"
-              >
+
+            {user && (
+              <div onClick={logOut} className="px-4 my-3 text-foreground">
                 Logout
-              </Link>
+              </div>
             )}
           </div>
         )}
@@ -114,7 +124,7 @@ export default function Settings() {
           }
         >
           {/* Account button for authenticated users */}
-          {isAuthenticated && (
+          {user && (
             <Button
               fullWidth
               variant="flat"
@@ -125,16 +135,18 @@ export default function Settings() {
             </Button>
           )}
           {/* Other settings options */}
-          <Button
-            as={Link}
-            href="/settings/PrivacyAndSafety"
-            fullWidth
-            variant="light"
-            radius="sm"
-            className="justify-start"
-          >
-            Privacy and safety
-          </Button>
+          {user && (
+            <Button
+              as={Link}
+              href="/settings/PrivacyAndSafety"
+              fullWidth
+              variant="light"
+              radius="sm"
+              className="justify-start"
+            >
+              Privacy and safety
+            </Button>
+          )}
           {/* Conditional rendering for mobile specific settings options */}
           {isMobileDevice && (
             <div className="flex flex-col">
@@ -179,9 +191,9 @@ export default function Settings() {
                 About
               </Button>
               {/* Logout button for authenticated users */}
-              {isAuthenticated && (
+              {user && (
                 <Button
-                  onClick={() => handleLogOut()}
+                  onClick={logOut}
                   fullWidth
                   variant="light"
                   radius="sm"
@@ -194,7 +206,7 @@ export default function Settings() {
           )}
         </div>
         {/* Account settings component */}
-        <AccountSettings />
+        {user && <AccountSettings />}
       </div>
     </Layout>
   );

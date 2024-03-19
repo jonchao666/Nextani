@@ -1,6 +1,4 @@
 import Layout from "@/components/layout/Layout";
-import useUserActivity from "@/hooks/useUserActivity";
-import { Image, Link, Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WatchlistItemInfinityScoroll from "@/components/watchlist/WatchlistItemInfinityScoroll";
@@ -8,12 +6,14 @@ import { useResponsive } from "@/hooks/useResponsive";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { useRouter } from "next/router";
 import { setPageName } from "@/reducers/pageNameSlice";
+import useAuthStatus from "@/hooks/useAuthStatus";
+
 export default function Watchlist() {
   const dispatch = useDispatch();
   const [selectedWatchlist, setSelectedWatchlist] = useState(null);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const router = useRouter();
   const { name } = router.query;
 
@@ -21,7 +21,7 @@ export default function Watchlist() {
     dispatch(setPageName(name));
   }, [dispatch, name]);
 
-  if (!isAuthenticated) {
+  if (!user) {
     return <LoginRequest />;
   }
 

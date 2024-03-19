@@ -1,26 +1,34 @@
 import { useRouter } from "next/router";
-import { Link } from "@nextui-org/react";
+import Link from "next/link";
+import { useResponsive } from "@/hooks/useResponsive";
 import { useSelector } from "react-redux";
+import useAuthStatus from "@/hooks/useAuthStatus";
+
 export default function LegalPages() {
   const router = useRouter();
   const { section } = router.query;
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user } = useAuthStatus();
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+  const { isXs } = useResponsive();
+
   switch (section) {
     case "About":
-      return <AboutPage />;
+      return (
+        <AboutPage isMobileDevice={isMobileDevice} isXs={isXs} user={user} />
+      );
     case "ContactUs":
-      return <ContactPage />;
+      return <ContactPage isMobileDevice={isMobileDevice} isXs={isXs} />;
     case "TermsOfService":
-      return <TermsOfServicePage />;
+      return <TermsOfServicePage isMobileDevice={isMobileDevice} isXs={isXs} />;
     case "PrivacyPolicy":
-      return <PrivacyPolicyPage />;
+      return <PrivacyPolicyPage isMobileDevice={isMobileDevice} isXs={isXs} />;
   }
 }
 
-const AboutPage = (isAuthenticated) => (
+const AboutPage = ({ user, isMobileDevice, isXs }) => (
   <div>
-    <div className="h-16"></div>
-    <div className="px-6 h-screen">
+    {!isMobileDevice && isXs && <div className="h-[140px]"></div>}
+    <div className="px-6 mt-4">
       <div className="mx-auto max-w-[1024px] ">
         <div className=" py-12">
           <div className=" mx-auto text-center">
@@ -34,7 +42,7 @@ const AboutPage = (isAuthenticated) => (
               adventures in anime.
             </p>
 
-            {!isAuthenticated && (
+            {!user && (
               <Link
                 href="/login"
                 className="bg-indigo-700 hover:bg-indigo-800 hover:opacity-100 text-white font-medium py-3 px-6 rounded-md"
@@ -49,11 +57,11 @@ const AboutPage = (isAuthenticated) => (
   </div>
 );
 
-const ContactPage = () => (
+const ContactPage = ({ isMobileDevice, isXs }) => (
   <div>
-    <div className="h-16"></div>
-    <div className="px-6 h-screen">
-      <div className="flex  items-center text-center  h-1/2 mx-auto max-w-[888px] ">
+    {!isMobileDevice && isXs && <div className="h-[140px]"></div>}
+    <div className="px-6 mt-4">
+      <div className="flex  items-center text-center mx-auto max-w-[888px] ">
         <div className="container mx-auto p-6">
           <h2 className="text-3xl font-bold mb-4">Contact Us</h2>
 
@@ -80,10 +88,10 @@ const ContactPage = () => (
   </div>
 );
 
-const TermsOfServicePage = () => (
+const TermsOfServicePage = ({ isMobileDevice, isXs }) => (
   <div>
-    <div className="h-16"></div>
-    <div className="px-6 h-screen">
+    {!isMobileDevice && isXs && <div className="h-4"></div>}
+    <div className="px-6 mt-4">
       <div className=" mx-auto max-w-[1024px] pb-6">
         <h1 className="text-3xl font-bold  mb-4">Terms of Service</h1>
         <h2 className="text-2xl font-semibold mb-3">Welcome to NextAni!</h2>
@@ -193,10 +201,10 @@ const TermsOfServicePage = () => (
   </div>
 );
 
-const PrivacyPolicyPage = () => (
+const PrivacyPolicyPage = ({ isMobileDevice, isXs }) => (
   <div>
-    <div className="h-16"></div>
-    <div className="px-6 h-screen">
+    {!isMobileDevice && isXs && <div className="h-4"></div>}
+    <div className="px-6 mt-4">
       <div className=" pb-6  mx-auto max-w-[1024px] ">
         <h1 className="text-3xl font-bold  mb-4">Privacy Policy</h1>
 

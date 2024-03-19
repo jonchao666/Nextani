@@ -1,9 +1,11 @@
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
 import AddToListComponent from "./AddToListComponent";
 import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+import useAuthStatus from "@/hooks/useAuthStatus";
 
 export default function DetailsPanelTop({
   data,
@@ -27,16 +29,17 @@ export default function DetailsPanelTop({
   const [addToListOpen, setAddToListOpen] = useState(false);
   const [loginReLike, setLoginReLike] = useState(false);
   const [loginReList, setLoginReList] = useState(false);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const tooltipRefList = useRef(null);
   const tooltipRefLike = useRef(null);
   const [watchlists, setWatchlists] = useState(null);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   const { isXs } = useResponsive();
+
   useEffect(() => {
     async function fetchData() {
-      if (isAuthenticated) {
+      if (user) {
         let data = await fetchWatchlistsWithoutAnimeDetails();
         setWatchlists(data);
         let res = await fetchWatchlistsContainingAnime(mal_id);
@@ -50,7 +53,7 @@ export default function DetailsPanelTop({
     addHistory,
     fetchWatchlistsContainingAnime,
     mal_id,
-    isAuthenticated,
+    user,
   ]);
 
   useEffect(() => {
@@ -59,8 +62,8 @@ export default function DetailsPanelTop({
 
       setIsAnimeLiked(response.isLiked); // Access the isLiked property
     }
-    if (isAuthenticated) fetchIsAnimeLiked();
-  }, [checkIsAnimeLiked, mal_id, isAuthenticated]);
+    if (user) fetchIsAnimeLiked();
+  }, [checkIsAnimeLiked, mal_id, user]);
 
   const handleClickLikedButton = (mal_id) => {
     const newIsAnimeLiked = !isAnimeLiked;
@@ -144,7 +147,7 @@ export default function DetailsPanelTop({
           <div ref={tooltipRefList}>
             <Button
               onClick={() =>
-                isAuthenticated ? setAddToListOpen(true) : setLoginReList(true)
+                user ? setAddToListOpen(true) : setLoginReList(true)
               }
               size="sm"
               color="primary"
@@ -164,7 +167,7 @@ export default function DetailsPanelTop({
             </Button>
           </div>
           {loginReList && (
-            <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]   shadow-lg min-w-max  overflow-hidden">
+            <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]   shadow-[0_4px_32px_0px_rgba(0,0,0,0.1)] min-w-max  overflow-hidden">
               <p className="mt-6 mb-4 px-6">Want to see this again later?</p>
               <p className="mb-4 px-6">
                 Sign in to save this anime to a watchlist.
@@ -194,21 +197,19 @@ export default function DetailsPanelTop({
           <div ref={tooltipRefLike}>
             <Button
               onClick={() =>
-                isAuthenticated
-                  ? handleClickLikedButton(mal_id)
-                  : setLoginReLike(true)
+                user ? handleClickLikedButton(mal_id) : setLoginReLike(true)
               }
               isIconOnly
               size="sm"
               color="danger"
               variant={
-                isAnimeLiked && isAuthenticated
+                isAnimeLiked && user
                   ? "solid"
                   : isMobileDevice
                   ? "bordered"
                   : "ghost"
               }
-              className={`${isAnimeLiked && isAuthenticated ? "" : "border-1"}`}
+              className={`${isAnimeLiked && user ? "" : "border-1"}`}
             >
               <span
                 className="material-symbols-outlined "
@@ -221,7 +222,7 @@ export default function DetailsPanelTop({
               </span>
             </Button>
             {loginReLike && (
-              <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)]  shadow-lg min-w-max overflow-hidden">
+              <div className="fixed z-20 left-1/2 top-1/2 -translate-x-1/2 rounded-xl  -translate-y-1/2 whitespace-pre-line   bg-background dark:bg-[rgb(40,40,40)] shadow-[0_4px_32px_0px_rgba(0,0,0,0.1)] min-w-max overflow-hidden">
                 <p className="mt-6 mb-4 px-6">Like this anime?</p>
                 <p className="mb-8 px-6">
                   Sign in to save this anime to your favorite.
@@ -252,8 +253,14 @@ export default function DetailsPanelTop({
         </div>
       </div>
 
-      {PV && (
-        <div className="flex flex-wrap">
+      {PV && PV.length > 0 ? (
+        <div
+          className={
+            isMobileDevice || !isXs
+              ? "flex overflow-x-auto touch-pan gap-2 -pr-3 overflow-hidden scrollbar-hide "
+              : "flex flex-wrap gap-2"
+          }
+        >
           {PV.map((video, index) => (
             <Button
               size="sm"
@@ -266,7 +273,7 @@ export default function DetailsPanelTop({
               }
               color="primary"
               radius="sm"
-              className={`mr-2  mb-2 shrink-0  ${
+              className={`  mb-2 shrink-0  ${
                 selectedButtonIndex !== index && "border-1"
               }`}
               key={index}
@@ -276,7 +283,7 @@ export default function DetailsPanelTop({
             </Button>
           ))}
         </div>
-      )}
+      ) : null}
       <p className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]  mb-1.5 line-clamp-1">
         {data && data.genres && data.genres.length > 0
           ? data.genres.map((genre) => genre.name).join("/")
@@ -288,11 +295,15 @@ export default function DetailsPanelTop({
       <p className="text-sm mb-1.5 text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] line-clamp-2">
         <span>Voice actors: </span>
         {mainCharacters.length > 0
-          ? mainCharacters.map(([characterName, actorName], index, arr) => (
-              <span key={characterName} className="mr-2">
-                {characterName}: {actorName} {index !== arr.length - 1 && "/"}
-              </span>
-            ))
+          ? mainCharacters.map(([characterName, actorName], index, arr) =>
+              arr.length === 1 && !actorName ? (
+                "No voice actors have been added to this title."
+              ) : (
+                <span key={characterName} className="mr-2">
+                  {characterName}: {actorName} {index !== arr.length - 1 && "/"}
+                </span>
+              )
+            )
           : "No voice actors have been added to this title."}
       </p>
     </div>

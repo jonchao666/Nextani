@@ -3,15 +3,18 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout/Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Button, Divider } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react";
+import Link from "next/link";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useTheme } from "next-themes";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import { handleLogOut } from "@/utils/firebaseAuth";
 
 // Settings component for managing theme preferences
 export default function Settings() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
   const { theme, setTheme } = useTheme();
@@ -24,14 +27,19 @@ export default function Settings() {
     dispatch(setPageName("Theme"));
   }, [dispatch]);
 
-  // Handle user logout
-  const handleLogOut = () => {
-    localStorage.removeItem("jwt");
-    router.push("/logout-callback");
+  //log out
+  const logOut = async () => {
+    try {
+      await handleLogOut();
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Redirect to login if not authenticated on a non-mobile XS device
-  if (!isAuthenticated && !isMobileDevice && isXs) {
+  if (!user && !isMobileDevice && isXs) {
     return <LoginRequest />;
   }
 
@@ -39,7 +47,7 @@ export default function Settings() {
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
   };
-
+  if (loading) return <div className="p-3">Please wait...</div>;
   // Renders theme option
   const renderThemeOption = (optionTheme, label) => (
     <div
@@ -100,7 +108,7 @@ export default function Settings() {
           }
         >
           {/* Account and privacy settings buttons for desktop */}
-          {isAuthenticated && (
+          {user && (
             <Button
               as={Link}
               fullWidth
@@ -112,16 +120,18 @@ export default function Settings() {
               Account
             </Button>
           )}
-          <Button
-            as={Link}
-            href="/settings/PrivacyAndSafety"
-            fullWidth
-            variant="light"
-            radius="sm"
-            className="justify-start"
-          >
-            Privacy and safety
-          </Button>
+          {user && (
+            <Button
+              as={Link}
+              href="/settings/PrivacyAndSafety"
+              fullWidth
+              variant="light"
+              radius="sm"
+              className="justify-start"
+            >
+              Privacy and safety
+            </Button>
+          )}
           {/* Additional settings options for mobile devices */}
           {isMobileDevice && (
             <div className="flex flex-col">
@@ -165,9 +175,9 @@ export default function Settings() {
               >
                 About
               </Button>
-              {isAuthenticated && (
+              {user && (
                 <Button
-                  onClick={handleLogOut}
+                  onClick={logOut}
                   fullWidth
                   variant="light"
                   radius="sm"

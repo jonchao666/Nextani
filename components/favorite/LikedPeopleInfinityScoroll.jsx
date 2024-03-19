@@ -3,8 +3,10 @@ import { CircularProgress } from "@nextui-org/react";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Image, Link, Button } from "@nextui-org/react";
+import { Image, Button } from "@nextui-org/react";
 import { useResponsive } from "../../hooks/useResponsive";
+import Link from "next/link";
+
 export default function LikedAnimeInfinityScoroll({
   likedPerson,
   setLikedPerson,
@@ -49,7 +51,7 @@ export default function LikedAnimeInfinityScoroll({
           likedPerson.map((data, index) => (
             <div
               key={data.mal_id}
-              className={`flex justify-between rounded-lg hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)] ${
+              className={`flex justify-between rounded-lg  ${
                 isMobileDevice || !isXs ? "py-1.5" : "py-2"
               }`}
             >
@@ -139,8 +141,8 @@ export default function LikedAnimeInfinityScoroll({
       {loading && (
         <CircularProgress
           size="sm"
-          className="mx-auto"
-          color="primary"
+          className="mx-auto mt-6"
+          color="default"
           aria-label="Loading..."
         />
       )}

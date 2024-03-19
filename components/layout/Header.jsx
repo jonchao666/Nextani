@@ -6,20 +6,23 @@ import { useRouter } from "next/router";
 import AvatarDropdown from "./AvatarDropdown";
 import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import { CircularProgress } from "@nextui-org/react";
 import {
   Input,
   Button,
-  Link,
   Navbar,
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/react";
+import Link from "next/link";
 
 export default function Header({ width }) {
   const {
     setQuery,
     results,
     isLoading,
+    searchStart,
     showResults,
     setShowResults,
     isSearchFocused,
@@ -28,12 +31,13 @@ export default function Header({ width }) {
     handleBlur,
     handleKeyDown,
     searchRef,
+    query,
   } = useSearch();
   const { isXs } = useResponsive();
   const { resolvedTheme } = useTheme();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const pageName = useSelector((state) => state.pageName.pageName);
   const [showInput, setShowInput] = useState(false);
@@ -71,17 +75,17 @@ export default function Header({ width }) {
       }
     >
       {showInput && (
-        <div className="fixed top-12 left-0 h-screen w-screen bg-black bg-opacity-50"></div>
+        <div className="fixed top-12 left-0 h-dvh w-dvw bg-black bg-opacity-50"></div>
       )}
       {!showInput && (
         <div className="shrink">
           {pageName === "home" || (!isMobileDevice && isXs) ? (
             <Link
               href="/"
-              className={`font-medium ${
+              className={`font-medium  ${
                 isMobileDevice || !isXs
-                  ? "text-xl text-foreground ml-3"
-                  : "text-2xl"
+                  ? "text-xl  ml-3"
+                  : "text-2xl text-primary"
               }`}
             >
               NextAni
@@ -120,12 +124,12 @@ export default function Header({ width }) {
             }}
             placeholder="Type to search..."
             endContent={
-              <Link
+              <div
                 onClick={handleSearchClick}
                 className="text-foreground cursor-pointer"
               >
                 <SearchIcon size={18} />
-              </Link>
+              </div>
             }
             type="search"
             radius="full"
@@ -139,38 +143,53 @@ export default function Header({ width }) {
             }}
             onKeyDown={handleKeyDown}
             startContent={
+              query !== "" &&
               showResults &&
-              (isMobileDevice || isSearchFocused) &&
-              !isLoading &&
-              results.length > 0 && (
+              (isMobileDevice || isSearchFocused) && (
                 <div
-                  className={` z-10 flex flex-col bg-background dark:bg-[rgb(40,40,40)] border dark:border-none left-0 ${
+                  className={` z-10 flex flex-col bg-background  dark:bg-[rgb(40,40,40)] border dark:border-none left-0 ${
                     showInput
                       ? "top-12 fixed h-full"
                       : "top-14 absolute rounded-2xl"
                   } border-gray-300 py-4  shadow-lg  w-full `}
                 >
-                  {results.map((result, index) => (
-                    <Link
-                      href={`/animeDetails/default?mal_id=${result.mal_id}`}
-                      onClick={() => setShowInput(false)}
-                      key={index}
-                      className="pl-4 pr-6 leading-8 hover:bg-gray-100 text-foreground font-medium"
-                    >
-                      <span
-                        className="material-symbols-outlined mr-4"
-                        style={{
-                          fontVariationSettings:
-                            "'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24",
-                        }}
-                      >
-                        search
-                      </span>
-                      <p className={`line-clamp-1 ${showInput && "py-2"}`}>
-                        {result.matchedTitles[0].title}
-                      </p>
-                    </Link>
-                  ))}
+                  {isLoading ? (
+                    <div className="text-center  font-medium ">
+                      Please wait...
+                    </div>
+                  ) : results.length > 0 ? (
+                    <div>
+                      {results.map((result, index) => (
+                        <Link
+                          href={`/animeDetails/default?mal_id=${result.mal_id}`}
+                          onClick={() => setShowInput(false)}
+                          key={index}
+                          className={
+                            isMobileDevice
+                              ? "flex items-center gap-4 px-3 leading-8 text-foreground font-medium"
+                              : "flex items-center gap-4 px-3 leading-8 hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.13)] text-foreground font-medium"
+                          }
+                        >
+                          <span
+                            className="material-symbols-outlined "
+                            style={{
+                              fontVariationSettings:
+                                "'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24",
+                            }}
+                          >
+                            search
+                          </span>
+                          <p className={`line-clamp-1 ${showInput && "py-2"}`}>
+                            {result.matchedTitles[0].title}
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : !searchStart ? (
+                    <div className="text-center  font-medium ">
+                      No results found.
+                    </div>
+                  ) : null}
                 </div>
               )
             }
@@ -229,7 +248,7 @@ export default function Header({ width }) {
                 <SearchIcon size={18} />
               </div>
             ) : null}
-            {isMobileDevice || !isXs ? null : isAuthenticated ? (
+            {isMobileDevice || !isXs || loading ? null : user ? (
               <div className="w-12 flex justify-center">
                 <AvatarDropdown isMobileDevice={isMobileDevice} isXs={isXs} />
               </div>

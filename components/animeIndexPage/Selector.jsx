@@ -2,6 +2,8 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { Genres, Types, Years } from "@/constans/categoryData";
 import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useRef, useState, useEffect } from "react";
+
 export default function Selector({
   selectedButtonSortby,
   selectedButtonGenres,
@@ -22,11 +24,84 @@ export default function Selector({
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
 
+  //adjust popoverContent when overflow
+  const [genresClass, setGenresClass] = useState("rounded-lg min-w-max");
+  const genresRef = useRef(null);
+
+  const [typesClass, setTypesClass] = useState("rounded-lg min-w-max");
+  const typesRef = useRef(null);
+
+  const [statusClass, setStatusClass] = useState("rounded-lg min-w-max");
+  const statusRef = useRef(null);
+
+  const [yearClass, setYearClass] = useState("rounded-lg min-w-max");
+  const yearRef = useRef(null);
+
+  const [seasonClass, setSeasonClass] = useState("rounded-lg min-w-max");
+  const seasonRef = useRef(null);
+
+  const [ratedClass, setRatedClass] = useState("rounded-lg min-w-max");
+  const ratedRef = useRef(null);
+
+  const [sortbyClass, setSortbyClass] = useState("rounded-lg min-w-max");
+  const sortbyRef = useRef(null);
+
+  const scrollContainer = useRef(null);
+
+  const adjustSelectCss = (ref, setClass) => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      const isOverflowingRight = rect.right > window.innerWidth / 2;
+      const isWithinBounds = rect.right <= window.innerWidth / 2;
+
+      if (isOverflowingRight) {
+        setClass("rounded-lg min-w-max absolute right-0");
+      } else if (isWithinBounds) {
+        setClass("rounded-lg min-w-max");
+      }
+    }
+  };
+
+  function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  useEffect(() => {
+    const checkAllSelects = () => {
+      adjustSelectCss(genresRef, setGenresClass);
+      adjustSelectCss(typesRef, setTypesClass);
+      adjustSelectCss(statusRef, setStatusClass);
+      adjustSelectCss(yearRef, setYearClass);
+      adjustSelectCss(seasonRef, setSeasonClass);
+      adjustSelectCss(ratedRef, setRatedClass);
+      adjustSelectCss(sortbyRef, setSortbyClass);
+    };
+
+    checkAllSelects();
+    const debouncedCheckAllSelects = debounce(checkAllSelects, 200);
+
+    const container = scrollContainer.current;
+    if (container) {
+      container.addEventListener("scroll", debouncedCheckAllSelects, true);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", debouncedCheckAllSelects, true);
+      }
+    };
+  }, []);
+
   const { isXs } = useResponsive();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   return (
     <div
-      className={`overflow-x-auto overflow-hidden  ${
+      ref={scrollContainer}
+      className={`flex overflow-x-auto overflow-hidden ${
         isMobileDevice
           ? "px-3 scrollbar-hide touch-pan pb-2.5 "
           : !isXs
@@ -34,20 +109,24 @@ export default function Selector({
           : " "
       }`}
     >
-      <div className="flex  ">
+      <div className="mr-2" ref={genresRef}>
         <Select
-          className="min-w-[100px] "
-          size="sm"
+          aria-label="Genres"
           radius="lg"
+          className="min-w-[93px]"
+          size="sm"
           labelPlacement="outside"
           placeholder="Genres"
           variant="bordered"
           classNames={{
             listboxWrapper: "overscroll-none",
 
-            trigger: " shadow-none border-none p-0 ",
+            trigger:
+              isMobileDevice || !isXs
+                ? "shadow-none border-default border-1 pl-3"
+                : " shadow-none border-none ",
 
-            popoverContent: "rounded-lg min-w-max",
+            popoverContent: genresClass,
           }}
           selectedKeys={
             selectedButtonGenres === "All Genres" || !selectedButtonGenres
@@ -62,9 +141,12 @@ export default function Selector({
             </SelectItem>
           ))}
         </Select>
+      </div>
 
+      <div className="mr-2" ref={typesRef}>
         <Select
-          className="min-w-[100px]"
+          aria-label="Types"
+          className="min-w-[93px]"
           size="sm"
           radius="lg"
           placeholder="Types"
@@ -73,9 +155,12 @@ export default function Selector({
           classNames={{
             listboxWrapper: "overscroll-none",
 
-            trigger: " shadow-none border-none py-0 ",
+            trigger:
+              isMobileDevice || !isXs
+                ? "shadow-none border-default border-1 pl-3"
+                : " shadow-none border-none",
 
-            popoverContent: "rounded-lg min-w-max",
+            popoverContent: typesClass,
           }}
           selectedKeys={
             selectedButtonTypes === "All Types" || !selectedButtonTypes
@@ -90,9 +175,11 @@ export default function Selector({
             </SelectItem>
           ))}
         </Select>
-
+      </div>
+      <div className="mr-2" ref={statusRef}>
         <Select
-          className="min-w-[100px]"
+          aria-label="Status"
+          className="min-w-[93px]"
           size="sm"
           radius="lg"
           placeholder="Status"
@@ -101,9 +188,12 @@ export default function Selector({
           classNames={{
             listboxWrapper: "overscroll-none",
 
-            trigger: " shadow-none border-none py-0 ",
+            trigger:
+              isMobileDevice || !isXs
+                ? "shadow-none border-default border-1 pl-3"
+                : " shadow-none border-none",
 
-            popoverContent: "rounded-lg min-w-max",
+            popoverContent: statusClass,
           }}
           selectedKeys={
             selectedButtonStatus === "All Status" || !selectedButtonStatus
@@ -134,20 +224,25 @@ export default function Selector({
             Not yet aired
           </SelectItem>
         </Select>
-
+      </div>
+      <div className="mr-2" ref={yearRef}>
         <Select
-          className="min-w-[100px]"
+          aria-label="Year"
+          className="min-w-[93px]"
           size="sm"
-          placeholder="Year"
           radius="lg"
+          placeholder="Year"
           variant="bordered"
           labelPlacement="outside"
           classNames={{
             listboxWrapper: "overscroll-none",
 
-            trigger: " shadow-none border-none py-0 ",
+            trigger:
+              isMobileDevice || !isXs
+                ? "shadow-none border-default border-1 pl-3"
+                : " shadow-none border-none",
 
-            popoverContent: "rounded-lg min-w-max",
+            popoverContent: yearClass,
           }}
           selectedKeys={
             selectedButtonYear === "All Year" || !selectedButtonYear
@@ -162,9 +257,11 @@ export default function Selector({
             </SelectItem>
           ))}
         </Select>
-
+      </div>
+      <div className="mr-2" ref={seasonRef}>
         <Select
-          className="min-w-[100px]"
+          aria-label="Season"
+          className="min-w-[93px]"
           size="sm"
           placeholder="Season"
           labelPlacement="outside"
@@ -173,9 +270,12 @@ export default function Selector({
           classNames={{
             listboxWrapper: "overscroll-none",
 
-            trigger: " shadow-none border-none py-0 ",
+            trigger:
+              isMobileDevice || !isXs
+                ? "shadow-none border-default border-1 pl-3"
+                : " shadow-none border-none",
 
-            popoverContent: "rounded-lg min-w-max",
+            popoverContent: seasonClass,
           }}
           selectedKeys={
             selectedButtonSeason === "All Season" || !selectedButtonSeason
@@ -197,9 +297,11 @@ export default function Selector({
             Fall
           </SelectItem>
         </Select>
-
+      </div>
+      <div className="mr-2" ref={ratedRef}>
         <Select
-          className="min-w-[100px]"
+          aria-label="Rated"
+          className="min-w-[93px]"
           size="sm"
           placeholder="Rated"
           labelPlacement="outside"
@@ -208,9 +310,12 @@ export default function Selector({
           classNames={{
             listboxWrapper: "overscroll-none",
 
-            trigger: " shadow-none border-none py-0",
+            trigger:
+              isMobileDevice || !isXs
+                ? "shadow-none border-default border-1 pl-3"
+                : " shadow-none border-none",
 
-            popoverContent: "rounded-lg min-w-max",
+            popoverContent: ratedClass,
           }}
           selectedKeys={
             selectedButtonRated === "All Rated" || !selectedButtonRated
@@ -264,9 +369,11 @@ export default function Selector({
             </SelectItem>
           )}
         </Select>
-
+      </div>
+      <div ref={sortbyRef}>
         <Select
-          className="min-w-[100px]"
+          aria-label="Sort by"
+          className="min-w-[93px]"
           size="sm"
           radius="lg"
           placeholder="Sort by"
@@ -274,10 +381,12 @@ export default function Selector({
           variant="bordered"
           classNames={{
             listboxWrapper: "overscroll-none",
+            trigger:
+              isMobileDevice || !isXs
+                ? "shadow-none border-default border-1 pl-3"
+                : " shadow-none border-none",
 
-            trigger: " shadow-none border-none py-0 ",
-
-            popoverContent: "rounded-lg min-w-max",
+            popoverContent: sortbyClass,
           }}
           selectedKeys={!selectedButtonSortby ? [] : [selectedButtonSortby]}
           onChange={(e) => setSelectedButtonSortby(e.target.value)}

@@ -1,9 +1,15 @@
 import { Card, Image } from "@nextui-org/react";
 import Link from "next/link";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useResponsive } from "@/hooks/useResponsive";
+
 export default function CharaterCard({ data }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false); // 新增状态用于追踪图片加载是否失败
+  const [hasError, setHasError] = useState(false);
+  const { isXs } = useResponsive();
+  const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
+
   const url =
     hasError ||
     data.character.images.jpg.image_url.startsWith(
@@ -14,7 +20,11 @@ export default function CharaterCard({ data }) {
   return (
     <div className=" min-w-[305px] ">
       <Card
-        className={`isPressable hover:opacity-100 hover:scale-105 rounded-lg shadow-md flex flex-row justify-between bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]   ${
+        className={`isPressable hover:opacity-100 ${
+          isMobileDevice || !isXs
+            ? "bg-background shadow-none"
+            : "hover:scale-105 bg-[rgb(255,255,255)] dark:bg-[rgb(24,24,27)]  shadow-md"
+        } rounded-lg  flex flex-row justify-between    ${
           isLoaded ? "visible" : "invisible"
         }`}
       >
@@ -23,7 +33,11 @@ export default function CharaterCard({ data }) {
           className="p-0 overflow-hidden shrink-0 "
         >
           <Image
-            className="h-[81px] w-[60px]   object-cover "
+            className={
+              isMobileDevice
+                ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
+                : "w-[60px] h-[81px] object-cover shrink-0"
+            }
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
@@ -32,27 +46,41 @@ export default function CharaterCard({ data }) {
             src={url}
           />
         </Link>
-        <div className="flex flex-col justify-between text-xs  text-right p-2.5">
-          <div>
-            <Link href={`/character?mal_id=${data.character.mal_id}`}>
-              <span className="text-sm">{data.character.name}</span>
+        <div className="flex  justify-start   grow">
+          <div className="flex flex-col justify-between p-2.5 text-xs">
+            <Link
+              href={`/character?mal_id=${data.character.mal_id}`}
+              className=" text-left "
+            >
+              {data.character.name}
             </Link>
-            <div>
-              <span className="text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)] ">
-                {data.role}
-              </span>
+
+            <div className="text-left line-clamp-2 break-words text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]">
+              {data.anime.title}
             </div>
           </div>
-
-          <div>
-            <Link
-              href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}
-              className="line-clamp-2 break-words  mt-1 text-xs"
-            >
-              {data.anime.title}
-            </Link>
-          </div>
         </div>
+        <Link
+          href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}
+          className="shrink-0"
+        >
+          <Image
+            radius="none"
+            className={
+              isMobileDevice
+                ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
+                : "w-[60px] h-[81px] object-cover shrink-0"
+            }
+            alt={data.anime.title}
+            src={
+              data.anime.images.jpg.image_url.startsWith(
+                "https://cdn.myanimelist.net/images/questionmark_23.gif"
+              )
+                ? "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg"
+                : data.anime.images.jpg.image_url
+            }
+          ></Image>
+        </Link>
       </Card>
     </div>
   );

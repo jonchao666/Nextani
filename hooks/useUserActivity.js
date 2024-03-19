@@ -2,21 +2,21 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { UserActivityToast } from "@/components/layout/Toasts";
 import { useDispatch, useSelector } from "react-redux";
+import { getIdToken } from "@/utils/firebaseAuth";
 
 function useUserActivity() {
   const isSensitiveFilterDisabled = useSelector(
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
-  const jwt =
-    typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
-  // fetchLikedAnime
+
   const fetchLikedAnime = useCallback(
     async (page, limit) => {
       try {
+        const idToken = await getIdToken();
         const response = await axios.get(
           `${process.env.API_URL}/userActivity/likedAnime`,
           {
-            headers: { Authorization: `Bearer ${jwt}` },
+            headers: { Authorization: `Bearer ${idToken}` },
             params: { page, limit, isSensitiveFilterDisabled },
           }
         );
@@ -27,43 +27,42 @@ function useUserActivity() {
         console.error("Error fetching likedAnime:", error);
       }
     },
-    [jwt, isSensitiveFilterDisabled]
+    [isSensitiveFilterDisabled]
   );
 
   // Check if anime is liked
-  const checkIsAnimeLiked = useCallback(
-    async (mal_id) => {
-      try {
-        const response = await axios.get(
-          `${process.env.API_URL}/userActivity/ifAnimeLiked/${mal_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
-        return response.data; //isLiked:true/false
-      } catch (error) {
-        console.error("Error checking if anime is liked:", error);
-      }
-    },
-    [jwt]
-  );
+  const checkIsAnimeLiked = useCallback(async (mal_id) => {
+    try {
+      const idToken = await getIdToken();
+      const response = await axios.get(
+        `${process.env.API_URL}/userActivity/ifAnimeLiked/${mal_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        }
+      );
+      return response.data; //isLiked:true/false
+    } catch (error) {
+      console.error("Error checking if anime is liked:", error);
+    }
+  }, []);
 
   // Add likedAnime
   async function addLikedAnime(mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.post(
         `${process.env.API_URL}/userActivity/likedAnimeAdd`,
         { mal_id },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
             "Content-Type": "application/json",
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
     } catch (error) {
       console.error("Error create watchlist:", error.response.data);
     }
@@ -72,76 +71,74 @@ function useUserActivity() {
   // Delete likedAnime
   async function removeLikedAnime(mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.delete(
         `${process.env.API_URL}/userActivity/likedAnime/${mal_id}`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
     } catch (error) {
       console.error("Error create watchlist:", error.response.data);
     }
   }
 
   //get likedPerson
-  const fetchLikedPerson = useCallback(
-    async (page, limit) => {
-      try {
-        const response = await axios.get(
-          `${process.env.API_URL}/userActivity/likedPerson`,
-          {
-            params: { page, limit },
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
-        const data = response.data;
+  const fetchLikedPerson = useCallback(async (page, limit) => {
+    try {
+      const idToken = await getIdToken();
+      const response = await axios.get(
+        `${process.env.API_URL}/userActivity/likedPerson`,
+        {
+          params: { page, limit },
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        }
+      );
+      const data = response.data;
 
-        return data;
-      } catch (error) {
-        console.error("Error fetching likedPerson:", error);
-      }
-    },
-    [jwt]
-  );
+      return data;
+    } catch (error) {
+      console.error("Error fetching likedPerson:", error);
+    }
+  }, []);
 
   //checkIsPersonLiked
-  const checkIsPersonLiked = useCallback(
-    async (mal_id) => {
-      try {
-        const response = await axios.get(
-          `${process.env.API_URL}/userActivity/ifPersonLiked/${mal_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
-        return response.data; //isLiked:true/false
-      } catch (error) {
-        console.error("Error checking if person is favorite:", error);
-      }
-    },
-    [jwt]
-  );
+  const checkIsPersonLiked = useCallback(async (mal_id) => {
+    try {
+      const idToken = await getIdToken();
+      const response = await axios.get(
+        `${process.env.API_URL}/userActivity/ifPersonLiked/${mal_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        }
+      );
+      return response.data; //isLiked:true/false
+    } catch (error) {
+      console.error("Error checking if person is favorite:", error);
+    }
+  }, []);
   // Add likedPerson
   async function addLikedPerson(mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.post(
         `${process.env.API_URL}/userActivity/likedPersonAdd`,
         { mal_id },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
             "Content-Type": "application/json",
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
     } catch (error) {
       console.error("Error add likedPerson:", error);
     }
@@ -150,71 +147,69 @@ function useUserActivity() {
   // Delete likedPerson
   async function removeLikedPerson(mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.delete(
         `${process.env.API_URL}/userActivity/likedPerson/${mal_id}`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
     } catch (error) {
       console.error("Error delete likedPerson:", error);
     }
   }
 
   // fetchHistory
-  const fetchHistory = useCallback(
-    async (page = 1, limit = 14) => {
-      try {
-        const response = await axios.get(
-          `${process.env.API_URL}/userActivity/history`,
-          {
-            headers: { Authorization: `Bearer ${jwt}` },
-            params: { page, limit },
-          }
-        );
-        const data = response.data;
+  const fetchHistory = useCallback(async (page = 1, limit = 14) => {
+    try {
+      const idToken = await getIdToken();
+      const response = await axios.get(
+        `${process.env.API_URL}/userActivity/history`,
+        {
+          headers: { Authorization: `Bearer ${idToken}` },
+          params: { page, limit },
+        }
+      );
+      const data = response.data;
 
-        return data;
-      } catch (error) {
-        console.error("Error fetching history:", error);
-      }
-    },
-    [jwt]
-  );
+      return data;
+    } catch (error) {
+      console.error("Error fetching history:", error);
+    }
+  }, []);
 
   // Add history
-  const addHistory = useCallback(
-    async (mal_id) => {
-      try {
-        const response = await axios.post(
-          `${process.env.API_URL}/userActivity/historyAdd`,
-          { mal_id },
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error adding history:", error);
-      }
-    },
-    [jwt]
-  );
+  const addHistory = useCallback(async (mal_id) => {
+    try {
+      const idToken = await getIdToken();
+      const response = await axios.post(
+        `${process.env.API_URL}/userActivity/historyAdd`,
+        { mal_id },
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
+    } catch (error) {
+      console.error("Error adding history:", error);
+    }
+  }, []);
 
   // Delete single history
   async function removeHistory(mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.delete(
         `${process.env.API_URL}/userActivity/history/${mal_id}`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
@@ -228,11 +223,12 @@ function useUserActivity() {
   // Delete all history
   async function removeAllHistory(mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.delete(
         `${process.env.API_URL}/userActivity/history`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
@@ -246,10 +242,11 @@ function useUserActivity() {
   //fetchSelectedWatchlist
   async function fetchSelectedWatchlist(name, page, limit) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.get(
         `${process.env.API_URL}/userActivity/watchlist/${name}`,
         {
-          headers: { Authorization: `Bearer ${jwt}` },
+          headers: { Authorization: `Bearer ${idToken}` },
           params: { page, limit, isSensitiveFilterDisabled },
         }
       );
@@ -263,10 +260,11 @@ function useUserActivity() {
   //fetch watchlists Without Anime details
   const fetchWatchlistsWithoutAnimeDetails = useCallback(async () => {
     try {
+      const idToken = await getIdToken();
       const response = await axios.get(
         `${process.env.API_URL}/userActivity/watchlistsWithoutAnimeDetails/`,
         {
-          headers: { Authorization: `Bearer ${jwt}` },
+          headers: { Authorization: `Bearer ${idToken}` },
         }
       );
 
@@ -276,15 +274,16 @@ function useUserActivity() {
     } catch (error) {
       console.error("Error fetching watchlists:", error);
     }
-  }, [jwt]);
+  }, []);
   //fetchwatchlists
   const fetchWatchlists = useCallback(
     async (page, limit) => {
       try {
+        const idToken = await getIdToken();
         const response = await axios.get(
           `${process.env.API_URL}/userActivity/watchlists/`,
           {
-            headers: { Authorization: `Bearer ${jwt}` },
+            headers: { Authorization: `Bearer ${idToken}` },
             params: { page, limit, isSensitiveFilterDisabled },
           }
         );
@@ -296,22 +295,23 @@ function useUserActivity() {
         console.error("Error fetching watchlists:", error);
       }
     },
-    [jwt]
+    [isSensitiveFilterDisabled]
   );
   //create watchlist
-  async function createWatchlist(name, mal_id = null, description = "") {
+  async function createWatchlist(name, mal_id = null) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.post(
         `${process.env.API_URL}/userActivity/watchlist/create`,
-        { name, mal_id, description },
+        { name, mal_id },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
             "Content-Type": "application/json",
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
 
       if (mal_id) {
         UserActivityToast("success", `Saved to ${name}`);
@@ -327,15 +327,16 @@ function useUserActivity() {
   // Delete watchlist
   async function removeWatchlist(name) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.delete(
         `${process.env.API_URL}/userActivity/watchlist/${name}`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
       UserActivityToast("success", `Watchlist deleted`);
       return true;
     } catch (error) {
@@ -346,39 +347,38 @@ function useUserActivity() {
   }
 
   //fetch Watchlists Containing Anime
-  const fetchWatchlistsContainingAnime = useCallback(
-    async (mal_id) => {
-      try {
-        const response = await axios.get(
-          `${process.env.API_URL}/userActivity/animeInWatchlists/${mal_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
+  const fetchWatchlistsContainingAnime = useCallback(async (mal_id) => {
+    try {
+      const idToken = await getIdToken();
+      const response = await axios.get(
+        `${process.env.API_URL}/userActivity/animeInWatchlists/${mal_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        }
+      );
 
-        return response.data;
-      } catch (error) {
-        console.error("Error fetching watchlists containing anime:", error);
-      }
-    },
-    [jwt]
-  );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching watchlists containing anime:", error);
+    }
+  }, []);
   // Add watchlistItem
   async function addWatchlistItem(name, mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.post(
         `${process.env.API_URL}/userActivity/watchlist/${name}/addItem`,
         { mal_id },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
             "Content-Type": "application/json",
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
       UserActivityToast("success", response.data.message);
     } catch (error) {
       console.error("Error adding item to watchlist:", error.response.data);
@@ -389,15 +389,16 @@ function useUserActivity() {
   // Delete watchlistItem
   async function removeWatchlistItem(name, mal_id) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.delete(
         `${process.env.API_URL}/userActivity/watchlist/${name}/item/${mal_id}`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
       UserActivityToast("success", response.data.message);
     } catch (error) {
       console.error("Error deleting watchlist item:", error.response.data);
@@ -408,16 +409,17 @@ function useUserActivity() {
   //rename watchlist
   async function renameWatchlist(oldName, newName) {
     try {
+      const idToken = await getIdToken();
       const response = await axios.patch(
         `${process.env.API_URL}/userActivity/watchlist/rename/${oldName}`,
         { newName },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
-      console.log(response.data);
+      process.env.SHOW_CONSOLE === "dev" && console.log(response.data);
       UserActivityToast("success", `Name changed`);
       return true;
     } catch (error) {
@@ -430,12 +432,13 @@ function useUserActivity() {
   //update description of watchlist
   async function updateWatchlistDescription(name, newDescription) {
     try {
+      const idToken = await getIdToken();
       await axios.patch(
         `${process.env.API_URL}/userActivity/watchlist/updateDescription/${name}`,
         { newDescription },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${idToken}`,
           },
         }
       );
@@ -444,59 +447,8 @@ function useUserActivity() {
     }
   }
 
-  // local login
-  async function localLogin(email, password) {
-    try {
-      const response = await axios.post(
-        `${process.env.API_URL}/auth/localLogin`,
-        {
-          email,
-          password,
-        }
-      );
-      console.log("Login Successful");
-
-      return response.data.token;
-    } catch (error) {
-      console.error("Error login:", error);
-      return false;
-    }
-  }
-
-  //localSignUp
-  const localSignUp = useCallback(async (token) => {
-    try {
-      await axios.post(`${process.env.API_URL}/auth/localSignUp`, {
-        token,
-      });
-      console.log("Registration Successful");
-      return true;
-    } catch (error) {
-      console.error("Error Sign Up:", error);
-      return false;
-    }
-  }, []);
-
-  //localVerifyEmail
-  async function localVerifyEmail(email, password) {
-    try {
-      await axios.post(`${process.env.API_URL}/auth/localVerifyEmail`, {
-        email,
-        password,
-      });
-    } catch (error) {
-      console.error("Error Sign Up:", error);
-
-      return error.message;
-    }
-  }
-
   // return state variables and functions
   return {
-    localLogin,
-    localSignUp,
-    localVerifyEmail,
-
     // Functions
     fetchLikedAnime,
     checkIsAnimeLiked,

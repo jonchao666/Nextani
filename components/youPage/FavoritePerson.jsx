@@ -1,10 +1,12 @@
-import { Link, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import { CircularProgress } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useSelector } from "react-redux";
 import FavoritePersonCard from "./FavoritePersonCard";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function FavoritePerson({ colToShow }) {
   const numToShow = parseInt(colToShow.split("-")[2]);
   const { fetchLikedPerson } = useUserActivity();
@@ -89,13 +91,13 @@ export default function FavoritePerson({ colToShow }) {
                 isMobileDevice || !isXs ? "px-3" : ""
               }`}
             >
-              Use the favorite icon to like people. Your list shows up right
+              Use the favorite icon to save people. Your list shows up right
               here.
             </div>
           ) : loading ? (
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
               className="mx-auto "
             />

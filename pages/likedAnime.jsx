@@ -5,17 +5,17 @@ import LikedAnimeInfinityScoroll from "@/components/favorite/LikedAnimeInfinityS
 import { setPageName } from "@/reducers/pageNameSlice";
 import LoginRequest from "@/components/auth/LoginRequest";
 import { useResponsive } from "@/hooks/useResponsive";
-
+import useAuthStatus from "@/hooks/useAuthStatus";
 export default function LikedAnime() {
   const [likedAnime, setLikedAnime] = useState(null);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user, loading } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const { isXs } = useResponsive();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setPageName("Favorite anime"));
   }, [dispatch]);
-  if (!isAuthenticated) {
+  if (!user) {
     return <LoginRequest />;
   }
   return (

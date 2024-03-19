@@ -12,11 +12,13 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@nextui-org/react": "^2.2.9",
+    "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.5.1",
     "colorthief": "^2.4.0",
     "date-fns": "^3.3.1",
     "envdot": "^0.0.3",
+    "firebase": "^10.8.1",
     "framer-motion": "^10.16.4",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
@@ -29,8 +31,7 @@
     "react-responsive": "^9.0.2",
     "react-slick": "^0.29.0",
     "redux": "^4.2.1",
-    "slick-carousel": "^1.8.1",
-    "swr": "^2.2.4"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "autoprefixer": "^10",

@@ -40,25 +40,30 @@ const Layout = ({ children, youPage }) => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
   if (!isMounted) {
     return null;
   }
   return (
-    <div className="h-screen flex flex-col">
+    <div
+      className={
+        isMobileDevice || !isXs ? "flex flex-col" : "flex flex-col h-screen"
+      }
+    >
       <Header width={mainWidth} />
-      <div className={isMobileDevice || !isXs ? "min-h-12" : "min-h-14"}></div>
+
       <main
         className={
           isMobileDevice || !isXs
-            ? "bg-background grow pb-safe-bottom"
-            : "bg-background grow"
+            ? "bg-background grow pb-safe-bottom my-12 "
+            : "bg-background grow mt-14"
         }
       >
         <div className="mx-auto" style={{ width: mainWidth }}>
           {children}
         </div>
       </main>
-      <div className={` ${isMobileDevice || !isXs ? "min-h-12" : ""}`}></div>
+
       <Footer
         mainWidth={mainWidth}
         isMobileDevice={isMobileDevice}

@@ -1,15 +1,8 @@
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import {
-  Card,
-  CardFooter,
-  CardBody,
-  Image,
-  Link,
-  Button,
-} from "@nextui-org/react";
-import { HeartIcon } from "@/icons";
+import { Image, Button } from "@nextui-org/react";
+import Link from "next/link";
 import Layout from "@/components/layout/Layout";
 import CardDisplay from "@/components/personPage/CardDisplay";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,11 +10,12 @@ import useUserActivity from "@/hooks/useUserActivity";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { CircularProgress } from "@nextui-org/react";
+import useAuthStatus from "@/hooks/useAuthStatus";
 
 export default function Person() {
   const router = useRouter();
   const { mal_id } = router.query;
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user } = useAuthStatus();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   const dispatch = useDispatch();
   const { isXs } = useResponsive();
@@ -44,8 +38,8 @@ export default function Person() {
 
       setIsPersonLiked(response.isLiked); // Access the isLiked property
     }
-    if (isAuthenticated) fetchIsPersonLiked();
-  }, [checkIsPersonLiked, mal_id, isAuthenticated]);
+    if (user) fetchIsPersonLiked();
+  }, [checkIsPersonLiked, mal_id, user]);
 
   const handleClickLikedButton = (mal_id) => {
     const newIsPersonLiked = !isPersonLiked;
@@ -71,18 +65,6 @@ export default function Person() {
   }, []);
 
   useEffect(() => {
-    let isLoadingData = true;
-
-    //show loading after 1s
-    const delaySetLoading = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (isLoadingData) {
-        setLoading(true);
-      }
-    };
-
-    delaySetLoading();
-
     const fetchWithRetry = async (url, config, retries = 5) => {
       for (let i = 0; i < retries; i++) {
         try {
@@ -96,6 +78,17 @@ export default function Person() {
     };
 
     const fetchData = async () => {
+      let isLoadingData = true;
+
+      //show loading after 1s
+      const delaySetLoading = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (isLoadingData) {
+          setLoading(true);
+        }
+      };
+
+      delaySetLoading();
       try {
         const response = await fetchWithRetry(
           `https://api.jikan.moe/v4/people/${mal_id}/full`,
@@ -145,11 +138,11 @@ export default function Person() {
   return (
     <Layout>
       {loading && (
-        <div className="fixed z-20 top-0 left-0 bg-background h-screen w-screen  ">
+        <div className="fixed z-20 top-0 left-0 bg-background h-dvh w-dvw  ">
           <div className="h-5/6 flex justify-center items-center">
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
             />
           </div>
@@ -164,7 +157,7 @@ export default function Person() {
             <div className={isMobileDevice || !isXs ? "" : "pb-6 pt-3"}>
               <div className="flex ">
                 <div
-                  className={`mr-6 ${
+                  className={`mr-6 shrink-0 ${
                     isMobileDevice || !isXs ? "" : " hidden md:block"
                   }`}
                 >
@@ -215,7 +208,10 @@ export default function Person() {
                         {data.favorites} favorites
                       </span>
                       {data.about && (
-                        <div ref={tooltipRef} className=" cursor-pointer">
+                        <div
+                          ref={tooltipRef}
+                          className=" cursor-pointer max-w-[600px]"
+                        >
                           <div
                             onClick={toggleVisibility}
                             className={
@@ -226,10 +222,12 @@ export default function Person() {
                           >
                             <span
                               className={
-                                isMobileDevice || !isXs ? "text-xs" : "text-sm"
+                                isMobileDevice || !isXs
+                                  ? "text-xs line-clamp-1 break-all"
+                                  : "text-sm line-clamp-1 break-all"
                               }
                             >
-                              About
+                              {data.about}
                             </span>
 
                             <span
@@ -269,22 +267,20 @@ export default function Person() {
                   {isMobileDevice || !isXs ? null : (
                     <Button
                       onClick={() =>
-                        isAuthenticated
+                        user
                           ? handleClickLikedButton(mal_id)
                           : setLoginReLike(true)
                       }
                       size="sm"
                       color="danger"
                       variant={
-                        isPersonLiked && isAuthenticated
+                        isPersonLiked && user
                           ? "solid"
                           : isMobileDevice
                           ? "bordered"
                           : "ghost"
                       }
-                      className={` ${
-                        isPersonLiked && isAuthenticated ? "" : "border-1"
-                      }`}
+                      className={` ${isPersonLiked && user ? "" : "border-1"}`}
                       startContent={
                         <span
                           className="material-symbols-outlined "
@@ -334,18 +330,14 @@ export default function Person() {
                 {isMobileDevice || !isXs ? (
                   <Button
                     onClick={() =>
-                      isAuthenticated
+                      user
                         ? handleClickLikedButton(mal_id)
                         : setLoginReLike(true)
                     }
                     size="sm"
                     color="danger"
-                    variant={
-                      isPersonLiked && isAuthenticated ? "solid" : "bordered"
-                    }
-                    className={` ${
-                      isPersonLiked && isAuthenticated ? "" : "border-1"
-                    }`}
+                    variant={isPersonLiked && user ? "solid" : "bordered"}
+                    className={` ${isPersonLiked && user ? "" : "border-1"}`}
                     startContent={
                       <span
                         className="material-symbols-outlined "

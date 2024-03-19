@@ -1,5 +1,6 @@
 import ImageCard from "@/components/layout/ImageCard";
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import { CircularProgress } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import useUserActivity from "@/hooks/useUserActivity";
@@ -41,11 +42,11 @@ export default function History({ colToShow }) {
   return (
     <div>
       {loading && (
-        <div className="fixed z-20 top-0 left-0 bg-background h-screen w-screen  ">
+        <div className="fixed z-20 top-0 left-0 bg-background h-dvh w-dvw  ">
           <div className="h-5/6 flex justify-center items-center">
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
             />
           </div>
@@ -108,7 +109,7 @@ export default function History({ colToShow }) {
           ) : loading ? (
             <CircularProgress
               size="sm"
-              color="primary"
+              color="default"
               aria-label="Loading..."
               className="mx-auto"
             />

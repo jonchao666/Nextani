@@ -1,11 +1,25 @@
-import { Skeleton } from "@nextui-org/react";
+import { useState, useEffect, useRef } from "react";
 
 export default function DetailsPanelBottomOpened({
   data,
-
   synopsisWithoutLastParagraph,
   setSynopsisOpened,
 }) {
+  const [overHeight, setOverHeight] = useState(false);
+  const textRef = useRef(null);
+  useEffect(() => {
+    if (textRef.current) {
+      const lineCount = calculateLineCount();
+      setOverHeight(lineCount > 2);
+    }
+  }, []);
+
+  const calculateLineCount = () => {
+    const lineHeight = 20;
+    const divHeight = textRef.current.clientHeight;
+    return divHeight / lineHeight;
+  };
+
   if (!synopsisWithoutLastParagraph) {
     return (
       <p className="font-sm">
@@ -14,19 +28,19 @@ export default function DetailsPanelBottomOpened({
     );
   }
 
-  const paragraphs = synopsisWithoutLastParagraph.split("\n");
-
-  const firstParagraph = paragraphs[0];
-
-  const hasMoreThanOneParagraph = paragraphs.length > 1;
-
   return (
     <div className="h-full flex flex-col justify-between">
-      {firstParagraph && (
-        <p className="whitespace-pre-line line-clamp-2 text-sm">
-          Synopsis: {firstParagraph}
-        </p>
-      )}
+      <p
+        ref={textRef}
+        className={
+          overHeight
+            ? "whitespace-pre-line line-clamp-2 text-sm"
+            : "whitespace-pre-line text-sm"
+        }
+      >
+        Synopsis: {synopsisWithoutLastParagraph}
+      </p>
+
       <div className="flex justify-between items-center">
         <div className="flex flex-col">
           <p className="text-[#ffa058] text-xl font-bold">
@@ -38,7 +52,7 @@ export default function DetailsPanelBottomOpened({
           </p>
         </div>
 
-        {hasMoreThanOneParagraph && (
+        {overHeight && (
           <div
             onClick={() => setSynopsisOpened(true)}
             className="cursor-pointer text-sm  font-medium"

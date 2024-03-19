@@ -50,17 +50,17 @@ export default function useAnimeDataJikanApi(mal_id) {
           headers: { "X-API-Key": process.env.API_KEY },
         }),
         fetchWithRetry(`https://api.jikan.moe/v4/anime/${mal_id}/videos`, {
-          timeout: 3000,
+          timeout: 5000,
         }),
         fetchWithRetry(`https://api.jikan.moe/v4/anime/${mal_id}/characters`, {
-          timeout: 3000,
+          timeout: 5000,
         }),
         fetchWithRetry(`https://api.jikan.moe/v4/anime/${mal_id}/staff`, {
-          timeout: 3000,
+          timeout: 5000,
         }),
-        // 更新获取推荐信息的请求以匹配你的后端API端点
+
         fetchWithRetry(`${process.env.API_URL}/anime/recommendations`, {
-          params: { mal_id, isSensitiveFilterDisabled },
+          params: { mal_id, isSensitiveFilterDisabled, limit: 12 },
           headers: { "X-API-Key": process.env.API_KEY },
         }),
       ];
@@ -71,6 +71,7 @@ export default function useAnimeDataJikanApi(mal_id) {
           switch (index) {
             case 0:
               setData(result.value.data[0].apiData);
+              setLoading(false);
               break;
             case 1:
               setVideos(result.value.data.data.promo);
@@ -86,7 +87,6 @@ export default function useAnimeDataJikanApi(mal_id) {
               break;
           }
           isLoadingData = false;
-          setLoading(false);
         } else {
           console.error(`Request ${index} failed:`, result.reason);
           // Handle failure as appropriate

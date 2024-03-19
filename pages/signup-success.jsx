@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
-import { Link, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import { SignInIcon } from "@/icons";
 import useUserActivity from "@/hooks/useUserActivity";
 import { useSelector, useDispatch } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+
 const SignupSuccess = () => {
   const { resolvedTheme } = useTheme();
   const router = useRouter();
@@ -27,7 +29,7 @@ const SignupSuccess = () => {
 
   if (isSuccess === null) return <div>Please wait...</div>;
   return (
-    <div className="h-screen">
+    <div className="h-">
       <div className="max-w-screen h-5/6 flex flex-col justify-center items-center px-6">
         {isSuccess ? (
           <>

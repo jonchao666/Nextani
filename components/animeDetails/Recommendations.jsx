@@ -1,7 +1,9 @@
 import { useResponsive } from "@/hooks/useResponsive";
 import { useSelector } from "react-redux";
 import ImageCard from "@/components/layout/ImageCard";
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
+
 export default function Recommendations({ recommendations, data }) {
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
@@ -12,7 +14,7 @@ export default function Recommendations({ recommendations, data }) {
         <div className=" font-medium mb-1.5 flex justify-between items-center">
           <h3>Recommendations</h3>
 
-          {recommendations.length >= 7 && (
+          {recommendations.length >= 12 && (
             <Button
               variant={isMobileDevice || !isXs ? "bordered" : "light"}
               radius="full"
@@ -31,7 +33,7 @@ export default function Recommendations({ recommendations, data }) {
       )}
       {isMobileDevice || !isXs ? (
         <div
-          className={`flex overflow-x-auto touch-pan-x gap-3 overflow-hidden ${
+          className={`flex overflow-x-auto touch-pan gap-3 overflow-hidden ${
             isMobileDevice ? "scrollbar-hide" : ""
           } pb-3`}
         >
