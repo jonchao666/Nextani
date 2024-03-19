@@ -28,7 +28,7 @@ export default function Oauth2() {
         router.push("/login-failed");
         console.error("Login process error", error);
       });
-  }, []);
+  }, [router]);
 
   if (loading)
     return (
