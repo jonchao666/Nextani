@@ -1,10 +1,9 @@
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import Oauth2 from "@/components/auth/oauth2";
+import Oauth2 from "@/components/auth/Oauth2";
 import { useRouter } from "next/router";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons";
-import useAuthStatus from "@/hooks/useAuthStatus";
 import { login } from "@/utils/firebaseAuth";
 
 export default function Login() {
@@ -31,7 +30,7 @@ export default function Login() {
     setIsLoading(true);
     try {
       await login(email, password);
-      router.replace("/")
+      router.replace("/");
     } catch (error) {
       console.error("Error logging in:", error);
       setLoginError(true);
