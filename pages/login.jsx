@@ -1,7 +1,7 @@
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import Oauth2 from "@/components/auth/oauth2";
+import Oauth2 from "@/components/auth/Oauth2";
 import { useRouter } from "next/router";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons";
 import { login } from "@/utils/firebaseAuth";
