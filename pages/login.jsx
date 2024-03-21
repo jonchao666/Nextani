@@ -1,14 +1,15 @@
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Oauth2 from "@/components/auth/Oauth2";
 import { useRouter } from "next/router";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons";
 import { login } from "@/utils/firebaseAuth";
+import useAuthStatus from "@/hooks/useAuthStatus";
 
 export default function Login() {
   const router = useRouter();
-
+  const { loading, user } = useAuthStatus();
   //email validate
   const [email, setEmail] = useState("");
   const validateEmail = (email) => email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
@@ -38,6 +39,12 @@ export default function Login() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      router.replace("/");
+    }
+  });
 
   return (
     <div className="h-dvh w-dvw">
