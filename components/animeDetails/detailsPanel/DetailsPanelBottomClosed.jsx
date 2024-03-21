@@ -12,7 +12,7 @@ export default function DetailsPanelBottomOpened({
       const lineCount = calculateLineCount();
       setOverHeight(lineCount > 2);
     }
-  }, []);
+  }, [synopsisWithoutLastParagraph]);
 
   const calculateLineCount = () => {
     const lineHeight = 20;

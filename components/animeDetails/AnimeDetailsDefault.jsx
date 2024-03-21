@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { fetchUserData } from "@/reducers/userSlice";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
-import { Image } from "@nextui-org/react";
 import { CircularProgress } from "@nextui-org/react";
 import MainAreaDefault from "@/components/animeDetails/mainArea/MainAreaDefault";
 
@@ -16,15 +15,14 @@ export default function AnimeDetailsLayout({
   characters,
   videos,
   mal_id,
-  videoLoading,
-  setVideoLoading,
+
   loading,
   recommendations,
 }) {
   const dispatch = useDispatch();
   const { isXs } = useResponsive();
   const [videoUrl, setVideoUrl] = useState("");
-
+  const [videoLoading, setVideoLoading] = useState(true);
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
 
   const mainCharacters = [];
@@ -109,29 +107,30 @@ export default function AnimeDetailsLayout({
         </div>
       )}
       <div className="flex justify-center">
-        <main className="  w-full h-full  ">
-          {videos && videos.length > 0 && (
-            <div className="relative">
-              {videoLoading && (
-                <div
-                  className={
-                    isMobileDevice || !isXs
-                      ? "absolute inset-0  bg-black dark:bg-[rgb(24,24,27)] "
-                      : "absolute inset-0 rounded-xl bg-black dark:bg-[rgb(24,24,27)] "
-                  }
-                ></div>
+        <main className="w-full h-full  ">
+          {(videos === null || videos.length > 0) && (
+            <div className="relative w-full aspect-video">
+              <div
+                className={
+                  isMobileDevice || !isXs
+                    ? "absolute  inset-0  bg-black dark:bg-[rgb(24,24,27)] "
+                    : "absolute z-10 inset-0 rounded-xl bg-black dark:bg-[rgb(24,24,27)] "
+                }
+              ></div>
+
+              {videos && videos.length > 0 && (
+                <iframe
+                  onClick={(e) => videoLoading && e.preventDefault()}
+                  id="videoIframe"
+                  className={`relative aspect-video  w-full h-full ${
+                    videoLoading ? "z-0" : "z-20"
+                  }  ${isMobileDevice || !isXs ? "" : "rounded-xl"}`}
+                  src={videoUrl}
+                  title={videos.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
               )}
-              <iframe
-                onClick={(e) => videoLoading && e.preventDefault()}
-                id="videoIframe"
-                className={`aspect-video w-full h-full ${
-                  isMobileDevice || !isXs ? "" : "rounded-xl"
-                }`}
-                src={videoUrl}
-                title={videos.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
             </div>
           )}
 

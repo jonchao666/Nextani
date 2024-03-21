@@ -56,9 +56,9 @@ export default function useSearch(initialQuery = "", delay = 500) {
     const fetchData = async () => {
       if (debouncedQuery) {
         let isLoadingData = true;
-        //show loading after 1s
+        //show loading after 700ms
         const delaySetLoading = async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 700));
           if (isLoadingData) {
             setIsLoading(true);
           }

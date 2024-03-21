@@ -59,9 +59,9 @@ export default function Character() {
     const fetchData = async () => {
       let isLoadingData = true;
 
-      //show loading after 1s
+      //show loading after 700ms
       const delaySetLoading = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 700));
         if (isLoadingData) {
           setLoading(true);
         }
@@ -191,11 +191,7 @@ export default function Character() {
                   <div
                     ref={textRef}
                     className={
-                      aboutOpen === null
-                        ? "invisible"
-                        : aboutOpen === true
-                        ? "text-sm"
-                        : "text-sm line-clamp-3"
+                      aboutOpen === true ? "text-sm" : "text-sm line-clamp-3"
                     }
                   >
                     {data.about}

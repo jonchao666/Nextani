@@ -33,9 +33,9 @@ export default function useAnimeDataJikanApi(mal_id) {
     const fetchCombinedData = async () => {
       let isLoadingData = true;
 
-      //show loading after 1s
+      //show loading after 700ms
       const delaySetLoading = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 700));
         if (isLoadingData) {
           setLoading(true);
           setVideoLoading(true);
@@ -44,54 +44,65 @@ export default function useAnimeDataJikanApi(mal_id) {
 
       delaySetLoading();
 
-      const requests = [
-        fetchWithRetry(`${process.env.API_URL}/anime`, {
+      const fetchAnimeDetails = async () => {
+        const result = await fetchWithRetry(`${process.env.API_URL}/anime`, {
           params: { mal_id, select: true, isSensitiveFilterDisabled },
           headers: { "X-API-Key": process.env.API_KEY },
-        }),
-        fetchWithRetry(`https://api.jikan.moe/v4/anime/${mal_id}/videos`, {
-          timeout: 5000,
-        }),
-        fetchWithRetry(`https://api.jikan.moe/v4/anime/${mal_id}/characters`, {
-          timeout: 5000,
-        }),
-        fetchWithRetry(`https://api.jikan.moe/v4/anime/${mal_id}/staff`, {
-          timeout: 5000,
-        }),
+        });
 
-        fetchWithRetry(`${process.env.API_URL}/anime/recommendations`, {
-          params: { mal_id, isSensitiveFilterDisabled, limit: 12 },
-          headers: { "X-API-Key": process.env.API_KEY },
-        }),
-      ];
+        setData(result.data[0].apiData);
+        setLoading(false);
+      };
 
-      const results = await Promise.allSettled(requests);
-      results.forEach((result, index) => {
-        if (result.status === "fulfilled") {
-          switch (index) {
-            case 0:
-              setData(result.value.data[0].apiData);
-              setLoading(false);
-              break;
-            case 1:
-              setVideos(result.value.data.data.promo);
-              break;
-            case 2:
-              setCharacters(result.value.data);
-              break;
-            case 3:
-              setStaff(result.value.data.data);
-              break;
-            case 4:
-              setRecommendations(result.value.data);
-              break;
+      const fetchVideos = async () => {
+        const result = await fetchWithRetry(
+          `https://api.jikan.moe/v4/anime/${mal_id}/videos`,
+          {
+            timeout: 5000,
           }
-          isLoadingData = false;
-        } else {
-          console.error(`Request ${index} failed:`, result.reason);
-          // Handle failure as appropriate
-        }
-      });
+        );
+        setVideos(result.data.data.promo);
+        setVideoLoading(false);
+      };
+
+      const fetchCharacters = async () => {
+        const result = await fetchWithRetry(
+          `https://api.jikan.moe/v4/anime/${mal_id}/characters`,
+          {
+            timeout: 5000,
+          }
+        );
+        setCharacters(result.data);
+      };
+
+      const fetchStaff = async () => {
+        const result = await fetchWithRetry(
+          `https://api.jikan.moe/v4/anime/${mal_id}/staff`,
+          {
+            timeout: 5000,
+          }
+        );
+        setStaff(result.data.data);
+      };
+
+      const fetchRecommendations = async () => {
+        const result = await fetchWithRetry(
+          `${process.env.API_URL}/anime/recommendations`,
+          {
+            params: { mal_id, isSensitiveFilterDisabled, limit: 12 },
+            headers: { "X-API-Key": process.env.API_KEY },
+          }
+        );
+        setRecommendations(result.data);
+      };
+
+      fetchAnimeDetails();
+      fetchVideos();
+      fetchCharacters();
+      fetchStaff();
+      fetchRecommendations();
+      isLoadingData = false;
+      setLoading(false);
     };
 
     fetchCombinedData();

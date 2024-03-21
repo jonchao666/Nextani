@@ -18,9 +18,9 @@ export default function FavoritePerson({ colToShow }) {
   useEffect(() => {
     async function fetchData() {
       let isLoadingData = true;
-      //show loading after 1s
+      //show loading after 700ms
       const delaySetLoading = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 700));
         if (isLoadingData) {
           setLoading(true);
         }
