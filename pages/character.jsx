@@ -20,7 +20,7 @@ export default function Character() {
   const [placeholdersNeededManga, setPlaceholdersNeededManga] = useState(0);
   const { isXl, isLg, isMd, isSm, isXs } = useResponsive();
   const [data, setData] = useState();
-  const [aboutOpen, setAboutOpen] = useState(null);
+  const [aboutOpen, setAboutOpen] = useState(true);
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [loading, setLoading] = useState(false);
   const textRef = useRef(null);
@@ -228,11 +228,7 @@ export default function Character() {
               <div
                 ref={textRef}
                 className={
-                  aboutOpen === null
-                    ? "invisible"
-                    : aboutOpen === true
-                    ? "text-sm"
-                    : "text-sm line-clamp-3"
+                  aboutOpen === true ? "text-sm" : "text-sm line-clamp-3"
                 }
               >
                 {data.about}
