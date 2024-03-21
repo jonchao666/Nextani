@@ -258,7 +258,7 @@ export default function DetailsPanelTop({
           className={
             isMobileDevice || !isXs
               ? "flex overflow-x-auto touch-pan gap-2 -pr-3 overflow-hidden scrollbar-hide "
-              : "flex flex-wrap gap-2"
+              : "flex flex-wrap gap-x-2"
           }
         >
           {PV.map((video, index) => (
