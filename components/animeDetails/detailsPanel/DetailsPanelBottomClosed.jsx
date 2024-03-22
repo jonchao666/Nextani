@@ -7,16 +7,22 @@ export default function DetailsPanelBottomOpened({
 }) {
   const [overHeight, setOverHeight] = useState(false);
   const textRef = useRef(null);
+
   useEffect(() => {
-    if (textRef.current) {
-      const lineCount = calculateLineCount();
-      setOverHeight(lineCount > 2);
-    }
-  }, [synopsisWithoutLastParagraph]);
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (textRef.current) {
+          const lineCount = calculateLineCount();
+          setOverHeight(lineCount > 2);
+        }
+      }, 0);
+    });
+  }, []);
 
   const calculateLineCount = () => {
     const lineHeight = 20;
     const divHeight = textRef.current.clientHeight;
+
     return divHeight / lineHeight;
   };
 

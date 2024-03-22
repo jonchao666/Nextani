@@ -22,6 +22,10 @@ export default function DetailsPanelContents({
   const [url, setUrl] = useState("");
 
   useEffect(() => {
+    setSynopsisOpened(false);
+  }, [synopsisWithoutLastParagraph]);
+
+  useEffect(() => {
     if (data) {
       setUrl(
         hasError ||
