@@ -53,7 +53,8 @@ export default function Selector({
       const rect = ref.current.getBoundingClientRect();
       const isOverflowingRight = rect.right > window.innerWidth / 2;
       const isWithinBounds = rect.right <= window.innerWidth / 2;
-
+      process.env.SHOW_CONSOLE === "dev" && console.log(rect.right);
+      process.env.SHOW_CONSOLE === "dev" && console.log(window.innerWidth);
       if (isOverflowingRight) {
         setClass("rounded-lg min-w-max absolute right-0");
       } else if (isWithinBounds) {
