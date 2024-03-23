@@ -2,7 +2,6 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { Genres, Types, Years } from "@/constans/categoryData";
 import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useRef, useState, useEffect } from "react";
 
 export default function Selector({
   selectedButtonSortby,
@@ -24,110 +23,34 @@ export default function Selector({
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
 
-  //adjust popoverContent when overflow
-  const [genresClass, setGenresClass] = useState("rounded-lg min-w-max");
-  const genresRef = useRef(null);
-
-  const [typesClass, setTypesClass] = useState("rounded-lg min-w-max");
-  const typesRef = useRef(null);
-
-  const [statusClass, setStatusClass] = useState("rounded-lg min-w-max");
-  const statusRef = useRef(null);
-
-  const [yearClass, setYearClass] = useState("rounded-lg min-w-max");
-  const yearRef = useRef(null);
-
-  const [seasonClass, setSeasonClass] = useState("rounded-lg min-w-max");
-  const seasonRef = useRef(null);
-
-  const [ratedClass, setRatedClass] = useState("rounded-lg min-w-max");
-  const ratedRef = useRef(null);
-
-  const [sortbyClass, setSortbyClass] = useState("rounded-lg min-w-max");
-  const sortbyRef = useRef(null);
-
-  const scrollContainer = useRef(null);
-
-  const adjustSelectCss = (ref, setClass) => {
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      const isOverflowingRight = rect.right > window.innerWidth / 2;
-      const isWithinBounds = rect.right <= window.innerWidth / 2;
-      process.env.SHOW_CONSOLE === "dev" && console.log(rect.right);
-      process.env.SHOW_CONSOLE === "dev" && console.log(window.innerWidth);
-      if (isOverflowingRight) {
-        setClass("rounded-lg min-w-max absolute right-0");
-      } else if (isWithinBounds) {
-        setClass("rounded-lg min-w-max");
-      }
-    }
-  };
-
-  function debounce(func, wait) {
-    let timeout;
-    return function (...args) {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-  }
-
-  useEffect(() => {
-    const checkAllSelects = () => {
-      adjustSelectCss(genresRef, setGenresClass);
-      adjustSelectCss(typesRef, setTypesClass);
-      adjustSelectCss(statusRef, setStatusClass);
-      adjustSelectCss(yearRef, setYearClass);
-      adjustSelectCss(seasonRef, setSeasonClass);
-      adjustSelectCss(ratedRef, setRatedClass);
-      adjustSelectCss(sortbyRef, setSortbyClass);
-    };
-
-    checkAllSelects();
-    const debouncedCheckAllSelects = debounce(checkAllSelects, 200);
-
-    const container = scrollContainer.current;
-    if (container) {
-      container.addEventListener("scroll", debouncedCheckAllSelects, true);
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("scroll", debouncedCheckAllSelects, true);
-      }
-    };
-  }, []);
-
   const { isXs } = useResponsive();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
   return (
     <div
-      ref={scrollContainer}
       className={`flex overflow-x-auto overflow-hidden ${
         isMobileDevice
           ? "px-3 scrollbar-hide touch-pan pb-2.5 "
           : !isXs
           ? "px-3  touch-pan pb-2.5 "
-          : " "
+          : ""
       }`}
     >
-      <div className="mr-2" ref={genresRef}>
+      <div className="mr-2 ">
         <Select
           aria-label="Genres"
           radius="lg"
-          className="min-w-[93px]"
+          className="min-w-[120px]"
           size="sm"
           labelPlacement="outside"
           placeholder="Genres"
           variant="bordered"
           classNames={{
-            listboxWrapper: "overscroll-none",
+            listboxWrapper: "overscroll-none ",
 
             trigger:
               isMobileDevice || !isXs
-                ? "shadow-none border-default border-1 pl-3"
+                ? "shadow-none border-default border-1 pl-3 "
                 : " shadow-none border-none ",
-
-            popoverContent: genresClass,
           }}
           selectedKeys={
             selectedButtonGenres === "All Genres" || !selectedButtonGenres
@@ -144,10 +67,10 @@ export default function Selector({
         </Select>
       </div>
 
-      <div className="mr-2" ref={typesRef}>
+      <div className="mr-2">
         <Select
           aria-label="Types"
-          className="min-w-[93px]"
+          className="min-w-[120px]"
           size="sm"
           radius="lg"
           placeholder="Types"
@@ -160,8 +83,6 @@ export default function Selector({
               isMobileDevice || !isXs
                 ? "shadow-none border-default border-1 pl-3"
                 : " shadow-none border-none",
-
-            popoverContent: typesClass,
           }}
           selectedKeys={
             selectedButtonTypes === "All Types" || !selectedButtonTypes
@@ -177,10 +98,10 @@ export default function Selector({
           ))}
         </Select>
       </div>
-      <div className="mr-2" ref={statusRef}>
+      <div className="mr-2">
         <Select
           aria-label="Status"
-          className="min-w-[93px]"
+          className="min-w-[120px]"
           size="sm"
           radius="lg"
           placeholder="Status"
@@ -193,8 +114,6 @@ export default function Selector({
               isMobileDevice || !isXs
                 ? "shadow-none border-default border-1 pl-3"
                 : " shadow-none border-none",
-
-            popoverContent: statusClass,
           }}
           selectedKeys={
             selectedButtonStatus === "All Status" || !selectedButtonStatus
@@ -208,28 +127,28 @@ export default function Selector({
             key="Finished Airing"
             value="Finished Airing"
           >
-            Finished Airing
+            Finished
           </SelectItem>
           <SelectItem
             textValue="Currently Airing"
             key="Currently Airing"
             value="Currently Airing"
           >
-            Currently Airing
+            Airing
           </SelectItem>
           <SelectItem
             textValue="Not yet aired"
             key="Not yet aired"
             value="Not yet aired"
           >
-            Not yet aired
+            Upcoming
           </SelectItem>
         </Select>
       </div>
-      <div className="mr-2" ref={yearRef}>
+      <div className="mr-2">
         <Select
           aria-label="Year"
-          className="min-w-[93px]"
+          className="min-w-[120px]"
           size="sm"
           radius="lg"
           placeholder="Year"
@@ -242,8 +161,6 @@ export default function Selector({
               isMobileDevice || !isXs
                 ? "shadow-none border-default border-1 pl-3"
                 : " shadow-none border-none",
-
-            popoverContent: yearClass,
           }}
           selectedKeys={
             selectedButtonYear === "All Year" || !selectedButtonYear
@@ -259,10 +176,10 @@ export default function Selector({
           ))}
         </Select>
       </div>
-      <div className="mr-2" ref={seasonRef}>
+      <div className="mr-2">
         <Select
           aria-label="Season"
-          className="min-w-[93px]"
+          className="min-w-[120px]"
           size="sm"
           placeholder="Season"
           labelPlacement="outside"
@@ -275,8 +192,6 @@ export default function Selector({
               isMobileDevice || !isXs
                 ? "shadow-none border-default border-1 pl-3"
                 : " shadow-none border-none",
-
-            popoverContent: seasonClass,
           }}
           selectedKeys={
             selectedButtonSeason === "All Season" || !selectedButtonSeason
@@ -299,10 +214,10 @@ export default function Selector({
           </SelectItem>
         </Select>
       </div>
-      <div className="mr-2" ref={ratedRef}>
+      <div className="mr-2">
         <Select
           aria-label="Rated"
-          className="min-w-[93px]"
+          className="min-w-[120px]"
           size="sm"
           placeholder="Rated"
           labelPlacement="outside"
@@ -315,8 +230,6 @@ export default function Selector({
               isMobileDevice || !isXs
                 ? "shadow-none border-default border-1 pl-3"
                 : " shadow-none border-none",
-
-            popoverContent: ratedClass,
           }}
           selectedKeys={
             selectedButtonRated === "All Rated" || !selectedButtonRated
@@ -371,10 +284,10 @@ export default function Selector({
           )}
         </Select>
       </div>
-      <div ref={sortbyRef}>
+      <div>
         <Select
           aria-label="Sort by"
-          className="min-w-[93px]"
+          className="min-w-[120px]"
           size="sm"
           radius="lg"
           placeholder="Sort by"
@@ -386,8 +299,6 @@ export default function Selector({
               isMobileDevice || !isXs
                 ? "shadow-none border-default border-1 pl-3"
                 : " shadow-none border-none",
-
-            popoverContent: sortbyClass,
           }}
           selectedKeys={!selectedButtonSortby ? [] : [selectedButtonSortby]}
           onChange={(e) => setSelectedButtonSortby(e.target.value)}
