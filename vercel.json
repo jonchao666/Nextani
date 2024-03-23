@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/__/auth/:path*",
+      "destination": "https://nextani-415707.firebaseapp.com/__/auth/:path*"
+    }
+  ]
+}

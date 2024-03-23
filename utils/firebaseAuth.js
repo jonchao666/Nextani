@@ -8,7 +8,7 @@ import { initializeApp } from "firebase/app";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBUh34fVGomF1fmLtmwZyW_FIi9jRVZYFM",
-  authDomain: "nextani.net",
+  authDomain: "nextani-415707.firebaseapp.com",
   projectId: "nextani-415707",
   storageBucket: "nextani-415707.appspot.com",
   messagingSenderId: "774743828666",
