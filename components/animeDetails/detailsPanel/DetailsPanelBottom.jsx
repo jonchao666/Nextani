@@ -1,28 +1,29 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function DetailsPanelBottomOpened({
+export default function DetailsPanelBottom({
   data,
   synopsisWithoutLastParagraph,
-  setSynopsisOpened,
 }) {
-  const [overHeight, setOverHeight] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(true);
+  const [showToggleButton, setShowToggleButton] = useState(false);
+
   const textRef = useRef(null);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (textRef.current) {
-          const lineCount = calculateLineCount();
-          setOverHeight(lineCount > 2);
-        }
-      }, 0);
-    });
-  }, []);
+    if (textRef.current) {
+      const lineCount = calculateLineCount();
+      setShowToggleButton(lineCount > 2);
+      if (lineCount > 2) {
+        setAboutOpen(false);
+      } else {
+        setAboutOpen(true);
+      }
+    }
+  }, [data]);
 
   const calculateLineCount = () => {
     const lineHeight = 20;
     const divHeight = textRef.current.clientHeight;
-
     return divHeight / lineHeight;
   };
 
@@ -39,9 +40,9 @@ export default function DetailsPanelBottomOpened({
       <p
         ref={textRef}
         className={
-          overHeight
-            ? "whitespace-pre-line line-clamp-2 text-sm"
-            : "whitespace-pre-line text-sm"
+          aboutOpen
+            ? "whitespace-pre-line  text-sm"
+            : "whitespace-pre-line text-sm line-clamp-2"
         }
       >
         Synopsis: {synopsisWithoutLastParagraph}
@@ -58,12 +59,20 @@ export default function DetailsPanelBottomOpened({
           </p>
         </div>
 
-        {overHeight && (
+        {showToggleButton && !aboutOpen && (
           <div
-            onClick={() => setSynopsisOpened(true)}
+            onClick={() => setAboutOpen(true)}
             className="cursor-pointer text-sm  font-medium"
           >
             Show more
+          </div>
+        )}
+        {showToggleButton && aboutOpen && (
+          <div
+            onClick={() => setAboutOpen(false)}
+            className="cursor-pointer text-sm  font-medium"
+          >
+            Show less
           </div>
         )}
       </div>

@@ -15,7 +15,7 @@ export default function AnimeDetailsLayout({
   characters,
   videos,
   mal_id,
-
+  isLoadingData,
   loading,
   recommendations,
 }) {
@@ -136,6 +136,7 @@ export default function AnimeDetailsLayout({
 
           <DetailsPanel
             data={data}
+            isLoadingData={isLoadingData}
             mainCharacters={mainCharacters}
             videos={videos}
             synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}

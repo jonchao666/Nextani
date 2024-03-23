@@ -10,6 +10,7 @@ export default function useAnimeDataJikanApi(mal_id) {
   const [recommendations, setRecommendations] = useState(null); // 新增状态用于存储推荐信息
   const [videoLoading, setVideoLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const isSensitiveFilterDisabled = useSelector(
     (state) => state.isSensitiveFilterDisabled.isSensitiveFilterDisabled
   );
@@ -31,12 +32,12 @@ export default function useAnimeDataJikanApi(mal_id) {
     };
 
     const fetchCombinedData = async () => {
-      let isLoadingData = true;
-
+      setIsLoadingData(true);
+      let loadingData = true;
       //show loading after 700ms
       const delaySetLoading = async () => {
         await new Promise((resolve) => setTimeout(resolve, 700));
-        if (isLoadingData) {
+        if (loadingData) {
           setLoading(true);
           setVideoLoading(true);
         }
@@ -52,6 +53,7 @@ export default function useAnimeDataJikanApi(mal_id) {
 
         setData(result.data[0].apiData);
         setLoading(false);
+        setIsLoadingData(false);
       };
 
       const fetchVideos = async () => {
@@ -101,7 +103,8 @@ export default function useAnimeDataJikanApi(mal_id) {
       fetchCharacters();
       fetchStaff();
       fetchRecommendations();
-      isLoadingData = false;
+
+      loadingData = false;
       setLoading(false);
     };
 
@@ -117,5 +120,6 @@ export default function useAnimeDataJikanApi(mal_id) {
     videoLoading,
     setVideoLoading,
     loading,
+    isLoadingData,
   };
 }

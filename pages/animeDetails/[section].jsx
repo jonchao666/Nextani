@@ -18,6 +18,7 @@ export default function AnimeDetails() {
     videoLoading,
     setVideoLoading,
     loading,
+    isLoadingData,
   } = useAnimeDataJikanApi(mal_id);
 
   switch (section) {
@@ -36,6 +37,7 @@ export default function AnimeDetails() {
         <Layout youPage={true}>
           <AnimeDetailsDefault
             data={data}
+            isLoadingData={isLoadingData}
             characters={characters}
             videos={videos}
             mal_id={mal_id}

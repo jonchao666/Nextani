@@ -1,11 +1,10 @@
 import { Image } from "@nextui-org/react";
 import DetailsPanelTop from "./DetailsPanelTop";
-import DetailsPanelBottomOpened from "./DetailsPanelBottomOpened";
-import DetailsPanelBottomClosed from "./DetailsPanelBottomClosed";
+import DetailsPanelBottom from "./DetailsPanelBottom";
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Skeleton } from "@nextui-org/react";
+import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
+
 export default function DetailsPanelContents({
   data,
   mainCharacters,
@@ -13,17 +12,14 @@ export default function DetailsPanelContents({
   videos,
   setVideoUrl,
   mal_id,
+  isLoadingData,
   PV,
 }) {
   const { isXs } = useResponsive();
   const isMobileDevice = useSelector((state) => state.isMobile.isMobileDevice);
-  const [synopsisOpened, setSynopsisOpened] = useState(false);
+
   const [hasError, setHasError] = useState(false);
   const [url, setUrl] = useState("");
-
-  useEffect(() => {
-    setSynopsisOpened(false);
-  }, [synopsisWithoutLastParagraph]);
 
   useEffect(() => {
     if (data) {
@@ -37,7 +33,9 @@ export default function DetailsPanelContents({
       );
     }
   }, [data, setUrl, hasError]);
-  if (!data) return null;
+  console.log(isLoadingData);
+  if (!data || isLoadingData) return null;
+
   return (
     <div
       className={` flex w-full ${
@@ -64,19 +62,11 @@ export default function DetailsPanelContents({
           mal_id={mal_id}
           PV={PV}
         />
-        {synopsisOpened ? (
-          <DetailsPanelBottomOpened
-            data={data}
-            synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}
-            setSynopsisOpened={setSynopsisOpened}
-          />
-        ) : (
-          <DetailsPanelBottomClosed
-            data={data}
-            synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}
-            setSynopsisOpened={setSynopsisOpened}
-          />
-        )}
+
+        <DetailsPanelBottom
+          data={data}
+          synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}
+        />
       </div>
     </div>
   );
