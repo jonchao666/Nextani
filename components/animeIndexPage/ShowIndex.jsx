@@ -151,9 +151,7 @@ export default function ShowIndex({
   return (
     <div>
       {!loading && data.length === 0 ? (
-        <div className="text-center mt-4 text-sm">
-          No results found matching your filters.
-        </div>
+        <div className="text-center mt-4 text-sm">No results found.</div>
       ) : (
         <div className={isMobileDevice || !isXs ? "mt-0 mb-6" : "mt-3 mb-6"}>
           {isMobileDevice || !isXs ? (
