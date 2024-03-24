@@ -34,7 +34,6 @@ export default function DetailsPanelContents({
     }
   }, [data, setUrl, hasError]);
   console.log(isLoadingData);
-  if (!data || isLoadingData) return null;
 
   return (
     <div
@@ -63,10 +62,13 @@ export default function DetailsPanelContents({
           PV={PV}
         />
 
-        <DetailsPanelBottom
-          data={data}
-          synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}
-        />
+        {!isLoadingData && (
+          <DetailsPanelBottom
+            data={data}
+            isLoadingData={isLoadingData}
+            synopsisWithoutLastParagraph={synopsisWithoutLastParagraph}
+          />
+        )}
       </div>
     </div>
   );

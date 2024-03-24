@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 export default function DetailsPanelBottom({
   data,
+  isLoadingData,
   synopsisWithoutLastParagraph,
 }) {
   const [aboutOpen, setAboutOpen] = useState(true);

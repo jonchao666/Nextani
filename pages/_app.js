@@ -7,6 +7,7 @@ import store from "@/store/store";
 import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import AuthInitializer from "@/utils/AuthInitializer";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }) {
   const [domLoaded, setDomLoaded] = useState(false);
@@ -24,6 +25,12 @@ export default function App({ Component, pageProps }) {
           enableSystem={true}
           defaultTheme="system"
         >
+          <Head>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
+          </Head>
           {domLoaded && (
             <Toaster position="bottom-right" reverseOrder={false} />
           )}
