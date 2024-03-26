@@ -29,38 +29,6 @@ export default function CharaterCard({ data }) {
         }`}
       >
         <Link
-          href={`/character?mal_id=${data.character.mal_id}`}
-          className="p-0 overflow-hidden shrink-0 "
-        >
-          <Image
-            className={
-              isMobileDevice
-                ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
-                : "w-[60px] h-[81px] object-cover shrink-0"
-            }
-            loading="lazy"
-            onLoad={() => setIsLoaded(true)}
-            onError={() => setHasError(true)}
-            radius="none"
-            alt={data.character.name}
-            src={url}
-          />
-        </Link>
-        <div className="flex  justify-start   grow">
-          <div className="flex flex-col justify-between p-2.5 text-xs">
-            <Link
-              href={`/character?mal_id=${data.character.mal_id}`}
-              className=" text-left "
-            >
-              {data.character.name}
-            </Link>
-
-            <div className="text-left line-clamp-2 break-words text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]">
-              {data.anime.title}
-            </div>
-          </div>
-        </div>
-        <Link
           href={`/animeDetails/default?mal_id=${data.anime.mal_id}`}
           className="shrink-0"
         >
@@ -80,6 +48,39 @@ export default function CharaterCard({ data }) {
                 : data.anime.images.jpg.image_url
             }
           ></Image>
+        </Link>
+
+        <div className="flex  justify-start   grow">
+          <div className="flex flex-col justify-between p-2.5 text-xs">
+            <Link
+              href={`/character?mal_id=${data.character.mal_id}`}
+              className=" text-left line-clamp-2 break-words"
+            >
+              {data.anime.title}
+            </Link>
+
+            <div className="text-left line-clamp-2 break-words text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]">
+              {data.character.name}
+            </div>
+          </div>
+        </div>
+        <Link
+          href={`/character?mal_id=${data.character.mal_id}`}
+          className="p-0 overflow-hidden shrink-0 "
+        >
+          <Image
+            className={
+              isMobileDevice
+                ? "w-[60px] h-[81px] object-cover shrink-0 rounded-md"
+                : "w-[60px] h-[81px] object-cover shrink-0"
+            }
+            loading="lazy"
+            onLoad={() => setIsLoaded(true)}
+            onError={() => setHasError(true)}
+            radius="none"
+            alt={data.character.name}
+            src={url}
+          />
         </Link>
       </Card>
     </div>
