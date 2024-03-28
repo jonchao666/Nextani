@@ -8,11 +8,13 @@ import {
 import { checkIsMobileState } from "@/reducers/isMobileSlice";
 import { observeAuthState } from "@/utils/firebaseAuth";
 import { useRouter } from "next/router";
+import clearExpiredLocalStorageData from "@/utils/clearExpiredLocalStorageData";
 
 export default function AuthInitializer() {
   const dispatch = useDispatch();
   const router = useRouter();
   useEffect(() => {
+    clearExpiredLocalStorageData();
     const unsubscribe = observeAuthState((user) => {
       if (user) {
         dispatch(fetchUserData());
