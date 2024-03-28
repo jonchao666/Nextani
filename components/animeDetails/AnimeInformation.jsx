@@ -67,9 +67,9 @@ export default function AnimeInformation({ data }) {
 
       {data && data.aired.from && (
         <div className="flex flex-col pb-3.5 pr-6">
-          <p className="font-medium text-sm pb-1">Start Date</p>
+          <p className="font-medium text-sm pb-1">Aired</p>
           <p className="text-xs text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]">
-            {formatDate(data.aired.from)}
+            {data.aired.string}
           </p>
         </div>
       )}
