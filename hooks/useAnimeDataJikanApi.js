@@ -46,6 +46,20 @@ export default function useAnimeDataJikanApi(mal_id) {
       delaySetLoading();
 
       const fetchAnimeDetails = async () => {
+        const cacheKey = `anime-details-${mal_id}`;
+        const cachedData = localStorage.getItem(cacheKey);
+
+        if (cachedData) {
+          const { data, timestamp } = JSON.parse(cachedData);
+          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+
+          if (!isExpired) {
+            setData(data);
+            setLoading(false);
+            setIsLoadingData(false);
+            return;
+          }
+        }
         const result = await fetchWithRetry(`${process.env.API_URL}/anime`, {
           params: { mal_id, select: true, isSensitiveFilterDisabled },
           headers: { "X-API-Key": process.env.API_KEY },
@@ -54,9 +68,29 @@ export default function useAnimeDataJikanApi(mal_id) {
         setData(result.data[0].apiData);
         setLoading(false);
         setIsLoadingData(false);
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({
+            data: result.data[0].apiData,
+            timestamp: Date.now(),
+          })
+        );
       };
 
       const fetchVideos = async () => {
+        const cacheKey = `anime-videos-${mal_id}`;
+        const cachedData = localStorage.getItem(cacheKey);
+
+        if (cachedData) {
+          const { data, timestamp } = JSON.parse(cachedData);
+          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+
+          if (!isExpired) {
+            setVideos(data);
+            setVideoLoading(false);
+            return;
+          }
+        }
         const result = await fetchWithRetry(
           `https://api.jikan.moe/v4/anime/${mal_id}/videos`,
           {
@@ -65,9 +99,28 @@ export default function useAnimeDataJikanApi(mal_id) {
         );
         setVideos(result.data.data.promo);
         setVideoLoading(false);
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({
+            data: result.data.data.promo,
+            timestamp: Date.now(),
+          })
+        );
       };
 
       const fetchCharacters = async () => {
+        const cacheKey = `anime-characters-${mal_id}`;
+        const cachedData = localStorage.getItem(cacheKey);
+
+        if (cachedData) {
+          const { data, timestamp } = JSON.parse(cachedData);
+          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+
+          if (!isExpired) {
+            setCharacters(data);
+            return;
+          }
+        }
         const result = await fetchWithRetry(
           `https://api.jikan.moe/v4/anime/${mal_id}/characters`,
           {
@@ -75,9 +128,25 @@ export default function useAnimeDataJikanApi(mal_id) {
           }
         );
         setCharacters(result.data);
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ data: result.data, timestamp: Date.now() })
+        );
       };
 
       const fetchStaff = async () => {
+        const cacheKey = `anime-staff-${mal_id}`;
+        const cachedData = localStorage.getItem(cacheKey);
+
+        if (cachedData) {
+          const { data, timestamp } = JSON.parse(cachedData);
+          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+
+          if (!isExpired) {
+            setStaff(data);
+            return;
+          }
+        }
         const result = await fetchWithRetry(
           `https://api.jikan.moe/v4/anime/${mal_id}/staff`,
           {
@@ -85,9 +154,25 @@ export default function useAnimeDataJikanApi(mal_id) {
           }
         );
         setStaff(result.data.data);
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ data: result.data.data, timestamp: Date.now() })
+        );
       };
 
       const fetchRecommendations = async () => {
+        const cacheKey = `anime-recommendations-${mal_id}`;
+        const cachedData = localStorage.getItem(cacheKey);
+
+        if (cachedData) {
+          const { data, timestamp } = JSON.parse(cachedData);
+          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+
+          if (!isExpired) {
+            setRecommendations(data);
+            return;
+          }
+        }
         const result = await fetchWithRetry(
           `${process.env.API_URL}/anime/recommendations`,
           {
@@ -96,6 +181,10 @@ export default function useAnimeDataJikanApi(mal_id) {
           }
         );
         setRecommendations(result.data);
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ data: result.data, timestamp: Date.now() })
+        );
       };
 
       fetchAnimeDetails();

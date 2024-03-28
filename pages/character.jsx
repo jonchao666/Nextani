@@ -57,6 +57,8 @@ export default function Character() {
     };
 
     const fetchData = async () => {
+      const cacheKey = `character-${mal_id}`;
+      const cachedData = localStorage.getItem(cacheKey);
       let isLoadingData = true;
 
       //show loading after 700ms
@@ -68,12 +70,29 @@ export default function Character() {
       };
 
       delaySetLoading();
+
+      if (cachedData) {
+        const { data, timestamp } = JSON.parse(cachedData);
+        const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+
+        if (!isExpired) {
+          setData(data);
+          isLoadingData = false;
+          setLoading(false);
+          return;
+        }
+      }
+
       try {
         const response = await fetchWithRetry(
           `https://api.jikan.moe/v4/characters/${mal_id}/full`,
           {}
         );
         setData(response.data.data);
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ data: response.data.data, timestamp: Date.now() })
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
