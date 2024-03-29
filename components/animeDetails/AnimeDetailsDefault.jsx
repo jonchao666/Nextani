@@ -1,9 +1,7 @@
 import DetailsPanel from "@/components/animeDetails/detailsPanel/DetailsPanel";
 import AnimeInformation from "@/components/animeDetails/AnimeInformation";
-import Layout from "@/components/layout/Layout";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { fetchUserData } from "@/reducers/userSlice";
 import { useResponsive } from "@/hooks/useResponsive";
 import { setPageName } from "@/reducers/pageNameSlice";
 import { CircularProgress } from "@nextui-org/react";
@@ -119,7 +117,7 @@ export default function AnimeDetailsLayout({
               ></div>
 
               {videos && videos.length > 0 && (
-                <iframe
+                <embed
                   onClick={(e) => videoLoading && e.preventDefault()}
                   id="videoIframe"
                   className={`relative aspect-video  w-full h-full ${
@@ -129,7 +127,7 @@ export default function AnimeDetailsLayout({
                   title={videos.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                ></iframe>
+                ></embed>
               )}
             </div>
           )}

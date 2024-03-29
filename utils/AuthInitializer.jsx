@@ -13,6 +13,7 @@ import clearExpiredLocalStorageData from "@/utils/clearExpiredLocalStorageData";
 export default function AuthInitializer() {
   const dispatch = useDispatch();
   const router = useRouter();
+
   useEffect(() => {
     clearExpiredLocalStorageData();
     const unsubscribe = observeAuthState((user) => {

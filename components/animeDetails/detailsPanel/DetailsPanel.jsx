@@ -33,7 +33,6 @@ export default function DetailsPanelContents({
       );
     }
   }, [data, setUrl, hasError]);
-  console.log(isLoadingData);
 
   return (
     <div
