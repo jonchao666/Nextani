@@ -284,7 +284,7 @@ export default function DetailsPanelTop({
           ))}
         </div>
       ) : null}
-      <p className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]  mb-1.5 line-clamp-1">
+      <p className="text-sm text-[rgb(96,96,96)] dark:text-[rgb(170,170,170)]  mb-1.5 line-clamp-2">
         {data && data.genres && data.genres.length > 0
           ? data.genres.map((genre) => genre.name).join("/")
           : "Anime"}{" "}
