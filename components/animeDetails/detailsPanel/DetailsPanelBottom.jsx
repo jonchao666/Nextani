@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 
 export default function DetailsPanelBottom({
   data,
@@ -10,13 +10,12 @@ export default function DetailsPanelBottom({
 
   const textRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setAboutOpen(true);
     setShowToggleButton(false);
     setTimeout(() => {
       if (textRef.current) {
         const lineCount = calculateLineCount();
-        console.log(lineCount);
         setShowToggleButton(lineCount > 2);
         if (lineCount > 2) {
           setAboutOpen(false);
