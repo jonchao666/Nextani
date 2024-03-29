@@ -11,16 +11,21 @@ export default function DetailsPanelBottom({
   const textRef = useRef(null);
 
   useEffect(() => {
-    if (textRef.current) {
-      const lineCount = calculateLineCount();
-      setShowToggleButton(lineCount > 2);
-      if (lineCount > 2) {
-        setAboutOpen(false);
-      } else {
-        setAboutOpen(true);
+    setAboutOpen(true);
+    setShowToggleButton(false);
+    setTimeout(() => {
+      if (textRef.current) {
+        const lineCount = calculateLineCount();
+        console.log(lineCount);
+        setShowToggleButton(lineCount > 2);
+        if (lineCount > 2) {
+          setAboutOpen(false);
+        } else {
+          setAboutOpen(true);
+        }
       }
-    }
-  }, [data]);
+    }, 1);
+  }, [synopsisWithoutLastParagraph]);
 
   const calculateLineCount = () => {
     const lineHeight = 20;
