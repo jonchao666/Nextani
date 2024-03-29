@@ -25,6 +25,12 @@ export default function AnimeDetailsLayout({
 
   const mainCharacters = [];
 
+  const [iframeKey, setIframeKey] = useState(Date.now());
+  //to prevent add Not necessary history from iframe
+  useEffect(() => {
+    setIframeKey(Date.now());
+  }, [videoUrl]);
+
   useEffect(() => {
     if (data) {
       dispatch(setPageName(data.title));
@@ -117,7 +123,8 @@ export default function AnimeDetailsLayout({
               ></div>
 
               {videos && videos.length > 0 && (
-                <embed
+                <iframe
+                  key={iframeKey}
                   onClick={(e) => videoLoading && e.preventDefault()}
                   id="videoIframe"
                   className={`relative aspect-video  w-full h-full ${
@@ -127,7 +134,7 @@ export default function AnimeDetailsLayout({
                   title={videos.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                ></embed>
+                ></iframe>
               )}
             </div>
           )}
