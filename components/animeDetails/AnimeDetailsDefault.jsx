@@ -52,7 +52,7 @@ export default function AnimeDetailsLayout({
         iframe.removeEventListener("load", handleLoad);
       }
     };
-  }, [videos, setVideoLoading]);
+  }, [videos, setVideoLoading, iframeKey]);
 
   const [PV, setPV] = useState(null);
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function AnimeDetailsLayout({
 
     setPV(tempPV);
   }, [videos]);
-
+  console.log(videoLoading);
   if (characters && characters.data) {
     for (let character of characters.data) {
       if (character.role !== "Main") {
@@ -117,7 +117,7 @@ export default function AnimeDetailsLayout({
               <div
                 className={
                   isMobileDevice || !isXs
-                    ? "absolute  inset-0  bg-black dark:bg-[rgb(24,24,27)] "
+                    ? "absolute z-10  inset-0  bg-black dark:bg-[rgb(24,24,27)] "
                     : "absolute z-10 inset-0 rounded-xl bg-black dark:bg-[rgb(24,24,27)] "
                 }
               ></div>
