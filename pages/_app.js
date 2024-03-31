@@ -30,6 +30,10 @@ export default function App({ Component, pageProps }) {
               name="viewport"
               content="width=device-width, initial-scale=1"
             />
+            <meta
+              name="description"
+              content="Explore diverse genres, find your favorites, and create personalized watchlists. At NextAni, we unite through stories and adventures in anime."
+            />
           </Head>
           {domLoaded && (
             <Toaster position="bottom-right" reverseOrder={false} />
