@@ -134,6 +134,6 @@ export async function getStaticProps() {
       slidersData,
       calendarData,
     },
-    revalidate: 86400,
+    revalidate: 60,
   };
 }
