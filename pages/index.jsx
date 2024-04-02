@@ -38,7 +38,7 @@ export default function HomePage({ slidersData, calendarData }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
   const slidersData = await Promise.all(
     //get sliders data
     Categories.slice(0, 6).map(async (category) => {
@@ -134,6 +134,5 @@ export async function getStaticProps() {
       slidersData,
       calendarData,
     },
-    revalidate: 60,
   };
 }
