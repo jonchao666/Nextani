@@ -61,7 +61,13 @@ export default function Selector({
         >
           {Genres.map((genre) => (
             <SelectItem textValue={genre} key={genre} value={genre}>
-              {genre}
+              {genre === "Slice of Life"
+                ? "Life"
+                : genre === "Avant Garde"
+                ? "Avant"
+                : genre === "Award Winning"
+                ? "Awarded"
+                : genre}
             </SelectItem>
           ))}
         </Select>
