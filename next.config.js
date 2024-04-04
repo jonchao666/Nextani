@@ -6,6 +6,7 @@ const nextConfig = {
     API_URL: process.env.API_URL,
     SHOW_CONSOLE: process.env.SHOW_CONSOLE,
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+    REVALIDATE_TOKEN: process.env.REVALIDATE_TOKEN,
   },
 };
 
