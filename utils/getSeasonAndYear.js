@@ -6,19 +6,30 @@ const currentSeasonIndex = Math.floor((currentMonth - 1) / 3);
 
 function getLastTwoSeasonAndYears() {
   let lastTwoSeasonAndYears = [];
+  const seasons = ["winter", "spring", "summer", "fall"];
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentSeasonIndex = Math.floor((currentMonth - 1) / 3);
+
   if (currentSeasonIndex === 0) {
+    lastTwoSeasonAndYears.push({ season: "fall", year: currentYear - 1 });
+    lastTwoSeasonAndYears.push({ season: "summer", year: currentYear - 1 });
+  } else if (currentSeasonIndex === 1) {
     lastTwoSeasonAndYears.push({ season: "winter", year: currentYear });
     lastTwoSeasonAndYears.push({ season: "fall", year: currentYear - 1 });
   } else {
     lastTwoSeasonAndYears.push({
-      season: season[currentSeasonIndex],
+      season: seasons[currentSeasonIndex - 1],
       year: currentYear,
     });
     lastTwoSeasonAndYears.push({
-      season: season[currentSeasonIndex - 1],
+      season: seasons[currentSeasonIndex - 2],
       year: currentYear,
     });
   }
+
   return lastTwoSeasonAndYears;
 }
 
