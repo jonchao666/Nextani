@@ -51,7 +51,7 @@ export default function useAnimeDataJikanApi(mal_id) {
 
         if (cachedData) {
           const { data, timestamp } = JSON.parse(cachedData);
-          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+          const isExpired = Date.now() - timestamp > 1 * 60 * 60 * 1000;
 
           if (!isExpired) {
             setData(data);
@@ -83,7 +83,7 @@ export default function useAnimeDataJikanApi(mal_id) {
 
         if (cachedData) {
           const { data, timestamp } = JSON.parse(cachedData);
-          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+          const isExpired = Date.now() - timestamp > 1 * 60 * 60 * 1000;
 
           if (!isExpired) {
             setVideos(data);
@@ -114,7 +114,7 @@ export default function useAnimeDataJikanApi(mal_id) {
 
         if (cachedData) {
           const { data, timestamp } = JSON.parse(cachedData);
-          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+          const isExpired = Date.now() - timestamp > 1 * 60 * 60 * 1000;
 
           if (!isExpired) {
             setCharacters(data);
@@ -140,7 +140,7 @@ export default function useAnimeDataJikanApi(mal_id) {
 
         if (cachedData) {
           const { data, timestamp } = JSON.parse(cachedData);
-          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+          const isExpired = Date.now() - timestamp > 1 * 60 * 60 * 1000;
 
           if (!isExpired) {
             setStaff(data);
@@ -166,7 +166,7 @@ export default function useAnimeDataJikanApi(mal_id) {
 
         if (cachedData) {
           const { data, timestamp } = JSON.parse(cachedData);
-          const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+          const isExpired = Date.now() - timestamp > 1 * 60 * 60 * 1000;
 
           if (!isExpired) {
             setRecommendations(data);

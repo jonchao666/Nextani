@@ -30,7 +30,7 @@ export default function clearExpiredLocalStorageData() {
 
   const now = Date.now();
   items.forEach((item) => {
-    if (now > item.timestamp + 12 * 60 * 60 * 1000) {
+    if (now > item.timestamp + 1 * 60 * 60 * 1000) {
       localStorage.removeItem(item.key);
     }
   });

@@ -73,7 +73,7 @@ export default function Character() {
 
       if (cachedData) {
         const { data, timestamp } = JSON.parse(cachedData);
-        const isExpired = Date.now() - timestamp > 12 * 60 * 60 * 1000;
+        const isExpired = Date.now() - timestamp > 1 * 60 * 60 * 1000;
 
         if (!isExpired) {
           setData(data);
