@@ -35,7 +35,7 @@ export default function Recommendations() {
     setLoading(true);
     const url = `${process.env.API_URL}/anime/recommendations`;
     let response = await axios.get(url, {
-      params: { mal_id, isSensitiveFilterDisabled, page, limit: 18 },
+      params: { mal_id, isSensitiveFilterDisabled, page, limit: 36 },
       headers: {
         "X-API-Key": process.env.API_KEY,
       },
@@ -43,7 +43,7 @@ export default function Recommendations() {
 
     setData((prev) => [...prev, ...response.data]);
     setPage((prev) => prev + 1);
-    setHasMoreData(response.data.length >= 18);
+    setHasMoreData(response.data.length >= 36);
     setLoading(false);
   };
 
