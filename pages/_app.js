@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import AuthInitializer from "@/utils/AuthInitializer";
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react"
 
 export default function App({ Component, pageProps }) {
   const [domLoaded, setDomLoaded] = useState(false);
@@ -39,6 +40,7 @@ export default function App({ Component, pageProps }) {
             <Toaster position="bottom-right" reverseOrder={false} />
           )}
           <AuthInitializer />
+          <Analytics/>
           <Component {...pageProps} />
         </ThemeProvider>
       </NextUIProvider>
