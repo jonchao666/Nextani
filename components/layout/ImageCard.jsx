@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useResponsive } from "@/hooks/useResponsive";
 import Link from "next/link";
 
-export default function ImageCard({ data, ep, smallSize }) {
+export default function ImageCard({ data, ep, smallSize, newPage }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const { isXs } = useResponsive();
@@ -26,6 +26,7 @@ export default function ImageCard({ data, ep, smallSize }) {
         as={Link}
         shadow="none"
         radius="sm"
+        target={newPage ? "_blank" : undefined}
         href={`/animeDetails/default?mal_id=${data.mal_id}`}
         className={`isPressable hover:opacity-100 active:opacity-100 ${
           isLoaded ? "visible" : "invisible"

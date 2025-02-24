@@ -171,7 +171,7 @@ export default function ShowIndex({
             <div className={`w-full grid ${colToShow} gap-y-6 gap-x-1 `}>
               {data &&
                 data.map((item, index) => (
-                  <ImageCard key={index} data={item} />
+                  <ImageCard key={index} data={item} newPage={true} />
                 ))}
             </div>
           )}
