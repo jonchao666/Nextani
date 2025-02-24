@@ -81,7 +81,10 @@ export default function ImageCard({ data, ep, smallSize, newPage }) {
       </Card>
 
       <div>
-        <Link href={`/animeDetails/default?mal_id=${data.mal_id}`}>
+        <Link
+          href={`/animeDetails/default?mal_id=${data.mal_id}`}
+          target={newPage ? "_blank" : undefined}
+        >
           <p
             className={`mt-2 text-sm  line-clamp-2 break-words ${width} ${
               isMobileDevice || !isXs
